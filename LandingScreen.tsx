@@ -1,21 +1,27 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
+import {RootStackParamList} from './RootStackParamList';
 import {TouchableOpacity, StyleSheet, Text, View} from 'react-native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-export function LandingScreen({navigation}): React.JSX.Element {
-  const onLoginPressed = () => {
+export function LandingScreen(): React.JSX.Element {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const onLoginPressedd = () => {
     navigation.navigate('Login');
   };
   const onSignupPressed = () => {
-    navigation.navigate('Login');
+    navigation.navigate('Home');
   };
 
   return (
     <View style={styles.screenContainer}>
       <Text style={styles.title}>Welcome</Text>
-      <TouchableOpacity onPress={onLoginPressed} style={styles.button}>
+      <TouchableOpacity onPress={onLoginPressedd} style={styles.button}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={onLoginPressed} style={styles.button}>
+      <TouchableOpacity onPress={onSignupPressed} style={styles.button}>
         <Text style={styles.buttonText}>Sign up</Text>
       </TouchableOpacity>
     </View>

@@ -7,9 +7,14 @@ import {
   View,
   TextInput,
 } from 'react-native';
+import {RootStackParamList} from './RootStackParamList';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
 
-export function LoginScreen({navigation}): React.JSX.Element {
+export function LoginScreen(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [emailText, setEmailText] = useState('');
   const [passwordText, setpasswordText] = useState('');

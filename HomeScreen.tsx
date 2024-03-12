@@ -1,7 +1,13 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {RootStackParamList} from './RootStackParamList';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
 
 export function HomeScreen(): React.JSX.Element {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   return (
     <View style={styles.screenContainer}>
       <Text style={styles.title}>HomeScreen</Text>
