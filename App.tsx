@@ -7,6 +7,8 @@
 
 import React, {useState} from 'react';
 import type {PropsWithChildren} from 'react';
+import {HomeScreen} from './HomeScreen';
+import {LoginScreen} from './LoginScreen';
 import {
   SafeAreaView,
   TouchableOpacity,
@@ -19,6 +21,9 @@ import {
   Button,
 } from 'react-native';
 
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 import {
   Colors,
   DebugInstructions,
@@ -27,114 +32,44 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-type LoginProps = PropsWithChildren<{
-  title: string;
-  hint: string;
-  validationErrorText: string;
-}>;
+const Stack = createNativeStackNavigator();
 
-function LoginScreen({
-  title,
-  hint,
-  validationErrorText,
-  children,
-}: LoginProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const [emailText, setEmailText] = useState('');
-  const [passwordText, setpasswordText] = useState('');
-  const onLoginPressed = () => {};
-
+const App = () => {
   return (
-    <View style={styles.screenContainer}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.fieldHeader}>Email</Text>
-      <TextInput
-        style={styles.textInputArea}
-        onChangeText={setEmailText}
-        value={emailText}
-        placeholder="Type email here"
-      />
-      <Text style={styles.fieldHeader}>Password</Text>
-      <TextInput
-        style={styles.textInputArea}
-        onChangeText={setpasswordText}
-        value={passwordText}
-        placeholder="Type password here"
-      />
-      <TouchableOpacity onPress={onLoginPressed} style={styles.button}>
-        <Text style={styles.buttonText}>{title}</Text>
-      </TouchableOpacity>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Login"
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+// function App(): React.JSX.Element {
+//   const isDarkMode = useColorScheme() === 'dark';
 
-  const containerStyle = {
-    flex: 1, // This makes the SafeAreaView fill the entire screen
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter, // Keeps your theme
-  };
+//   const containerStyle = {
+//     flex: 1, // This makes the SafeAreaView fill the entire screen
+//     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter, // Keeps your theme
+//   };
 
-  return (
-    <SafeAreaView style={containerStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={containerStyle.backgroundColor}
-      />
-      <LoginScreen
-        title="Login"
-        hint="Type here"
-        validationErrorText="Type here"></LoginScreen>
-    </SafeAreaView>
-  );
-}
+//   return (
+//     <NavigationContainer>
+//       <SafeAreaView style={containerStyle}>
+//         <StatusBar
+//           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+//           backgroundColor={containerStyle.backgroundColor}
+//         />
+//         <MyStack />
+//       </SafeAreaView>
+//     </NavigationContainer>
+//   );
+// }
 
-const styles = StyleSheet.create({
-  screenContainer: {
-    margin: 24,
-    flex: 1,
-  },
-  title: {
-    marginTop: 8,
-    fontSize: 40,
-    fontWeight: '600',
-  },
-  fieldHeader: {
-    marginTop: 16,
-    fontSize: 25,
-    fontWeight: '600',
-  },
-  textInputArea: {
-    height: 40,
-    marginTop: 8,
-    borderColor: 'gray',
-    borderWidth: 1,
-  },
-  textInputText: {
-    fontSize: 14,
-    fontWeight: '200',
-  },
-  validationError: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  loginButtonStyle: {
-    marginTop: 20,
-  },
-  button: {
-    backgroundColor: '#999999',
-    padding: 16,
-    marginVertical: 32,
-    borderRadius: 5, // Optional: if you want rounded corners
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
-    // Add other text styles as needed
-  },
-});
 
 export default App;
 
