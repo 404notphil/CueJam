@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
 import {
+  Alert,
+  Modal,
+  Pressable,
   TouchableOpacity,
   StyleSheet,
   Text,
@@ -16,14 +19,62 @@ export function LoginScreen(): React.JSX.Element {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const [modalVisible, setModalVisible] = useState(false);
   const [emailText, setEmailText] = useState('');
   const [passwordText, setpasswordText] = useState('');
+
+  const [loginResponse, setLoginResponse] = useState('Loading');
+
+  const handleLogin = async (username: String, password: String) => {
+    try {
+      const response = await fetch('http://192.168.0.32:8080/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // Replace username and password with actual values you want to send
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      // Update state with the login response
+      setLoginResponse(data.message); // Assuming the response has a message field
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Error during login:', error);
+      setLoginResponse('Login failed. Please try again.' + username + password);
+      setModalVisible(true);
+    }
+  };
+
   const onLoginPressed = () => {
-    navigation.navigate('Home');
+    handleLogin(emailText, passwordText);
   };
 
   return (
     <View style={styles.screenContainer}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.modalOuter}>
+          <View style={styles.modalInner}>
+            <Text style={styles.title}>{loginResponse}</Text>
+            <Pressable
+              style={[styles.button, styles.button]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.buttonText}>Hide Modal</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
       <Text style={styles.title}>Login</Text>
       <Text style={styles.fieldHeader}>Email</Text>
       <TextInput
@@ -47,6 +98,22 @@ export function LoginScreen(): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
+  modalOuter: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    flex: 1,
+  },
+  modalInner: {
+    position: 'absolute',
+    top: '25%',
+    margin: 32,
+    padding: 16,
+    backgroundColor: 'black',
+    borderColor: 'white',
+    borderWidth: 0.3,
+    borderRadius: 15,
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
   screenContainer: {
     padding: 24,
     flex: 1,
