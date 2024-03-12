@@ -5,16 +5,18 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
-  ScrollView,
+  TouchableOpacity,
   StatusBar,
   StyleSheet,
   Text,
   useColorScheme,
   View,
+  TextInput,
+  Button,
 } from 'react-native';
 
 import {
@@ -25,32 +27,44 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-type SectionProps = PropsWithChildren<{
+type LoginProps = PropsWithChildren<{
   title: string;
+  hint: string;
+  validationErrorText: string;
 }>;
 
-function Section({children, title}: SectionProps): React.JSX.Element {
+function LoginScreen({
+  title,
+  hint,
+  validationErrorText,
+  children,
+}: LoginProps): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+
+  const [emailText, setEmailText] = useState('');
+  const [passwordText, setpasswordText] = useState('');
+  const onLoginPressed = () => {};
+
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View style={styles.screenContainer}>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.fieldHeader}>Email</Text>
+      <TextInput
+        style={styles.textInputArea}
+        onChangeText={setEmailText}
+        value={emailText}
+        placeholder="Type email here"
+      />
+      <Text style={styles.fieldHeader}>Password</Text>
+      <TextInput
+        style={styles.textInputArea}
+        onChangeText={setpasswordText}
+        value={passwordText}
+        placeholder="Type password here"
+      />
+      <TouchableOpacity onPress={onLoginPressed} style={styles.button}>
+        <Text style={styles.buttonText}>{title}</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -58,61 +72,74 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const containerStyle = {
+    flex: 1, // This makes the SafeAreaView fill the entire screen
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter, // Keeps your theme
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <SafeAreaView style={containerStyle}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+        backgroundColor={containerStyle.backgroundColor}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+      <LoginScreen
+        title="Login"
+        hint="Type here"
+        validationErrorText="Type here"></LoginScreen>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  screenContainer: {
+    margin: 24,
+    flex: 1,
   },
-  sectionTitle: {
-    fontSize: 24,
+  title: {
+    marginTop: 8,
+    fontSize: 40,
     fontWeight: '600',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  fieldHeader: {
+    marginTop: 16,
+    fontSize: 25,
+    fontWeight: '600',
   },
-  highlight: {
-    fontWeight: '700',
+  textInputArea: {
+    height: 40,
+    marginTop: 8,
+    borderColor: 'gray',
+    borderWidth: 1,
+  },
+  textInputText: {
+    fontSize: 14,
+    fontWeight: '200',
+  },
+  validationError: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  loginButtonStyle: {
+    marginTop: 20,
+  },
+  button: {
+    backgroundColor: '#999999',
+    padding: 16,
+    marginVertical: 32,
+    borderRadius: 5, // Optional: if you want rounded corners
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    // Add other text styles as needed
   },
 });
 
 export default App;
+
+
+// How do I know what colors are available?
+// How do I know what properties, such as "flex" are available in a style sheet?
+// How do I make a completely custom color? 
+// How about a gradient?
