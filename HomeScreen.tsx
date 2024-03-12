@@ -3,14 +3,19 @@ import {StyleSheet, Text, View} from 'react-native';
 import {RootStackParamList} from './RootStackParamList';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
+import {useAuth} from './AuthProvider';
 
 export function HomeScreen(): React.JSX.Element {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const {token, setToken} = useAuth();
+
   return (
     <View style={styles.screenContainer}>
       <Text style={styles.title}>HomeScreen</Text>
+      <Text style={styles.fieldHeader}>Token:</Text>
+      <Text style={styles.smallText}>{token}</Text>
     </View>
   );
 }
@@ -31,32 +36,9 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '600',
   },
-  textInputArea: {
-    height: 40,
-    marginTop: 8,
-    borderColor: 'gray',
-    borderWidth: 1,
-  },
-  textInputText: {
-    fontSize: 14,
-    fontWeight: '200',
-  },
-  validationError: {
+  smallText: {
+    marginTop: 16,
     fontSize: 16,
-    fontWeight: '600',
-  },
-  loginButtonStyle: {
-    marginTop: 20,
-  },
-  button: {
-    backgroundColor: '#999999',
-    padding: 16,
-    marginVertical: 32,
-    borderRadius: 5, // Optional: if you want rounded corners
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
-    // Add other text styles as needed
+    fontWeight: '400',
   },
 });

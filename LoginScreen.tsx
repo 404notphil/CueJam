@@ -11,6 +11,7 @@ import {
   TextInput,
 } from 'react-native';
 import {RootStackParamList} from './RootStackParamList';
+import {useAuth} from './AuthProvider';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 
@@ -24,6 +25,8 @@ export function LoginScreen(): React.JSX.Element {
   const [passwordText, setpasswordText] = useState('');
 
   const [loginResponse, setLoginResponse] = useState('Loading');
+
+  const {setToken} = useAuth();
 
   const handleLogin = async (username: String, password: String) => {
     try {
@@ -43,6 +46,7 @@ export function LoginScreen(): React.JSX.Element {
 
       // Update state with the login response
       setLoginResponse(data.message); // Assuming the response has a message field
+      setToken(data.token);
       navigation.navigate('Home');
     } catch (error) {
       console.error('Error during login:', error);
@@ -76,12 +80,12 @@ export function LoginScreen(): React.JSX.Element {
         </View>
       </Modal>
       <Text style={styles.title}>Login</Text>
-      <Text style={styles.fieldHeader}>Email</Text>
+      <Text style={styles.fieldHeader}>Email/username</Text>
       <TextInput
         style={styles.textInputArea}
         onChangeText={setEmailText}
         value={emailText}
-        placeholder="Type email here"
+        placeholder="Type email or username here"
       />
       <Text style={styles.fieldHeader}>Password</Text>
       <TextInput
