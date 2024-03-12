@@ -12,7 +12,7 @@ export function LandingScreen(): React.JSX.Element {
     navigation.navigate('Login');
   };
   const onSignupPressed = () => {
-    navigation.navigate('Home');
+    navigation.navigate('Signup');
   };
 
   return (
