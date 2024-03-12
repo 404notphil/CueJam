@@ -1,10 +1,23 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {TouchableOpacity, StyleSheet, Text, View} from 'react-native';
 
-export function HomeScreen(): React.JSX.Element {
+export function LandingScreen({navigation}): React.JSX.Element {
+  const onLoginPressed = () => {
+    navigation.navigate('Login');
+  };
+  const onSignupPressed = () => {
+    navigation.navigate('Login');
+  };
+
   return (
     <View style={styles.screenContainer}>
-      <Text style={styles.title}>HomeScreen</Text>
+      <Text style={styles.title}>Welcome</Text>
+      <TouchableOpacity onPress={onLoginPressed} style={styles.button}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={onLoginPressed} style={styles.button}>
+        <Text style={styles.buttonText}>Sign up</Text>
+      </TouchableOpacity>
     </View>
   );
 }
