@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React, {useReducer, useState} from 'react';
 import {
-  Alert,
   Modal,
   Pressable,
   TouchableOpacity,
@@ -10,8 +9,8 @@ import {
   View,
   TextInput,
 } from 'react-native';
+import {loginUser} from './services/AuthService';
 import {RootStackParamList} from './RootStackParamList';
-import {useAuth} from './AuthProvider';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 
@@ -20,81 +19,97 @@ export function LoginScreen(): React.JSX.Element {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [emailText, setEmailText] = useState('');
-  const [passwordText, setpasswordText] = useState('');
-
-  const [loginResponse, setLoginResponse] = useState('Loading');
-
-  const {setToken} = useAuth();
-
-  const handleLogin = async (username: String, password: String) => {
-    try {
-      const response = await fetch('http://192.168.0.32:8080/user/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // Replace username and password with actual values you want to send
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      });
-
-      const data = await response.json();
-
-      // Update state with the login response
-      setLoginResponse(data.message); // Assuming the response has a message field
-      setToken(data.token);
-      navigation.navigate('Home');
-    } catch (error) {
-      console.error('Error during login:', error);
-      setLoginResponse('Login failed. Please try again.' + username + password);
-      setModalVisible(true);
-    }
+  const initialState = {
+    emailText: '',
+    passwordText: '',
+    emailError: undefined,
+    passwordErrors: undefined,
+    modalState: undefined,
   };
 
-  const onLoginPressed = () => {
-    handleLogin(emailText, passwordText);
+  const [uiState, dispatch] = useReducer(reduce, initialState);
+
+  const onLoginPressed = async () => {
+    const response = await loginUser(uiState.emailText, uiState.passwordText);
+
+    switch (response) {
+      case 'Success': {
+        dispatch(LoginActions.loginCompleted());
+        navigation.navigate('Home');
+      }
+      case 'InvalidCredentials':
+      case 'UserNotFound':
+      case 'ErrorDuringLogin': {
+        dispatch(LoginActions.serverOrCredentialError());
+      }
+    }
   };
 
   return (
     <View style={styles.screenContainer}>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.modalOuter}>
-          <View style={styles.modalInner}>
-            <Text style={styles.title}>{loginResponse}</Text>
-            <Pressable
-              style={[styles.button, styles.button]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.buttonText}>Hide Modal</Text>
-            </Pressable>
+      {uiState.modalState && (
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={uiState.modalState != null}
+          onRequestClose={() => {
+            dispatch(LoginActions.closeModal());
+          }}>
+          <View style={styles.modalOuter}>
+            <View style={styles.modalInner}>
+              <Text style={styles.title}>{uiState.modalState?.modalTitle}</Text>
+              <Text style={styles.errorText}>
+                {uiState.modalState?.modalMessage}
+              </Text>
+              <Pressable
+                style={[styles.button, styles.button]}
+                onPress={() => {
+                  dispatch(LoginActions.tryAgainPressed());
+                }}>
+                <Text style={styles.buttonText}>Try again</Text>
+              </Pressable>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      )}
+
       <Text style={styles.title}>Login</Text>
       <Text style={styles.fieldHeader}>Email/username</Text>
       <TextInput
         style={styles.textInputArea}
-        onChangeText={setEmailText}
-        value={emailText}
+        onChangeText={email =>
+          dispatch(LoginActions.fieldValueChanged(email, uiState.passwordText))
+        }
+        value={uiState.emailText}
         placeholder="Type email or username here"
       />
       <Text style={styles.fieldHeader}>Password</Text>
       <TextInput
         style={styles.textInputArea}
-        onChangeText={setpasswordText}
-        value={passwordText}
+        onChangeText={password =>
+          dispatch(LoginActions.fieldValueChanged(uiState.emailText, password))
+        }
+        value={uiState.passwordText}
         placeholder="Type password here"
       />
-      <TouchableOpacity onPress={onLoginPressed} style={styles.button}>
+      <TouchableOpacity
+        onPress={() => {
+          if (
+            uiState.passwordText.length === 0 ||
+            uiState.emailText.length === 0
+          ) {
+            dispatch(LoginActions.showModalForInvalidFields());
+          } else {
+            dispatch(
+              LoginActions.loginAttemptInitiated(
+                uiState.emailText,
+                uiState.passwordText,
+              ),
+            );
+            onLoginPressed();
+          }
+        }}
+        style={styles.button}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
     </View>
@@ -156,9 +171,198 @@ const styles = StyleSheet.create({
     marginVertical: 32,
     borderRadius: 5, // Optional: if you want rounded corners
   },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    // Add other text styles as needed
+  },
   buttonText: {
     color: 'white',
     textAlign: 'center',
     // Add other text styles as needed
   },
 });
+
+export enum EmailError {
+  Empty = 'Email must not be empty',
+  NoAtSign = "Email must have '@' sign",
+}
+
+// enum PasswordError {
+//   Empty = 'Password must not be empty',
+//   NoLetters = 'Password must include one letter',
+//   NoNumbers = 'Password must include one number',
+//   NoSpecialChars = 'Password must include one special character',
+//   TooShort = 'Password must be at least 6 characters long',
+// }
+
+export interface LoginUiState {
+  emailText: string;
+  passwordText: string;
+  emailError?: EmailError;
+  passwordErrors:
+    | {
+        [K in PasswordError]?: boolean;
+      }
+    | undefined;
+  modalState?: LoginModalStateType;
+}
+
+export type LoginModalStateType = {
+  modalTitle: string;
+  modalMessage?: string;
+  modalButtonText?: string;
+};
+
+export const LoginModalStates = {
+  Loading: {
+    modalTitle: 'Loading',
+  },
+  Error: {
+    modalTitle: 'Uh oh!',
+    modalMessage: "Something's not right there",
+    modalButtonText: 'Try again',
+  },
+} satisfies Record<string, LoginModalStateType>;
+
+// Action types
+export type InitializeScreen = {type: 'InitializeScreen'};
+export type FieldValueChanged = {
+  type: 'FieldValueChanged';
+  email: string;
+  password: string;
+};
+export type LoginPressed = {
+  type: 'LoginPressed';
+  email: string;
+  password: string;
+};
+export type TryAgainPressed = {type: 'TryAgainPressed'};
+export type ServerOrCredentialError = {type: 'ServerOrCredentialError'};
+export type LoginCompleted = {type: 'LoginCompleted'};
+export type ShowModalForInvalidFields = {
+  type: 'ShowModalForInvalidFields';
+};
+export type CloseModal = {
+  type: 'CloseModal';
+};
+export type LoginAction =
+  | InitializeScreen
+  | FieldValueChanged
+  | LoginPressed
+  | TryAgainPressed
+  | ServerOrCredentialError
+  | LoginCompleted
+  | ShowModalForInvalidFields
+  | CloseModal;
+
+export class LoginActions {
+  static initializeScreen(): InitializeScreen {
+    return {type: 'InitializeScreen'};
+  }
+
+  static fieldValueChanged(email: string, password: string): FieldValueChanged {
+    return {type: 'FieldValueChanged', email, password};
+  }
+
+  static loginAttemptInitiated(email: string, password: string): LoginPressed {
+    return {type: 'LoginPressed', email, password};
+  }
+
+  static tryAgainPressed(): TryAgainPressed {
+    return {type: 'TryAgainPressed'};
+  }
+  static serverOrCredentialError(): ServerOrCredentialError {
+    return {type: 'ServerOrCredentialError'};
+  }
+  static loginCompleted(): LoginCompleted {
+    return {type: 'LoginCompleted'};
+  }
+  static showModalForInvalidFields(): ShowModalForInvalidFields {
+    return {type: 'ShowModalForInvalidFields'};
+  }
+  static closeModal(): CloseModal {
+    return {type: 'CloseModal'};
+  }
+}
+export function assertNever(x: never): never {
+  throw new Error('Unexpected object: ' + x);
+}
+
+export type PasswordError =
+  | 'Empty'
+  | 'NoLetters'
+  | 'NoNumbers'
+  | 'NoSpecialChars'
+  | 'TooShort';
+
+export function reduce(state: LoginUiState, action: LoginAction): LoginUiState {
+  switch (action.type) {
+    case 'InitializeScreen': {
+      return {
+        ...state,
+      };
+    }
+    case 'FieldValueChanged': {
+      const emptyEmail = action.email.length == 0;
+      const emptyPassword = action.password.length == 0;
+      const eitherEmpty = emptyEmail || emptyPassword;
+      return {
+        ...state,
+        emailError: emptyEmail ? EmailError.Empty : undefined,
+        passwordErrors: emptyPassword ? {Empty: true} : undefined,
+        modalState: eitherEmpty ? LoginModalStates.Error : undefined,
+      };
+    }
+    case 'LoginPressed': {
+      return {
+        ...state,
+        emailError: EmailError.Empty,
+        passwordErrors: {
+          NoLetters: true,
+          NoNumbers: true,
+        },
+        modalState: undefined,
+      };
+    }
+    case 'TryAgainPressed':
+      return {
+        ...state,
+        emailError: EmailError.Empty,
+        passwordErrors: {
+          NoLetters: true,
+          NoNumbers: true,
+        },
+        modalState: undefined,
+      };
+      break;
+    case 'LoginCompleted': {
+      return {
+        ...state,
+        emailError: undefined,
+        passwordErrors: undefined,
+        modalState: undefined,
+      };
+    }
+    case 'ServerOrCredentialError': {
+      return {
+        ...state,
+        modalState: LoginModalStates.Error,
+      };
+    }
+    case 'ShowModalForInvalidFields': {
+      return {
+        ...state,
+        modalState: LoginModalStates.Error,
+      };
+    }
+    case 'CloseModal': {
+      return {
+        ...state,
+        modalState: undefined,
+      };
+    }
+    default:
+      return assertNever(action); // TypeScript will error if any case is not handled
+  }
+}

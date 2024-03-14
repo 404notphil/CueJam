@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {RootStackParamList} from './RootStackParamList';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
@@ -16,6 +16,14 @@ export function HomeScreen(): React.JSX.Element {
       <Text style={styles.title}>HomeScreen</Text>
       <Text style={styles.fieldHeader}>Token:</Text>
       <Text style={styles.smallText}>{token}</Text>
+      <TouchableOpacity
+        onPress={() => {
+          setToken(null);
+          navigation.navigate('Landing');
+        }}
+        style={styles.button}>
+        <Text>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -40,5 +48,11 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 16,
     fontWeight: '400',
+  },
+  button: {
+    backgroundColor: '#999999',
+    padding: 16,
+    marginVertical: 32,
+    borderRadius: 5, // Optional: if you want rounded corners
   },
 });

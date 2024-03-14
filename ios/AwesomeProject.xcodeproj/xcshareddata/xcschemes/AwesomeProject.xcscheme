@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "LoginProject.app"
-               BlueprintName = "LoginProject"
-               ReferencedContainer = "container:LoginProject.xcodeproj">
+               BuildableName = "NotePrompter.app"
+               BlueprintName = "NotePrompter"
+               ReferencedContainer = "container:NotePrompter.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "LoginProjectTests.xctest"
-               BlueprintName = "LoginProjectTests"
-               ReferencedContainer = "container:LoginProject.xcodeproj">
+               BuildableName = "NotePrompterTests.xctest"
+               BlueprintName = "NotePrompterTests"
+               ReferencedContainer = "container:NotePrompter.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "LoginProject.app"
-            BlueprintName = "LoginProject"
-            ReferencedContainer = "container:LoginProject.xcodeproj">
+            BuildableName = "NotePrompter.app"
+            BlueprintName = "NotePrompter"
+            ReferencedContainer = "container:NotePrompter.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "LoginProject.app"
-            BlueprintName = "LoginProject"
-            ReferencedContainer = "container:LoginProject.xcodeproj">
+            BuildableName = "NotePrompter.app"
+            BlueprintName = "NotePrompter"
+            ReferencedContainer = "container:NotePrompter.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

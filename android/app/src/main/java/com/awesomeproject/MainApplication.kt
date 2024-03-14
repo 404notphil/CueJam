@@ -1,4 +1,4 @@
-package com.loginproject
+package com.NotePrompter
 
 import android.app.Application
 import com.facebook.react.PackageList
