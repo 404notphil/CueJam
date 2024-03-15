@@ -1,9 +1,9 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {RootStackParamList} from '../navigation/RootStackParamList';
+import {RootStackParamList} from '../../navigation/RootStackParamList';
 import {TouchableOpacity, StyleSheet, Text, View} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {globalStyles} from './theme/styles';
+import {globalStyles} from '../../ui/theme/styles';
 
 export function LandingScreen(): React.JSX.Element {
   const navigation =

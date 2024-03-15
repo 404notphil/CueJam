@@ -8,11 +8,11 @@ import {
   View,
   TextInput,
 } from 'react-native';
-import {RootStackParamList} from '../navigation/RootStackParamList';
+import {RootStackParamList} from '../../navigation/RootStackParamList';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
-import {useAuth} from '../auth/AuthProvider';
-import {globalStyles} from './theme/styles';
+import {useAuth} from '../../auth/AuthProvider';
+import {globalStyles} from '../../ui/theme/styles';
 
 export function SignupScreen(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
