@@ -32,11 +32,11 @@ export function LoginScreen(): React.JSX.Element {
       case 'Success': {
         dispatch(LoginActions.loginCompleted());
         navigation.navigate('Home');
+        break;
       }
-      case 'InvalidCredentials':
-      case 'UserNotFound':
-      case 'ErrorDuringLogin': {
+      case 'InvalidCredentials' || 'UserNotFound' || 'ErrorDuringLogin': {
         dispatch(LoginActions.serverOrCredentialError());
+        break;
       }
     }
   };
@@ -268,12 +268,7 @@ export function reduce(state: LoginUiState, action: LoginAction): LoginUiState {
       };
     }
     case 'LoginCompleted': {
-      return {
-        ...state,
-        emailError: undefined,
-        passwordErrors: undefined,
-        modalState: undefined,
-      };
+      return initialUiState;
     }
     case 'ServerOrCredentialError': {
       return {
