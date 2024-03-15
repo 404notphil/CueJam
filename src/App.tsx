@@ -6,11 +6,11 @@
  */
 
 import React from 'react';
-import {HomeScreen} from './HomeScreen';
-import {LoginScreen} from './LoginScreen';
-import {LandingScreen} from './LandingScreen';
-import {SignupScreen} from './SignupScreen';
-import {AuthProvider} from './AuthProvider';
+import {HomeScreen} from '../HomeScreen';
+import {LoginScreen} from '../LoginScreen';
+import {LandingScreen} from '../LandingScreen';
+import {SignupScreen} from '../SignupScreen';
+import {AuthProvider} from '../AuthProvider';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -56,11 +56,9 @@ const App = () => {
 //   );
 // }
 
-
 export default App;
-
 
 // How do I know what colors are available?
 // How do I know what properties, such as "flex" are available in a style sheet?
-// How do I make a completely custom color? 
+// How do I make a completely custom color?
 // How about a gradient?
