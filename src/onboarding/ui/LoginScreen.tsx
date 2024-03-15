@@ -84,7 +84,7 @@ export function LoginScreen(): React.JSX.Element {
       )}
 
       <Text style={globalStyles.title}>Login</Text>
-      <Text style={globalStyles.fieldHeader}>Email/username</Text>
+      <Text style={globalStyles.fieldHeader}>Username</Text>
       <TextInput
         style={globalStyles.textInputArea}
         onChangeText={email =>

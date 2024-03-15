@@ -100,6 +100,7 @@ export class LoginActions {
     return {type: 'CloseModal'};
   }
 }
+
 export function assertNever(x: never): never {
   throw new Error('Unexpected object: ' + x);
 }
@@ -134,10 +135,6 @@ export function loginReducer(
     case 'TryAgainPressed':
       return {
         ...state,
-        emailError: EmailError.Empty,
-        passwordErrors: {
-          Empty: true,
-        },
         modalState: undefined,
       };
       break;
