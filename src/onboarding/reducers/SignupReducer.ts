@@ -110,8 +110,17 @@ export class SignupActions {
   static signupCompleted(): SignupCompleted {
     return {type: 'SignupCompleted'};
   }
-  static showModalForInvalidFields(): ShowModalForInvalidFields {
-    return {type: 'ShowModalForInvalidFields'};
+  static showModalForInvalidFields(
+    emailText: string,
+    usernameText: string,
+    passwordText: string,
+  ): ShowModalForInvalidFields {
+    return {
+      emailText,
+      usernameText,
+      passwordText,
+      type: 'ShowModalForInvalidFields',
+    };
   }
   static closeModal(): CloseModal {
     return {type: 'CloseModal'};

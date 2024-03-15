@@ -13,16 +13,7 @@ import {loginUser} from '../../services/AuthService';
 import {RootStackParamList} from '../../navigation/RootStackParamList';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
-import {
-  initialUiState,
-  LoginAction,
-  LoginActions,
-  LoginCompleted,
-  LoginModalStateType,
-  LoginModalStates,
-  LoginPressed,
-  LoginUiState,
-} from '../reducers/LoginReducer';
+import {initialUiState, LoginActions} from '../reducers/LoginReducer';
 
 import {loginReducer} from '../reducers/LoginReducer';
 
