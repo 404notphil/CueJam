@@ -9,14 +9,14 @@ interface AuthContextType {
 // Create context with a default value
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// AuthProvider Props accepts children, so that we can place 'AuthProvider' at the top of the 
-// component tree, wrapping the entire app. 
+// AuthProvider Props accepts children, so that we can place 'AuthProvider' at the top of the
+// component tree, wrapping the entire app.
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-// AuthProvider component. This should be placed at the top of the 
-// component tree, wrapping the entire app. 
+// AuthProvider component. This should be placed at the top of the
+// component tree, wrapping the entire app.
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [token, setToken] = useState<string | null>(null);
 
@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 // Custom hook to use the auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

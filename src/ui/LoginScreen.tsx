@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React, {useReducer, useState, useEffect} from 'react';
 import {
   Modal,
   Pressable,
@@ -9,28 +9,25 @@ import {
   View,
   TextInput,
 } from 'react-native';
-import {loginUser} from './services/AuthService';
-import {RootStackParamList} from './RootStackParamList';
+import {useAuth} from '../auth/AuthProvider';
+import {loginUser} from '../services/AuthService';
+import {RootStackParamList} from '../navigation/RootStackParamList';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 
 export function LoginScreen(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const initialState = {
-    emailText: '',
-    passwordText: '',
-    emailError: undefined,
-    passwordErrors: undefined,
-    modalState: undefined,
-  };
-
-  const [uiState, dispatch] = useReducer(reduce, initialState);
+  const [uiState, dispatch] = useReducer(reduce, initialUiState);
+  const {setToken} = useAuth();
 
   const onLoginPressed = async () => {
-    const response = await loginUser(uiState.emailText, uiState.passwordText);
+    const response = await loginUser(
+      uiState.emailText,
+      uiState.passwordText,
+      setToken,
+    );
 
     switch (response) {
       case 'Success': {
@@ -208,6 +205,14 @@ export interface LoginUiState {
   modalState?: LoginModalStateType;
 }
 
+const initialUiState = {
+  emailText: '',
+  passwordText: '',
+  emailError: undefined,
+  passwordErrors: undefined,
+  modalState: undefined,
+};
+
 export type LoginModalStateType = {
   modalTitle: string;
   modalMessage?: string;
@@ -299,29 +304,17 @@ export type PasswordError =
 export function reduce(state: LoginUiState, action: LoginAction): LoginUiState {
   switch (action.type) {
     case 'InitializeScreen': {
-      return {
-        ...state,
-      };
+      return initialUiState;
     }
     case 'FieldValueChanged': {
       const emptyEmail = action.email.length == 0;
       const emptyPassword = action.password.length == 0;
-      const eitherEmpty = emptyEmail || emptyPassword;
       return {
         ...state,
-        emailError: emptyEmail ? EmailError.Empty : undefined,
-        passwordErrors: emptyPassword ? {Empty: true} : undefined,
-        modalState: eitherEmpty ? LoginModalStates.Error : undefined,
-      };
-    }
-    case 'LoginPressed': {
-      return {
-        ...state,
-        emailError: EmailError.Empty,
-        passwordErrors: {
-          NoLetters: true,
-          NoNumbers: true,
-        },
+        emailText: action.email,
+        passwordText: action.password,
+        emailError: emptyEmail ? EmailError.Empty : state.emailError,
+        passwordErrors: emptyPassword ? {Empty: true} : state.passwordErrors,
         modalState: undefined,
       };
     }
@@ -330,12 +323,16 @@ export function reduce(state: LoginUiState, action: LoginAction): LoginUiState {
         ...state,
         emailError: EmailError.Empty,
         passwordErrors: {
-          NoLetters: true,
-          NoNumbers: true,
+          Empty: true,
         },
         modalState: undefined,
       };
       break;
+    case 'LoginPressed': {
+      return {
+        ...state,
+      };
+    }
     case 'LoginCompleted': {
       return {
         ...state,
@@ -353,6 +350,10 @@ export function reduce(state: LoginUiState, action: LoginAction): LoginUiState {
     case 'ShowModalForInvalidFields': {
       return {
         ...state,
+        emailError: EmailError.Empty,
+        passwordErrors: {
+          Empty: true,
+        },
         modalState: LoginModalStates.Error,
       };
     }

@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {RootStackParamList} from './RootStackParamList';
+import {RootStackParamList} from '../navigation/RootStackParamList';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
-import {useAuth} from './AuthProvider';
+import {useAuth} from '../auth/AuthProvider';
 
 export function HomeScreen(): React.JSX.Element {
   const navigation =

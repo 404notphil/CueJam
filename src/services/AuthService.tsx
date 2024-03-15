@@ -1,5 +1,5 @@
 // services/authService.js
-import {useAuth} from '../AuthProvider';
+import {useAuth} from '../auth/AuthProvider';
 
 type LoginResult =
   | 'Success'
@@ -10,16 +10,14 @@ type LoginResult =
 const loginUser = async (
   username: string,
   password: string,
+  setToken: (token: string) => void, // Add setToken as a parameter
 ): Promise<LoginResult> => {
   try {
-    const {setToken} = useAuth();
-
     const response = await fetch('http://192.168.0.32:8080/user/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-
       body: JSON.stringify({
         username: username,
         password: password,
@@ -32,14 +30,10 @@ const loginUser = async (
       setToken(data.token);
       return 'Success';
     } else {
-      // return error
       return 'InvalidCredentials';
-      // TODO further handle error types for UserNotFound
     }
   } catch (error) {
-    console.error('Error during login:', error);
     return 'ErrorDuringLogin';
-    // return error
   }
 };
 
