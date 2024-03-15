@@ -3,13 +3,12 @@ import {
   Modal,
   Pressable,
   TouchableOpacity,
-  StyleSheet,
   Text,
-  useColorScheme,
   View,
   TextInput,
 } from 'react-native';
 import {useAuth} from '../auth/AuthProvider';
+import {globalStyles} from './theme/styles';
 import {loginUser} from '../services/AuthService';
 import {RootStackParamList} from '../navigation/RootStackParamList';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -43,7 +42,7 @@ export function LoginScreen(): React.JSX.Element {
   };
 
   return (
-    <View style={styles.screenContainer}>
+    <View style={globalStyles.screenContainer}>
       {uiState.modalState && (
         <Modal
           animationType="fade"
@@ -52,37 +51,39 @@ export function LoginScreen(): React.JSX.Element {
           onRequestClose={() => {
             dispatch(LoginActions.closeModal());
           }}>
-          <View style={styles.modalOuter}>
-            <View style={styles.modalInner}>
-              <Text style={styles.title}>{uiState.modalState?.modalTitle}</Text>
-              <Text style={styles.errorText}>
+          <View style={globalStyles.modalOuter}>
+            <View style={globalStyles.modalInner}>
+              <Text style={globalStyles.title}>
+                {uiState.modalState?.modalTitle}
+              </Text>
+              <Text style={globalStyles.errorText}>
                 {uiState.modalState?.modalMessage}
               </Text>
               <Pressable
-                style={[styles.button, styles.button]}
+                style={[globalStyles.button, globalStyles.button]}
                 onPress={() => {
                   dispatch(LoginActions.tryAgainPressed());
                 }}>
-                <Text style={styles.buttonText}>Try again</Text>
+                <Text style={globalStyles.buttonText}>Try again</Text>
               </Pressable>
             </View>
           </View>
         </Modal>
       )}
 
-      <Text style={styles.title}>Login</Text>
-      <Text style={styles.fieldHeader}>Email/username</Text>
+      <Text style={globalStyles.title}>Login</Text>
+      <Text style={globalStyles.fieldHeader}>Email/username</Text>
       <TextInput
-        style={styles.textInputArea}
+        style={globalStyles.textInputArea}
         onChangeText={email =>
           dispatch(LoginActions.fieldValueChanged(email, uiState.passwordText))
         }
         value={uiState.emailText}
         placeholder="Type email or username here"
       />
-      <Text style={styles.fieldHeader}>Password</Text>
+      <Text style={globalStyles.fieldHeader}>Password</Text>
       <TextInput
-        style={styles.textInputArea}
+        style={globalStyles.textInputArea}
         onChangeText={password =>
           dispatch(LoginActions.fieldValueChanged(uiState.emailText, password))
         }
@@ -106,79 +107,12 @@ export function LoginScreen(): React.JSX.Element {
             onLoginPressed();
           }
         }}
-        style={styles.button}>
-        <Text style={styles.buttonText}>Login</Text>
+        style={globalStyles.button}>
+        <Text style={globalStyles.buttonText}>Login</Text>
       </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  modalOuter: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    flex: 1,
-  },
-  modalInner: {
-    position: 'absolute',
-    top: '25%',
-    margin: 32,
-    padding: 16,
-    backgroundColor: 'black',
-    borderColor: 'white',
-    borderWidth: 0.3,
-    borderRadius: 15,
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  screenContainer: {
-    padding: 24,
-    flex: 1,
-    backgroundColor: 'black',
-  },
-  title: {
-    marginTop: 8,
-    fontSize: 40,
-    fontWeight: '600',
-  },
-  fieldHeader: {
-    marginTop: 16,
-    fontSize: 25,
-    fontWeight: '600',
-  },
-  textInputArea: {
-    height: 40,
-    marginTop: 8,
-    borderColor: 'gray',
-    borderWidth: 1,
-  },
-  textInputText: {
-    fontSize: 14,
-    fontWeight: '200',
-  },
-  validationError: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  loginButtonStyle: {
-    marginTop: 20,
-  },
-  button: {
-    backgroundColor: '#999999',
-    padding: 16,
-    marginVertical: 32,
-    borderRadius: 5, // Optional: if you want rounded corners
-  },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
-    // Add other text styles as needed
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
-    // Add other text styles as needed
-  },
-});
 
 export enum EmailError {
   Empty = 'Email must not be empty',

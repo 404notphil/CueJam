@@ -3,7 +3,6 @@ import {
   TouchableOpacity,
   Modal,
   Pressable,
-  StyleSheet,
   Text,
   useColorScheme,
   View,
@@ -13,6 +12,7 @@ import {RootStackParamList} from '../navigation/RootStackParamList';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../auth/AuthProvider';
+import {globalStyles} from './theme/styles';
 
 export function SignupScreen(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -100,7 +100,7 @@ export function SignupScreen(): React.JSX.Element {
   };
 
   return (
-    <View style={styles.screenContainer}>
+    <View style={globalStyles.screenContainer}>
       <Modal
         animationType="fade"
         transparent={true}
@@ -108,38 +108,38 @@ export function SignupScreen(): React.JSX.Element {
         onRequestClose={() => {
           setModalVisible(!modalVisible);
         }}>
-        <View style={styles.modalOuter}>
-          <View style={styles.modalInner}>
-            <Text style={styles.title}>{modalTitle}</Text>
-            <Text style={styles.errorText}>{modalMessage}</Text>
+        <View style={globalStyles.modalOuter}>
+          <View style={globalStyles.modalInner}>
+            <Text style={globalStyles.title}>{modalTitle}</Text>
+            <Text style={globalStyles.errorText}>{modalMessage}</Text>
             <Pressable
-              style={[styles.button, styles.button]}
+              style={[globalStyles.button, globalStyles.button]}
               onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.buttonText}>Try again</Text>
+              <Text style={globalStyles.buttonText}>Try again</Text>
             </Pressable>
           </View>
         </View>
       </Modal>
-      <Text style={styles.title}>Signup</Text>
-      <Text style={styles.fieldHeader}>Email</Text>
+      <Text style={globalStyles.title}>Signup</Text>
+      <Text style={globalStyles.fieldHeader}>Email</Text>
       <TextInput
-        style={styles.textInputArea}
+        style={globalStyles.textInputArea}
         onChangeText={setEmailText}
         value={emailText}
         placeholder="Type email here"
       />
 
-      <Text style={styles.fieldHeader}>Username</Text>
+      <Text style={globalStyles.fieldHeader}>Username</Text>
       <TextInput
-        style={styles.textInputArea}
+        style={globalStyles.textInputArea}
         onChangeText={setUsernameText}
         value={usernameText}
         placeholder="Type username here"
       />
 
-      <Text style={styles.fieldHeader}>Password</Text>
+      <Text style={globalStyles.fieldHeader}>Password</Text>
       <TextInput
-        style={styles.textInputArea}
+        style={globalStyles.textInputArea}
         onChangeText={setpasswordText}
         value={passwordText}
         placeholder="Type password here"
@@ -158,76 +158,9 @@ export function SignupScreen(): React.JSX.Element {
             onSignupPressed();
           }
         }}
-        style={styles.button}>
-        <Text style={styles.buttonText}>Sign up</Text>
+        style={globalStyles.button}>
+        <Text style={globalStyles.buttonText}>Sign up</Text>
       </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  modalOuter: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    flex: 1,
-  },
-  modalInner: {
-    position: 'absolute',
-    top: '25%',
-    margin: 32,
-    padding: 16,
-    backgroundColor: 'black',
-    borderColor: 'grey',
-    borderWidth: 1,
-    borderRadius: 15,
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
-    // Add other text styles as needed
-  },
-  screenContainer: {
-    padding: 24,
-    flex: 1,
-    backgroundColor: 'black',
-  },
-  title: {
-    marginTop: 8,
-    fontSize: 40,
-    fontWeight: '600',
-  },
-  fieldHeader: {
-    marginTop: 16,
-    fontSize: 25,
-    fontWeight: '600',
-  },
-  textInputArea: {
-    height: 40,
-    marginTop: 8,
-    borderColor: 'gray',
-    borderWidth: 1,
-  },
-  textInputText: {
-    fontSize: 14,
-    fontWeight: '200',
-  },
-  validationError: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  loginButtonStyle: {
-    marginTop: 20,
-  },
-  button: {
-    backgroundColor: '#999999',
-    padding: 16,
-    marginVertical: 32,
-    borderRadius: 5, // Optional: if you want rounded corners
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
-    // Add other text styles as needed
-  },
-});
