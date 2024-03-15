@@ -1,4 +1,4 @@
-package com.NotePrompter
+package com.noteprompter
 
 import android.app.Application
 import com.facebook.react.PackageList

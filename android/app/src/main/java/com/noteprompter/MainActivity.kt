@@ -1,4 +1,4 @@
-package com.NotePrompter
+package com.noteprompter
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
