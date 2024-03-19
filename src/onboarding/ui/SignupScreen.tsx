@@ -13,7 +13,9 @@ import {
   SignupActions,
   hasErrors,
   PasswordErrorMessages,
+  SignupUiState,
 } from '../reducers/SignupReducer';
+import {SignupModalStateType} from '../reducers/SignupReducer';
 import {RootStackParamList} from '../../navigation/RootStackParamList';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
@@ -50,90 +52,74 @@ export function SignupScreen(): React.JSX.Element {
 
   return (
     <View style={globalStyles.screenContainer}>
-      {uiState.modalState && (
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={uiState.modalState != undefined}
-          onRequestClose={() => {
-            dispatch(SignupActions.closeModal());
-          }}>
-          <View style={globalStyles.modalOuter}>
-            <View style={globalStyles.modalInner}>
-              <Text style={globalStyles.title}>
-                {uiState.modalState.modalTitle}
-              </Text>
-              <Text style={globalStyles.errorText}>
-                {uiState.modalState.modalMessage}
-              </Text>
-
-              {uiState.modalState?.modalButtonText && (
-                <Pressable
-                  style={[globalStyles.button, globalStyles.button]}
-                  onPress={() => {
-                    dispatch(SignupActions.tryAgainPressed());
-                  }}>
-                  <Text style={globalStyles.buttonText}>Try again</Text>
-                </Pressable>
-              )}
-              {uiState.modalState.modalTitle == 'Loading' && (
-                <ActivityIndicator size="large" color="#00ff00" />
-              )}
-            </View>
-          </View>
-        </Modal>
-      )}
+      {uiState.modalState &&
+        uiState.modalState.modalMessage &&
+        SignupScreenModal(
+          uiState.modalState,
+          uiState.modalState.modalTitle,
+          uiState.modalState.modalMessage,
+          dispatch,
+        )}
 
       {/* Header */}
       <Text style={globalStyles.title}>Signup</Text>
 
       {/* Email field */}
-      <Text style={globalStyles.fieldHeader}>Email</Text>
-      <TextInput
-        autoCapitalize="none"
-        style={globalStyles.textInputArea}
-        onChangeText={text =>
-          dispatch(
-            SignupActions.fieldValueChanged(
-              text,
-              uiState.usernameText,
-              uiState.passwordText,
-            ),
-          )
-        }
-        value={uiState.emailText}
-        placeholder="Type email here"
-      />
-
-      {/* Email field error(s) */}
-      {uiState.emailError && (
-        <Text style={signupStyles.errorText}>{uiState.emailError}</Text>
-      )}
+      {EmailFieldAndErrors(dispatch, uiState)}
 
       {/* Username field */}
-      <Text style={globalStyles.fieldHeader}>Username</Text>
-      <TextInput
-        autoCapitalize="none"
-        style={globalStyles.textInputArea}
-        onChangeText={text =>
-          dispatch(
-            SignupActions.fieldValueChanged(
-              uiState.emailText,
-              text,
-              uiState.passwordText,
-            ),
-          )
-        }
-        value={uiState.usernameText}
-        placeholder="Type username here"
-      />
-
-      {/* Username field error(s) */}
-      {uiState.usernameError && (
-        <Text style={signupStyles.errorText}>{uiState.usernameError}</Text>
-      )}
+      {UsernameFieldAndErrors(dispatch, uiState)}
 
       {/* Password field */}
+      {PasswordFieldAndErrors(dispatch, uiState)}
+
+      {SignupButton(dispatch, uiState, onSignupPressed)}
+    </View>
+  );
+}
+
+const signupStyles = StyleSheet.create({
+  errorText: {
+    color: 'red',
+    // Add other text styles as needed
+  },
+});
+
+function SignupButton(
+  dispatch: React.Dispatch<
+    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupReducer').SignupAction
+  >,
+  uiState: SignupUiState,
+  onSignupPressed: () => Promise<void>,
+) {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        dispatch(
+          SignupActions.signupAttemptInitiated(
+            uiState.emailText,
+            uiState.usernameText,
+            uiState.passwordText,
+          ),
+        );
+        if (!hasErrors(uiState)) {
+          onSignupPressed();
+        }
+      }}
+      style={globalStyles.button}>
+      <Text style={globalStyles.buttonText}>Sign up</Text>
+    </TouchableOpacity>
+  );
+}
+
+function PasswordFieldAndErrors(
+  dispatch: React.Dispatch<
+    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupReducer').SignupAction
+  >,
+  uiState: SignupUiState,
+) {
+  return (
+    <View>
       <Text style={globalStyles.fieldHeader}>Password</Text>
       <TextInput
         autoCapitalize="none"
@@ -159,30 +145,111 @@ export function SignupScreen(): React.JSX.Element {
             {PasswordErrorMessages[error]}
           </Text>
         ))}
-
-      <TouchableOpacity
-        onPress={() => {
-          dispatch(
-            SignupActions.signupAttemptInitiated(
-              uiState.emailText,
-              uiState.usernameText,
-              uiState.passwordText,
-            ),
-          );
-          if (!hasErrors(uiState)) {
-            onSignupPressed();
-          }
-        }}
-        style={globalStyles.button}>
-        <Text style={globalStyles.buttonText}>Sign up</Text>
-      </TouchableOpacity>
     </View>
   );
 }
 
-const signupStyles = StyleSheet.create({
-  errorText: {
-    color: 'red',
-    // Add other text styles as needed
-  },
-});
+function UsernameFieldAndErrors(
+  dispatch: React.Dispatch<
+    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupReducer').SignupAction
+  >,
+  uiState: SignupUiState,
+) {
+  return (
+    <View>
+      <Text style={globalStyles.fieldHeader}>Username</Text>
+      <TextInput
+        autoCapitalize="none"
+        style={globalStyles.textInputArea}
+        onChangeText={text =>
+          dispatch(
+            SignupActions.fieldValueChanged(
+              uiState.emailText,
+              text,
+              uiState.passwordText,
+            ),
+          )
+        }
+        value={uiState.usernameText}
+        placeholder="Type username here"
+      />
+
+      {/* Username field error(s) */}
+      {uiState.usernameError && (
+        <Text style={signupStyles.errorText}>{uiState.usernameError}</Text>
+      )}
+    </View>
+  );
+}
+
+function EmailFieldAndErrors(
+  dispatch: React.Dispatch<
+    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupReducer').SignupAction
+  >,
+  uiState: SignupUiState,
+) {
+  return (
+    <View>
+      <Text style={globalStyles.fieldHeader}>Email</Text>
+      <TextInput
+        autoCapitalize="none"
+        style={globalStyles.textInputArea}
+        onChangeText={text =>
+          dispatch(
+            SignupActions.fieldValueChanged(
+              text,
+              uiState.usernameText,
+              uiState.passwordText,
+            ),
+          )
+        }
+        value={uiState.emailText}
+        placeholder="Type email here"
+      />
+
+      {/* Email field error(s) */}
+      {uiState.emailError && (
+        <Text style={signupStyles.errorText}>{uiState.emailError}</Text>
+      )}
+    </View>
+  );
+}
+
+function SignupScreenModal(
+  modalState: SignupModalStateType,
+  modalTitle: string,
+  modalMessage: string,
+  dispatch: React.Dispatch<
+    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupReducer').SignupAction
+  >,
+): React.ReactNode {
+  return (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={modalState != undefined}
+      onRequestClose={() => {
+        dispatch(SignupActions.closeModal());
+      }}>
+      <View style={globalStyles.modalOuter}>
+        <View style={globalStyles.modalInner}>
+          <Text style={globalStyles.title}>{modalTitle}</Text>
+          <Text style={globalStyles.errorText}>{modalMessage}</Text>
+
+          {modalState.modalButtonText && (
+            <Pressable
+              style={[globalStyles.button, globalStyles.button]}
+              onPress={() => {
+                dispatch(SignupActions.tryAgainPressed());
+              }}>
+              <Text style={globalStyles.buttonText}>Try again</Text>
+            </Pressable>
+          )}
+          {modalTitle == 'Loading' && (
+            <ActivityIndicator size="large" color="#00ff00" />
+          )}
+        </View>
+      </View>
+    </Modal>
+  );
+}

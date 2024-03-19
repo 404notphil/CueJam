@@ -1,5 +1,5 @@
 export enum EmailUsernameError {
-  Empty = 'Email must not be empty',
+  Empty = 'Must not be empty',
   NoAtSign = "Email must have '@' sign",
 }
 
