@@ -95,20 +95,13 @@ export function LoginScreen(): React.JSX.Element {
       />
       <TouchableOpacity
         onPress={() => {
-          if (
-            uiState.passwordText.length === 0 ||
-            uiState.emailText.length === 0
-          ) {
-            dispatch(LoginActions.showModalForInvalidFields());
-          } else {
-            dispatch(
-              LoginActions.loginAttemptInitiated(
-                uiState.emailText,
-                uiState.passwordText,
-              ),
-            );
-            onLoginPressed();
-          }
+          dispatch(
+            LoginActions.loginAttemptInitiated(
+              uiState.emailText,
+              uiState.passwordText,
+            ),
+          );
+          onLoginPressed();
         }}
         style={globalStyles.button}>
         <Text style={globalStyles.buttonText}>Login</Text>

@@ -17,6 +17,14 @@ export interface SignupUiState {
   modalState?: SignupModalStateType;
 }
 
+export function hasErrors(uiState: SignupUiState): boolean {
+  return (
+    uiState.emailError === undefined &&
+    uiState.usernameError === undefined &&
+    uiState.passwordErrors === undefined
+  );
+}
+
 export const initialSignupUiState = {
   emailText: '',
   usernameText: '',
@@ -54,9 +62,9 @@ export type FieldValueChanged = {
 };
 export type SignupPressed = {
   type: 'SignupPressed';
-  email: string;
-  username: string;
-  password: string;
+  emailText: string;
+  usernameText: string;
+  passwordText: string;
 };
 export type TryAgainPressed = {type: 'TryAgainPressed'};
 export type ServerOrCredentialError = {type: 'ServerOrCredentialError'};
@@ -98,7 +106,12 @@ export class SignupActions {
     username: string,
     password: string,
   ): SignupPressed {
-    return {type: 'SignupPressed', email, username, password};
+    return {
+      type: 'SignupPressed',
+      emailText: email,
+      usernameText: username,
+      passwordText: password,
+    };
   }
 
   static tryAgainPressed(): TryAgainPressed {
@@ -148,19 +161,14 @@ export function signupReducer(
       return initialSignupUiState;
     }
     case 'FieldValueChanged': {
-      const emptyEmail = action.email.length == 0;
-      const emptyUsername = action.username.length == 0;
-      const emptyPassword = action.password.length == 0;
       return {
         ...state,
         emailText: action.email,
         usernameText: action.username,
         passwordText: action.password,
-        emailError: emptyEmail ? EmailUsernameError.Empty : state.emailError,
-        usernameError: emptyUsername
-          ? EmailUsernameError.Empty
-          : state.emailError,
-        passwordErrors: emptyPassword ? {Empty: true} : state.passwordErrors,
+        emailError: validateEmail(action.email),
+        usernameError: validateUsername(action.username),
+        passwordErrors: validatePassword(action.password),
         modalState: undefined,
       };
     }
@@ -169,7 +177,15 @@ export function signupReducer(
         ...state,
         modalState: undefined,
       };
-      break;
+    case 'ShowModalForInvalidFields': {
+      return {
+        ...state,
+        emailError: validateEmail(action.emailText),
+        usernameError: validateUsername(action.usernameText),
+        passwordErrors: validatePassword(action.passwordText),
+        modalState: SignupModalStates.Error,
+      };
+    }
     case 'SignupPressed': {
       return {
         ...state,
@@ -181,15 +197,6 @@ export function signupReducer(
     case 'ServerOrCredentialError': {
       return {
         ...state,
-        modalState: SignupModalStates.Error,
-      };
-    }
-    case 'ShowModalForInvalidFields': {
-      return {
-        ...state,
-        emailError: validateEmail(action.emailText),
-        usernameError: validateUsername(action.usernameText),
-        passwordErrors: validatePassword(action.passwordText),
         modalState: SignupModalStates.Error,
       };
     }
