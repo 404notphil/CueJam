@@ -9,11 +9,7 @@ export interface SignupUiState {
   passwordText: string;
   emailError?: EmailUsernameError;
   usernameError?: EmailUsernameError;
-  passwordErrors:
-    | {
-        [K in PasswordError]?: boolean;
-      }
-    | undefined;
+  passwordErrors: PasswordError[] | undefined;
   modalState?: SignupModalStateType;
 }
 
@@ -210,22 +206,20 @@ function hasEmailError(email: string): EmailUsernameError | undefined {
   else return undefined;
 }
 
-function hasPasswordErrors(
-  password: string,
-): {[K in PasswordError]?: boolean} | undefined {
+function hasPasswordErrors(password: string): PasswordError[] | undefined {
   const hasLowerCase = /[a-z]/;
   const hasUpperCase = /[A-Z]/;
   const hasNumber = /[0-9]/;
   const hasSpecialChar = /[^A-Za-z0-9]/;
 
-  const errors: {[K in PasswordError]?: boolean} = {};
+  const errors: PasswordError[] = [];
 
-  if (password.length === 0) errors.Empty = true;
-  if (!hasLowerCase.test(password)) errors.NoUppercaseLetters = true;
-  if (!hasUpperCase.test(password)) errors.NoLowercaseLetters = true;
-  if (!hasNumber.test(password)) errors.NoNumbers = true;
-  if (!hasSpecialChar.test(password)) errors.NoSpecialChars = true;
-  if (password.length < 6) errors.TooShort = true;
+  if (password.length === 0) errors.push('Empty');
+  if (!hasLowerCase.test(password)) errors.push('NoLowercaseLetters');
+  if (!hasUpperCase.test(password)) errors.push('NoUppercaseLetters');
+  if (!hasNumber.test(password)) errors.push('NoNumbers');
+  if (!hasSpecialChar.test(password)) errors.push('NoSpecialChars');
+  if (password.length < 6) errors.push('TooShort');
 
   return Object.keys(errors).length === 0 ? undefined : errors;
 }

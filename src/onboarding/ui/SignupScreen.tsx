@@ -7,8 +7,13 @@ import {
   View,
   TextInput,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
-import {SignupActions, hasErrors} from '../reducers/SignupReducer';
+import {
+  SignupActions,
+  hasErrors,
+  PasswordErrorMessages,
+} from '../reducers/SignupReducer';
 import {RootStackParamList} from '../../navigation/RootStackParamList';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
@@ -16,6 +21,7 @@ import {useAuth} from '../../auth/AuthProvider';
 import {signUpUser} from '../../services/AuthService';
 import {globalStyles} from '../../ui/theme/styles';
 import {initialSignupUiState, signupReducer} from '../reducers/SignupReducer';
+import {PasswordError} from '../reducers/LoginReducer';
 
 export function SignupScreen(): React.JSX.Element {
   const navigation =
@@ -77,9 +83,11 @@ export function SignupScreen(): React.JSX.Element {
           </View>
         </Modal>
       )}
-      // Header
+
+      {/* Header */}
       <Text style={globalStyles.title}>Signup</Text>
-      // Email field
+
+      {/* Email field */}
       <Text style={globalStyles.fieldHeader}>Email</Text>
       <TextInput
         autoCapitalize="none"
@@ -96,6 +104,13 @@ export function SignupScreen(): React.JSX.Element {
         value={uiState.emailText}
         placeholder="Type email here"
       />
+
+      {/* Email field error(s) */}
+      {uiState.emailError && (
+        <Text style={signupStyles.errorText}>{uiState.emailError}</Text>
+      )}
+
+      {/* Username field */}
       <Text style={globalStyles.fieldHeader}>Username</Text>
       <TextInput
         autoCapitalize="none"
@@ -112,6 +127,13 @@ export function SignupScreen(): React.JSX.Element {
         value={uiState.usernameText}
         placeholder="Type username here"
       />
+
+      {/* Username field error(s) */}
+      {uiState.usernameError && (
+        <Text style={signupStyles.errorText}>{uiState.usernameError}</Text>
+      )}
+
+      {/* Password field */}
       <Text style={globalStyles.fieldHeader}>Password</Text>
       <TextInput
         autoCapitalize="none"
@@ -129,6 +151,24 @@ export function SignupScreen(): React.JSX.Element {
         value={uiState.passwordText}
         placeholder="Type password here"
       />
+
+      {/* Password field errors */}
+      {uiState.passwordErrors &&
+        Object.keys(uiState.passwordErrors)
+          .filter((key): key is PasswordError => key in PasswordErrorMessages)
+          .map((error, index) => (
+            <Text style={signupStyles.errorText} key={index}>
+              {PasswordErrorMessages[error]}
+            </Text>
+          ))}
+
+      {uiState.passwordErrors &&
+        uiState.passwordErrors.map((error, index) => (
+          <Text style={signupStyles.errorText} key={index}>
+            {PasswordErrorMessages[error]}
+          </Text>
+        ))}
+
       <TouchableOpacity
         onPress={() => {
           dispatch(
@@ -148,3 +188,10 @@ export function SignupScreen(): React.JSX.Element {
     </View>
   );
 }
+
+const signupStyles = StyleSheet.create({
+  errorText: {
+    color: 'red',
+    // Add other text styles as needed
+  },
+});
