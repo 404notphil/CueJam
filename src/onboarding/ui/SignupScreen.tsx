@@ -154,15 +154,6 @@ export function SignupScreen(): React.JSX.Element {
 
       {/* Password field errors */}
       {uiState.passwordErrors &&
-        Object.keys(uiState.passwordErrors)
-          .filter((key): key is PasswordError => key in PasswordErrorMessages)
-          .map((error, index) => (
-            <Text style={signupStyles.errorText} key={index}>
-              {PasswordErrorMessages[error]}
-            </Text>
-          ))}
-
-      {uiState.passwordErrors &&
         uiState.passwordErrors.map((error, index) => (
           <Text style={signupStyles.errorText} key={index}>
             {PasswordErrorMessages[error]}
