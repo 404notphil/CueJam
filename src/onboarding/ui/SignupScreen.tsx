@@ -6,6 +6,7 @@ import {
   Text,
   View,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import {SignupActions, hasErrors} from '../reducers/SignupReducer';
 import {RootStackParamList} from '../../navigation/RootStackParamList';
@@ -59,11 +60,19 @@ export function SignupScreen(): React.JSX.Element {
               <Text style={globalStyles.errorText}>
                 {uiState.modalState.modalMessage}
               </Text>
-              <Pressable
-                style={[globalStyles.button, globalStyles.button]}
-                onPress={() => dispatch(SignupActions.closeModal())}>
-                <Text style={globalStyles.buttonText}>Try again</Text>
-              </Pressable>
+
+              {uiState.modalState?.modalButtonText && (
+                <Pressable
+                  style={[globalStyles.button, globalStyles.button]}
+                  onPress={() => {
+                    dispatch(SignupActions.tryAgainPressed());
+                  }}>
+                  <Text style={globalStyles.buttonText}>Try again</Text>
+                </Pressable>
+              )}
+              {uiState.modalState.modalTitle == 'Loading' && (
+                <ActivityIndicator size="large" color="#00ff00" />
+              )}
             </View>
           </View>
         </Modal>

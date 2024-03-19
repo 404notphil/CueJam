@@ -141,6 +141,7 @@ export function loginReducer(
     case 'LoginPressed': {
       return {
         ...state,
+        modalState: LoginModalStates.Loading,
       };
     }
     case 'LoginCompleted': {
