@@ -140,7 +140,7 @@ export function SignupScreen(): React.JSX.Element {
           );
           if (!hasErrors(uiState)) {
             onSignupPressed();
-          }
+          } 
         }}
         style={globalStyles.button}>
         <Text style={globalStyles.buttonText}>Sign up</Text>

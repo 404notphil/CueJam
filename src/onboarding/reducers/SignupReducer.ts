@@ -69,12 +69,6 @@ export type SignupPressed = {
 export type TryAgainPressed = {type: 'TryAgainPressed'};
 export type ServerOrCredentialError = {type: 'ServerOrCredentialError'};
 export type SignupCompleted = {type: 'SignupCompleted'};
-export type ShowModalForInvalidFields = {
-  emailText: string;
-  usernameText: string;
-  passwordText: string;
-  type: 'ShowModalForInvalidFields';
-};
 export type CloseModal = {
   type: 'CloseModal';
 };
@@ -85,7 +79,6 @@ export type SignupAction =
   | TryAgainPressed
   | ServerOrCredentialError
   | SignupCompleted
-  | ShowModalForInvalidFields
   | CloseModal;
 
 export class SignupActions {
@@ -123,18 +116,6 @@ export class SignupActions {
   static signupCompleted(): SignupCompleted {
     return {type: 'SignupCompleted'};
   }
-  static showModalForInvalidFields(
-    emailText: string,
-    usernameText: string,
-    passwordText: string,
-  ): ShowModalForInvalidFields {
-    return {
-      emailText,
-      usernameText,
-      passwordText,
-      type: 'ShowModalForInvalidFields',
-    };
-  }
   static closeModal(): CloseModal {
     return {type: 'CloseModal'};
   }
@@ -168,7 +149,7 @@ export function signupReducer(
         passwordText: action.password,
         emailError: hasEmailError(action.email),
         usernameError: hasUsernameError(action.username),
-        passwordErrors: hasPasswordError(action.password),
+        passwordErrors: hasPasswordErrors(action.password),
         modalState: undefined,
       };
     }
@@ -177,21 +158,12 @@ export function signupReducer(
         ...state,
         modalState: undefined,
       };
-    case 'ShowModalForInvalidFields': {
-      return {
-        ...state,
-        emailError: hasEmailError(action.emailText),
-        usernameError: hasUsernameError(action.usernameText),
-        passwordErrors: hasPasswordError(action.passwordText),
-        modalState: SignupModalStates.Error,
-      };
-    }
     case 'SignupPressed': {
       return {
         ...state,
         emailError: hasEmailError(action.emailText),
         usernameError: hasUsernameError(action.usernameText),
-        passwordErrors: hasPasswordError(action.passwordText),
+        passwordErrors: hasPasswordErrors(action.passwordText),
         modalState: hasErrors(state)
           ? SignupModalStates.Error
           : SignupModalStates.Loading,
@@ -229,7 +201,7 @@ function hasEmailError(email: string): EmailUsernameError | undefined {
   else return undefined;
 }
 
-function hasPasswordError(
+function hasPasswordErrors(
   password: string,
 ): {[K in PasswordError]?: boolean} | undefined {
   const hasLowerCase = /[a-z]/;
