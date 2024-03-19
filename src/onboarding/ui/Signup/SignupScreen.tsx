@@ -11,7 +11,6 @@ import {
   initialSignupUiState,
   signupReducer,
 } from '../../reducers/SignupReducer';
-import {PasswordError} from '../../reducers/LoginReducer';
 import {SignupScreenModal} from './SignupScreenModal';
 import {EmailFieldAndErrors} from './EmailFieldAndErrors';
 import {UsernameFieldAndErrors} from './UsernameFieldAndErrors';
