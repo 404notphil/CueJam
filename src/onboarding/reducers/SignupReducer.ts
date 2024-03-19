@@ -125,6 +125,15 @@ export function assertNever(x: never): never {
   throw new Error('Unexpected object: ' + x);
 }
 
+export const PasswordErrorMessages = {
+  Empty: 'Required field',
+  NoLowercaseLetters: 'At least one lowercase letter is required',
+  NoUppercaseLetters: 'At least one uppercase letter is required',
+  NoNumbers: 'At least one number is required',
+  NoSpecialChars: 'At least one special character is required',
+  TooShort: 'Password must be at least 6 characters long',
+} satisfies Record<PasswordError, string>;
+
 export type PasswordError =
   | 'Empty'
   | 'NoUppercaseLetters'

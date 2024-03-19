@@ -77,7 +77,9 @@ export function SignupScreen(): React.JSX.Element {
           </View>
         </Modal>
       )}
+      // Header
       <Text style={globalStyles.title}>Signup</Text>
+      // Email field
       <Text style={globalStyles.fieldHeader}>Email</Text>
       <TextInput
         autoCapitalize="none"
@@ -94,7 +96,6 @@ export function SignupScreen(): React.JSX.Element {
         value={uiState.emailText}
         placeholder="Type email here"
       />
-
       <Text style={globalStyles.fieldHeader}>Username</Text>
       <TextInput
         autoCapitalize="none"
@@ -111,7 +112,6 @@ export function SignupScreen(): React.JSX.Element {
         value={uiState.usernameText}
         placeholder="Type username here"
       />
-
       <Text style={globalStyles.fieldHeader}>Password</Text>
       <TextInput
         autoCapitalize="none"
@@ -140,7 +140,7 @@ export function SignupScreen(): React.JSX.Element {
           );
           if (!hasErrors(uiState)) {
             onSignupPressed();
-          } 
+          }
         }}
         style={globalStyles.button}>
         <Text style={globalStyles.buttonText}>Sign up</Text>
