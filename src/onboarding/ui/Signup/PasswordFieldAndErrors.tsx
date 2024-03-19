@@ -4,13 +4,13 @@ import {
   SignupActions,
   PasswordErrorMessages,
   SignupUiState,
-} from '../../reducers/SignupReducer';
+} from '../../reducers/SignupUiState';
 import {globalStyles} from '../../../ui/theme/styles';
 import {signupStyles} from './SignupScreen';
 
 export function PasswordFieldAndErrors(
   dispatch: React.Dispatch<
-    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupReducer').SignupAction
+    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupUiState').SignupAction
   >,
   uiState: SignupUiState,
 ) {

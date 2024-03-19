@@ -1,12 +1,12 @@
 import React from 'react';
 import {Text, View, TextInput} from 'react-native';
-import {SignupActions, SignupUiState} from '../../reducers/SignupReducer';
+import {SignupActions, SignupUiState} from '../../reducers/SignupUiState';
 import {globalStyles} from '../../../ui/theme/styles';
 import {signupStyles} from './SignupScreen';
 
 export function UsernameFieldAndErrors(
   dispatch: React.Dispatch<
-    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupReducer').SignupAction
+    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupUiState').SignupAction
   >,
   uiState: SignupUiState,
 ) {

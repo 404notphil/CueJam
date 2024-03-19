@@ -1,7 +1,7 @@
 import React from 'react';
 import {Modal, Pressable, Text, View, ActivityIndicator} from 'react-native';
-import {SignupActions} from '../../reducers/SignupReducer';
-import {SignupModalStateType} from '../../reducers/SignupReducer';
+import {SignupActions} from '../../reducers/SignupUiState';
+import {SignupModalStateType} from '../../reducers/SignupUiState';
 import {globalStyles} from '../../../ui/theme/styles';
 
 export function SignupScreenModal(
@@ -9,7 +9,7 @@ export function SignupScreenModal(
   modalTitle: string,
   modalMessage: string,
   dispatch: React.Dispatch<
-    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupReducer').SignupAction
+    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupUiState').SignupAction
   >,
 ): React.ReactNode {
   return (

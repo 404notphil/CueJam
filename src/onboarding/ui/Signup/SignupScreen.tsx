@@ -1,16 +1,14 @@
-import React, {useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
-import {SignupActions} from '../../reducers/SignupReducer';
+import {SignupActions} from '../../reducers/SignupUiState';
 import {RootStackParamList} from '../../../navigation/RootStackParamList';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../../auth/AuthProvider';
 import {signUpUser} from '../../../services/AuthService';
 import {globalStyles} from '../../../ui/theme/styles';
-import {
-  initialSignupUiState,
-  signupReducer,
-} from '../../reducers/SignupReducer';
+import {signupReducer} from '../../reducers/SignupReducer';
+import {initialSignupUiState} from '../../reducers/SignupUiState';
 import {SignupScreenModal} from './SignupScreenModal';
 import {EmailFieldAndErrors} from './EmailFieldAndErrors';
 import {UsernameFieldAndErrors} from './UsernameFieldAndErrors';
