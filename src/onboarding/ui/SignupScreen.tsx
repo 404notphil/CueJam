@@ -80,6 +80,7 @@ export function SignupScreen(): React.JSX.Element {
       <Text style={globalStyles.title}>Signup</Text>
       <Text style={globalStyles.fieldHeader}>Email</Text>
       <TextInput
+        autoCapitalize="none"
         style={globalStyles.textInputArea}
         onChangeText={text =>
           dispatch(
@@ -96,6 +97,7 @@ export function SignupScreen(): React.JSX.Element {
 
       <Text style={globalStyles.fieldHeader}>Username</Text>
       <TextInput
+        autoCapitalize="none"
         style={globalStyles.textInputArea}
         onChangeText={text =>
           dispatch(
@@ -112,6 +114,8 @@ export function SignupScreen(): React.JSX.Element {
 
       <Text style={globalStyles.fieldHeader}>Password</Text>
       <TextInput
+        autoCapitalize="none"
+        secureTextEntry={true}
         style={globalStyles.textInputArea}
         onChangeText={text =>
           dispatch(

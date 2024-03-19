@@ -19,9 +19,9 @@ export interface SignupUiState {
 
 export function hasErrors(uiState: SignupUiState): boolean {
   return (
-    uiState.emailError === undefined &&
-    uiState.usernameError === undefined &&
-    uiState.passwordErrors === undefined
+    uiState.emailError != undefined ||
+    uiState.usernameError != undefined ||
+    uiState.passwordErrors != undefined
   );
 }
 
@@ -166,9 +166,9 @@ export function signupReducer(
         emailText: action.email,
         usernameText: action.username,
         passwordText: action.password,
-        emailError: validateEmail(action.email),
-        usernameError: validateUsername(action.username),
-        passwordErrors: validatePassword(action.password),
+        emailError: hasEmailError(action.email),
+        usernameError: hasUsernameError(action.username),
+        passwordErrors: hasPasswordError(action.password),
         modalState: undefined,
       };
     }
@@ -180,15 +180,21 @@ export function signupReducer(
     case 'ShowModalForInvalidFields': {
       return {
         ...state,
-        emailError: validateEmail(action.emailText),
-        usernameError: validateUsername(action.usernameText),
-        passwordErrors: validatePassword(action.passwordText),
+        emailError: hasEmailError(action.emailText),
+        usernameError: hasUsernameError(action.usernameText),
+        passwordErrors: hasPasswordError(action.passwordText),
         modalState: SignupModalStates.Error,
       };
     }
     case 'SignupPressed': {
       return {
         ...state,
+        emailError: hasEmailError(action.emailText),
+        usernameError: hasUsernameError(action.usernameText),
+        passwordErrors: hasPasswordError(action.passwordText),
+        modalState: hasErrors(state)
+          ? SignupModalStates.Error
+          : SignupModalStates.Loading,
       };
     }
     case 'SignupCompleted': {
@@ -211,17 +217,19 @@ export function signupReducer(
   }
 }
 
-function validateUsername(username: string): EmailUsernameError | undefined {
-  return username.length === 0 ? EmailUsernameError.Empty : undefined;
+function hasUsernameError(username: string): EmailUsernameError | undefined {
+  const valueToReturn =
+    username.length === 0 ? EmailUsernameError.Empty : undefined;
+  return valueToReturn;
 }
 
-function validateEmail(email: string): EmailUsernameError | undefined {
+function hasEmailError(email: string): EmailUsernameError | undefined {
   if (email.length == 0) return EmailUsernameError.Empty;
   if (!email.includes('@')) return EmailUsernameError.NoAtSign;
   else return undefined;
 }
 
-function validatePassword(
+function hasPasswordError(
   password: string,
 ): {[K in PasswordError]?: boolean} | undefined {
   const hasLowerCase = /[a-z]/;
