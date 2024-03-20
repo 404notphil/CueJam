@@ -1,4 +1,11 @@
-import React, {createContext, useContext, useState, ReactNode} from 'react';
+import React, {
+  useEffect,
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Define the shape of the context
 interface AuthContextType {
@@ -20,10 +27,29 @@ interface AuthProviderProps {
 // AuthProvider component. This should be placed at the top of the
 // component tree, wrapping the entire app.
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
-  const [token, setToken] = useState<string | null>(null);
+  const [tokenInWorkingMemory, setTokenInWorkingMemory] = useState<
+    string | null
+  >(null);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const storedToken = await getTokenFromDisk();
+      if (storedToken !== null) {
+        setTokenInWorkingMemory(storedToken);
+      }
+    };
+
+    fetchToken();
+  }, []);
+
+  // Enhance setToken to also store the token to disk
+  const setToken = async (token: string | null) => {
+    await storeTokenToDisk(token); // Persist token to AsyncStorage
+    setTokenInWorkingMemory(token); // Update state
+  };
 
   return (
-    <AuthContext.Provider value={{token, setToken}}>
+    <AuthContext.Provider value={{token: tokenInWorkingMemory, setToken}}>
       {children}
     </AuthContext.Provider>
   );
@@ -36,4 +62,26 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+};
+
+const storeTokenToDisk = async (value: string | null) => {
+  try {
+    if (value === null) {
+      await AsyncStorage.removeItem('@storage_Key');
+    } else {
+      await AsyncStorage.setItem('@storage_Key', value);
+    }
+  } catch (e) {
+    // saving error
+  }
+};
+
+const getTokenFromDisk = async () => {
+  try {
+    const value = await AsyncStorage.getItem('@storage_Key');
+    return value; // Return the retrieved value
+  } catch (e) {
+    // error reading value
+    return null; // Ensure a null is returned on error
+  }
 };
