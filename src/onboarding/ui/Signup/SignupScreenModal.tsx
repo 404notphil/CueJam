@@ -25,7 +25,7 @@ export function SignupScreenModal(
           <Text style={globalStyles.title}>{modalTitle}</Text>
 
           {modalMessage && (
-            <Text style={globalStyles.errorText}>{modalMessage}</Text>
+            <Text style={globalStyles.modalErrorText}>{modalMessage}</Text>
           )}
 
           {modalState.modalButtonText && (

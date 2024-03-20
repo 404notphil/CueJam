@@ -7,6 +7,7 @@ import {
 } from '../../reducers/SignupUiState';
 import {globalStyles} from '../../../ui/theme/styles';
 import {signupStyles} from './SignupScreen';
+import {ExpandableText} from '../ExpandableText';
 
 export function PasswordFieldAndErrors(
   dispatch: React.Dispatch<
@@ -37,9 +38,7 @@ export function PasswordFieldAndErrors(
       {/* Password field errors */}
       {uiState.passwordErrors &&
         uiState.passwordErrors.map((error, index) => (
-          <Text style={signupStyles.errorText} key={index}>
-            {PasswordErrorMessages[error]}
-          </Text>
+          <ExpandableText key={index} error={PasswordErrorMessages[error]} />
         ))}
     </View>
   );

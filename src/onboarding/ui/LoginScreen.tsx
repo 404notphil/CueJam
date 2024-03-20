@@ -53,7 +53,7 @@ export function LoginScreen(): React.JSX.Element {
               <Text style={globalStyles.title}>
                 {uiState.modalState?.modalTitle}
               </Text>
-              <Text style={globalStyles.errorText}>
+              <Text style={globalStyles.modalErrorText}>
                 {uiState.modalState?.modalMessage}
               </Text>
               {uiState.modalState?.modalButtonText && (

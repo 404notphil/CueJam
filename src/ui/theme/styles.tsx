@@ -43,14 +43,14 @@ export const globalStyles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
   },
-  validationError: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: 'red',
-    fontFamily: 'arciform',
-  },
   loginButtonStyle: {
     marginTop: 20,
+  },
+  validationErrorText: {
+    color: '#FF1100',
+    // Add other text styles as needed
+    fontFamily: 'arciform',
+    fontSize: 16,
   },
   button: {
     backgroundColor: '#5FA9FF',
@@ -58,8 +58,8 @@ export const globalStyles = StyleSheet.create({
     marginVertical: 32,
     borderRadius: 5, // Optional: if you want rounded corners
   },
-  errorText: {
-    color: 'red',
+  modalErrorText: {
+    color: '#FF1100',
     textAlign: 'center',
     // Add other text styles as needed
     fontFamily: 'arciform',

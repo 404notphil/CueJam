@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, View, TextInput} from 'react-native';
 import {SignupActions, SignupUiState} from '../../reducers/SignupUiState';
 import {globalStyles} from '../../../ui/theme/styles';
-import {signupStyles} from './SignupScreen';
+import { ExpandableText } from '../ExpandableText';
 
 export function UsernameFieldAndErrors(
   dispatch: React.Dispatch<
@@ -30,9 +30,7 @@ export function UsernameFieldAndErrors(
       />
 
       {/* Username field error(s) */}
-      {uiState.usernameError && (
-        <Text style={signupStyles.errorText}>{uiState.usernameError}</Text>
-      )}
+      <ExpandableText error={uiState.usernameError} />
     </View>
   );
 }
