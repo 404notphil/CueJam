@@ -11,17 +11,11 @@ import {
 import {useAuth} from '../../auth/AuthProvider';
 import {globalStyles} from '../../ui/theme/styles';
 import {loginUser} from '../../services/AuthService';
-import {RootStackParamList} from '../../navigation/RootStackParamList';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useNavigation} from '@react-navigation/native';
 import {initialUiState, LoginActions} from '../reducers/LoginReducer';
 
 import {loginReducer} from '../reducers/LoginReducer';
 
 export function LoginScreen(): React.JSX.Element {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
   const [uiState, dispatch] = useReducer(loginReducer, initialUiState);
   const {setToken} = useAuth();
 
@@ -35,7 +29,6 @@ export function LoginScreen(): React.JSX.Element {
     switch (response) {
       case 'Success': {
         dispatch(LoginActions.loginCompleted());
-        navigation.navigate('Home');
         break;
       }
       case 'InvalidCredentials' || 'UserNotFound' || 'ErrorDuringLogin': {
@@ -83,6 +76,7 @@ export function LoginScreen(): React.JSX.Element {
       <Text style={globalStyles.title}>Login</Text>
       <Text style={globalStyles.fieldHeader}>Username</Text>
       <TextInput
+        autoCapitalize="none"
         style={globalStyles.textInputArea}
         onChangeText={email =>
           dispatch(LoginActions.fieldValueChanged(email, uiState.passwordText))
@@ -92,6 +86,7 @@ export function LoginScreen(): React.JSX.Element {
       />
       <Text style={globalStyles.fieldHeader}>Password</Text>
       <TextInput
+        autoCapitalize="none"
         style={globalStyles.textInputArea}
         onChangeText={password =>
           dispatch(LoginActions.fieldValueChanged(uiState.emailText, password))

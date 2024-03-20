@@ -37,7 +37,6 @@ export function SignupButton(
       }
       case 'Success': {
         dispatch(SignupActions.signupCompleted());
-        navigation.navigate('Home');
       }
     }
   };

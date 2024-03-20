@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useReducer} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {globalStyles} from '../../../ui/theme/styles';
 import {signupReducer} from '../../reducers/SignupReducer';
