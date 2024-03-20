@@ -1,13 +1,13 @@
 import React from 'react';
 import {Modal, Pressable, Text, View, ActivityIndicator} from 'react-native';
-import {SignupActions} from '../../reducers/SignupUiState';
+import {SignupActions, SignupModalStates} from '../../reducers/SignupUiState';
 import {SignupModalStateType} from '../../reducers/SignupUiState';
 import {globalStyles} from '../../../ui/theme/styles';
 
 export function SignupScreenModal(
   modalState: SignupModalStateType,
   modalTitle: string,
-  modalMessage: string,
+  modalMessage: string | undefined,
   dispatch: React.Dispatch<
     import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupUiState').SignupAction
   >,
@@ -23,7 +23,10 @@ export function SignupScreenModal(
       <View style={globalStyles.modalOuter}>
         <View style={globalStyles.modalInner}>
           <Text style={globalStyles.title}>{modalTitle}</Text>
-          <Text style={globalStyles.errorText}>{modalMessage}</Text>
+
+          {modalMessage && (
+            <Text style={globalStyles.errorText}>{modalMessage}</Text>
+          )}
 
           {modalState.modalButtonText && (
             <Pressable
@@ -34,7 +37,7 @@ export function SignupScreenModal(
               <Text style={globalStyles.buttonText}>Try again</Text>
             </Pressable>
           )}
-          {modalTitle == 'Loading' && (
+          {modalState === SignupModalStates.Loading && (
             <ActivityIndicator size="large" color="#00ff00" />
           )}
         </View>

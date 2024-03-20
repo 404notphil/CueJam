@@ -38,14 +38,18 @@ export function signupReducer(
         modalState: undefined,
       };
     case 'SignupPressed': {
+      const emailErrors = hasEmailError(action.emailText);
+      const usernameError = hasUsernameError(action.usernameText);
+      const passwordErrors = hasPasswordErrors(action.passwordText);
       return {
         ...state,
-        emailError: hasEmailError(action.emailText),
-        usernameError: hasUsernameError(action.usernameText),
-        passwordErrors: hasPasswordErrors(action.passwordText),
-        modalState: hasErrors(state)
-          ? SignupModalStates.Error
-          : SignupModalStates.Loading,
+        emailError: emailErrors,
+        usernameError: usernameError,
+        passwordErrors: passwordErrors,
+        modalState:
+          emailErrors || usernameError || passwordErrors
+            ? SignupModalStates.Error
+            : SignupModalStates.Loading,
       };
     }
     case 'SignupCompleted': {
