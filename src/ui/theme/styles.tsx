@@ -10,7 +10,7 @@ export const globalStyles = StyleSheet.create({
     top: '25%',
     margin: 32,
     padding: 16,
-    backgroundColor: 'black',
+    backgroundColor: '#4B6496',
     borderColor: 'white',
     borderWidth: 0.3,
     borderRadius: 15,
@@ -20,42 +20,40 @@ export const globalStyles = StyleSheet.create({
   screenContainer: {
     padding: 24,
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: '#4B6496',
   },
   title: {
     marginTop: 8,
     fontSize: 40,
+    color: 'white',
     fontWeight: '600',
     fontFamily: 'arciform',
   },
   fieldHeader: {
     marginTop: 16,
     fontSize: 25,
+    color: 'white',
     fontWeight: '600',
     fontFamily: 'arciform',
   },
   textInputArea: {
     height: 40,
     marginTop: 8,
+    color: 'white',
     borderColor: 'gray',
     borderWidth: 1,
-    fontFamily: 'arciform',
-  },
-  textInputText: {
-    fontSize: 14,
-    fontWeight: '200',
-    fontFamily: 'arciform',
   },
   validationError: {
     fontSize: 16,
     fontWeight: '600',
+    color: 'red',
     fontFamily: 'arciform',
   },
   loginButtonStyle: {
     marginTop: 20,
   },
   button: {
-    backgroundColor: '#999999',
+    backgroundColor: '#5FA9FF',
     padding: 16,
     marginVertical: 32,
     borderRadius: 5, // Optional: if you want rounded corners
@@ -77,6 +75,7 @@ export const globalStyles = StyleSheet.create({
   smallText: {
     marginTop: 16,
     fontSize: 16,
+    color: 'white',
     fontWeight: '400',
     fontFamily: 'arciform',
   },
