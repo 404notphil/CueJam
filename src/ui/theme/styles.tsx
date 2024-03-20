@@ -26,25 +26,30 @@ export const globalStyles = StyleSheet.create({
     marginTop: 8,
     fontSize: 40,
     fontWeight: '600',
+    fontFamily: 'arciform',
   },
   fieldHeader: {
     marginTop: 16,
     fontSize: 25,
     fontWeight: '600',
+    fontFamily: 'arciform',
   },
   textInputArea: {
     height: 40,
     marginTop: 8,
     borderColor: 'gray',
     borderWidth: 1,
+    fontFamily: 'arciform',
   },
   textInputText: {
     fontSize: 14,
     fontWeight: '200',
+    fontFamily: 'arciform',
   },
   validationError: {
     fontSize: 16,
     fontWeight: '600',
+    fontFamily: 'arciform',
   },
   loginButtonStyle: {
     marginTop: 20,
@@ -59,15 +64,20 @@ export const globalStyles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     // Add other text styles as needed
+    fontFamily: 'arciform',
+    fontSize: 16,
   },
   buttonText: {
     color: 'white',
     textAlign: 'center',
     // Add other text styles as needed
+    fontFamily: 'arciform',
+    fontSize: 16,
   },
   smallText: {
     marginTop: 16,
     fontSize: 16,
     fontWeight: '400',
+    fontFamily: 'arciform',
   },
 });
