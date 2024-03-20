@@ -4,7 +4,7 @@ An app which provides prompts (note names, chord names, scale names, etc) for us
 
 See the figma design [here](https://www.figma.com/file/2IR1FbthGus1OufkmFWkGW/Untitled?type=design&node-id=0%3A1&mode=dev&t=Y9OVKelz22WWL2ex-1)
 
-Here is the [current state of the app](https://drive.google.com/file/d/1A0RiRyyG04PixRugCaYdkeEhUHZLb6fN/view?usp=drive_link)
+Here is the [current state of the app](https://drive.google.com/file/d/1031PL7YCXztqVU14itEZ6IGajiXC1qu-/view?usp=drive_link)
 
 # Running the app
 
