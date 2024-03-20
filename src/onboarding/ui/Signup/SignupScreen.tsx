@@ -25,7 +25,7 @@ export function SignupScreen(): React.JSX.Element {
       {/* Header */}
       <Text style={globalStyles.title}>Signup</Text>
 
-      {EmailFieldAndErrors(dispatch, uiState)}
+      <EmailFieldAndErrors dispatch={dispatch} uiState={uiState} />
 
       {UsernameFieldAndErrors(dispatch, uiState)}
 

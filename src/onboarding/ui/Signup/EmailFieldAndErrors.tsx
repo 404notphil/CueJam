@@ -1,15 +1,22 @@
 import React from 'react';
 import {Text, View, TextInput} from 'react-native';
-import {SignupActions, SignupUiState} from '../../reducers/SignupUiState';
+import {
+  SignupActions,
+  SignupAction,
+  SignupUiState,
+} from '../../reducers/SignupUiState';
 import {globalStyles} from '../../../ui/theme/styles';
 import {ExpandableText} from '../ExpandableText';
 
-export function EmailFieldAndErrors(
-  dispatch: React.Dispatch<
-    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupUiState').SignupAction
-  >,
-  uiState: SignupUiState,
-) {
+interface EmailFieldAndErrorsProps {
+  dispatch: React.Dispatch<SignupAction>;
+  uiState: SignupUiState;
+}
+
+export function EmailFieldAndErrors({
+  dispatch,
+  uiState,
+}: EmailFieldAndErrorsProps) {
   return (
     <View>
       <Text style={globalStyles.fieldHeader}>Email</Text>
