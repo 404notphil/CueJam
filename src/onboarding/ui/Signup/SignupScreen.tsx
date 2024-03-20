@@ -29,7 +29,7 @@ export function SignupScreen(): React.JSX.Element {
 
       {UsernameFieldAndErrors(dispatch, uiState)}
 
-      {PasswordFieldAndErrors(dispatch, uiState)}
+      <PasswordFieldAndErrors dispatch={dispatch} uiState={uiState} />
 
       {SignupButton(dispatch, uiState)}
     </View>

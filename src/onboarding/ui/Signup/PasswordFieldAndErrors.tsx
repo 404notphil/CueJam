@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, View, TextInput} from 'react-native';
 import {
   SignupActions,
+  SignupAction,
   PasswordErrorMessages,
   SignupUiState,
 } from '../../reducers/SignupUiState';
@@ -9,12 +10,15 @@ import {globalStyles} from '../../../ui/theme/styles';
 import {signupStyles} from './SignupScreen';
 import {ExpandableText} from '../ExpandableText';
 
-export function PasswordFieldAndErrors(
-  dispatch: React.Dispatch<
-    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupUiState').SignupAction
-  >,
-  uiState: SignupUiState,
-) {
+interface PasswordFieldAndErrorsProps {
+  dispatch: React.Dispatch<SignupAction>;
+  uiState: SignupUiState;
+}
+
+export function PasswordFieldAndErrors({
+  dispatch,
+  uiState,
+}: PasswordFieldAndErrorsProps) {
   return (
     <View>
       <Text style={globalStyles.fieldHeader}>Password</Text>
