@@ -35,10 +35,3 @@ export function SignupScreen(): React.JSX.Element {
     </View>
   );
 }
-
-export const signupStyles = StyleSheet.create({
-  errorText: {
-    color: 'red',
-    fontFamily: 'arciform',
-  },
-});
