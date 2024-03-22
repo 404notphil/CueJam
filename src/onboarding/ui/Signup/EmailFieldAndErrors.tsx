@@ -37,7 +37,7 @@ export function EmailFieldAndErrors({
       />
 
       {/* Email field error(s) */}
-      <ExpandableText error={uiState.emailError} />
+      <ExpandableText error={uiState.emailError} isCurrent={uiState.emailError != undefined} />
     </View>
   );
 }

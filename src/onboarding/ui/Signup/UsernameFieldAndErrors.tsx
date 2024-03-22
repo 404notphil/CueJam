@@ -30,7 +30,10 @@ export function UsernameFieldAndErrors(
       />
 
       {/* Username field error(s) */}
-      <ExpandableText error={uiState.usernameError} />
+      <ExpandableText
+        error={uiState.usernameError}
+        isCurrent={uiState.usernameError != undefined}
+      />
     </View>
   );
 }

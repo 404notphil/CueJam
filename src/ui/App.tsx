@@ -17,7 +17,7 @@ const AuthStack = () => (
     screenOptions={{
       headerShown: false,
       animation: 'fade',
-      contentStyle: {backgroundColor: 'black'},
+      contentStyle: {backgroundColor: '#4B6496'},
     }}>
     <Stack.Screen name="Landing" component={LandingScreen} />
     <Stack.Screen name="Login" component={LoginScreen} />
@@ -30,7 +30,7 @@ const HomeStack = () => (
     screenOptions={{
       headerShown: false,
       animation: 'fade',
-      contentStyle: {backgroundColor: 'black'},
+      contentStyle: {backgroundColor: '#4B6496'},
     }}>
     <Stack.Screen name="Home" component={HomeScreen} />
   </Stack.Navigator>
@@ -62,7 +62,7 @@ const AppContent = () => {
   }, [token]); // Depend on token to trigger animation
 
   return (
-    <View style={{flex: 1, backgroundColor: 'black'}}>
+    <View style={{flex: 1, backgroundColor: '#4B6496'}}>
       <Animated.View style={{flex: 1, opacity: fadeAnim}}>
         {token ? <HomeStack /> : <AuthStack />}
       </Animated.View>

@@ -137,3 +137,12 @@ export type PasswordError =
   | 'NoNumbers'
   | 'NoSpecialChars'
   | 'TooShort';
+
+export const PasswordErrors = {
+  Empty: true,
+  NoUppercaseLetters: true,
+  NoLowercaseLetters: true,
+  NoNumbers: true,
+  NoSpecialChars: true,
+  TooShort: true,
+} satisfies Record<PasswordError, boolean>;

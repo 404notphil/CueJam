@@ -7,8 +7,8 @@ import {
   SignupUiState,
 } from '../../reducers/SignupUiState';
 import {globalStyles} from '../../../ui/theme/styles';
-import {signupStyles} from './SignupScreen';
 import {ExpandableText} from '../ExpandableText';
+import {PasswordError, PasswordErrors} from '../../reducers/SignupUiState';
 
 interface PasswordFieldAndErrorsProps {
   dispatch: React.Dispatch<SignupAction>;
@@ -19,6 +19,14 @@ export function PasswordFieldAndErrors({
   dispatch,
   uiState,
 }: PasswordFieldAndErrorsProps) {
+  const currentErrors = uiState.passwordErrors ? uiState.passwordErrors : [];
+  const resultingErrors = (Object.keys(PasswordErrors) as PasswordError[]).map(
+    error => ({
+      error,
+      isCurrent: currentErrors.includes(error),
+    }),
+  );
+
   return (
     <View>
       <Text style={globalStyles.fieldHeader}>Password</Text>
@@ -40,10 +48,14 @@ export function PasswordFieldAndErrors({
       />
 
       {/* Password field errors */}
-      {uiState.passwordErrors &&
-        uiState.passwordErrors.map((error, index) => (
-          <ExpandableText key={index} error={PasswordErrorMessages[error]} />
-        ))}
+
+      {resultingErrors.map((error, index) => (
+        <ExpandableText
+          key={error.error}
+          error={PasswordErrorMessages[error.error]}
+          isCurrent={error.isCurrent}
+        />
+      ))}
     </View>
   );
 }
