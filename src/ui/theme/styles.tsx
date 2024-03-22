@@ -47,8 +47,7 @@ export const globalStyles = StyleSheet.create({
     marginTop: 20,
   },
   validationErrorText: {
-    color: '#FF1100',
-    // Add other text styles as needed
+    color: '#FFFF00',
     fontFamily: 'arciform',
     fontSize: 16,
   },
