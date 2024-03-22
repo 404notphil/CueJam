@@ -26,7 +26,9 @@ export const ExpandableText = ({error, isCurrent}: ExpandableTextProps) => {
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.expandableView, {height: maxHeight}]}>
-        <Text style={globalStyles.validationErrorText}>{error}</Text>
+        <Text style={globalStyles.validationErrorText}>
+          {isCurrent ? error : ''}
+        </Text>
       </Animated.View>
     </View>
   );
