@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, TextInput} from 'react-native';
 import {
   SignupActions,
@@ -10,6 +10,11 @@ import {globalStyles} from '../../../ui/theme/styles';
 import {ExpandableText} from '../ExpandableText';
 import {PasswordError, PasswordErrors} from '../../reducers/SignupUiState';
 
+type PasswordErrorWithState = {
+  error: PasswordError;
+  isCurrent: boolean;
+};
+
 interface PasswordFieldAndErrorsProps {
   dispatch: React.Dispatch<SignupAction>;
   uiState: SignupUiState;
@@ -20,12 +25,19 @@ export function PasswordFieldAndErrors({
   uiState,
 }: PasswordFieldAndErrorsProps) {
   const currentErrors = uiState.passwordErrors ? uiState.passwordErrors : [];
-  const resultingErrors = (Object.keys(PasswordErrors) as PasswordError[]).map(
-    error => ({
-      error,
-      isCurrent: currentErrors.includes(error),
-    }),
-  );
+
+  const [errorsWithState, resetCurrentErrorsWithState] = useState<
+    PasswordErrorWithState[]
+  >([]);
+
+  useEffect(() => {
+    resetCurrentErrorsWithState(
+      (Object.keys(PasswordErrors) as PasswordError[]).map(error => ({
+        error,
+        isCurrent: currentErrors.includes(error),
+      })),
+    );
+  }, [uiState.passwordErrors]);
 
   return (
     <View>
@@ -49,7 +61,7 @@ export function PasswordFieldAndErrors({
 
       {/* Password field errors */}
 
-      {resultingErrors.map((error, index) => (
+      {errorsWithState.map((error, index) => (
         <ExpandableText
           key={error.error}
           error={PasswordErrorMessages[error.error]}

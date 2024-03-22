@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, Animated, StyleSheet, TouchableOpacity} from 'react-native';
 import {globalStyles} from '../../ui/theme/styles';
 
@@ -9,21 +9,21 @@ interface ExpandableTextProps {
 
 export const ExpandableText = ({error, isCurrent}: ExpandableTextProps) => {
   const [expanded, setExpanded] = useState(isCurrent);
-  const animationHeight = new Animated.Value(isCurrent ? 0 : 1);
+  const animationHeight = useRef(new Animated.Value(isCurrent ? 0 : 1));
 
   useEffect(() => {
     setExpanded(isCurrent);
   }, [isCurrent]);
 
   useEffect(() => {
-    Animated.timing(animationHeight, {
+    Animated.timing(animationHeight.current, {
       toValue: expanded ? 1 : 0, // 1 when expanded, 0 when collapsed
       duration: 300, // Animation duration in milliseconds
       useNativeDriver: false, // Height animation does not support native driver
     }).start();
   }, [expanded]);
 
-  const maxHeight = animationHeight.interpolate({
+  const maxHeight = animationHeight.current.interpolate({
     inputRange: [0, 1],
     outputRange: [0, 20], // or use pixels like '0%', '20%'
   });
