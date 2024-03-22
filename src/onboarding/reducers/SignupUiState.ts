@@ -47,8 +47,8 @@ export const SignupModalStates = {
     modalButtonText: 'Try again',
   },
 } satisfies Record<string, SignupModalStateType>;
-// Action types
 
+// Action types
 export type InitializeScreen = {type: 'InitializeScreen'};
 export type FieldValueChanged = {
   type: 'FieldValueChanged';

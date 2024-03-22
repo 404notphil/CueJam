@@ -1,8 +1,10 @@
 import {StyleSheet} from 'react-native';
+import {Themes} from './Theme';
+import {ThemeProvider} from '@react-navigation/native';
 
 export const globalStyles = StyleSheet.create({
   modalOuter: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: Themes.dark.scrimColor,
     flex: 1,
   },
   modalInner: {
@@ -10,9 +12,9 @@ export const globalStyles = StyleSheet.create({
     top: '25%',
     margin: 32,
     padding: 16,
-    backgroundColor: '#4B6496',
-    borderColor: 'white',
-    borderWidth: 0.3,
+    backgroundColor: Themes.dark.background,
+    borderColor: Themes.dark.borderColor,
+    borderWidth: Themes.dark.borderWidth,
     borderRadius: 15,
     alignItems: 'center',
     alignSelf: 'center',
@@ -20,26 +22,26 @@ export const globalStyles = StyleSheet.create({
   screenContainer: {
     padding: 24,
     flex: 1,
-    backgroundColor: '#4B6496',
+    backgroundColor: Themes.dark.background,
   },
   title: {
     marginTop: 8,
     fontSize: 40,
-    color: 'white',
+    color: Themes.dark.lightText,
     fontWeight: '600',
     fontFamily: 'arciform',
   },
   fieldHeader: {
     marginTop: 16,
     fontSize: 25,
-    color: 'white',
+    color: Themes.dark.lightText,
     fontWeight: '600',
     fontFamily: 'arciform',
   },
   textInputArea: {
     height: 40,
     marginTop: 8,
-    color: 'white',
+    color: Themes.dark.lightText,
     borderColor: 'gray',
     borderWidth: 1,
   },
@@ -47,34 +49,32 @@ export const globalStyles = StyleSheet.create({
     marginTop: 20,
   },
   validationErrorText: {
-    color: '#FFFF00',
+    color: Themes.dark.errorYellowText,
     fontFamily: 'arciform',
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#5FA9FF',
+    backgroundColor: Themes.dark.buttonSurface,
     padding: 16,
     marginVertical: 32,
-    borderRadius: 5, // Optional: if you want rounded corners
+    borderRadius: 5,
   },
   modalErrorText: {
-    color: '#FF1100',
+    color: Themes.dark.errorYellowText,
     textAlign: 'center',
-    // Add other text styles as needed
     fontFamily: 'arciform',
     fontSize: 16,
   },
   buttonText: {
-    color: 'white',
+    color: Themes.dark.lightText,
     textAlign: 'center',
-    // Add other text styles as needed
     fontFamily: 'arciform',
     fontSize: 16,
   },
   smallText: {
     marginTop: 16,
     fontSize: 16,
-    color: 'white',
+    color: Themes.dark.lightText,
     fontWeight: '400',
     fontFamily: 'arciform',
   },

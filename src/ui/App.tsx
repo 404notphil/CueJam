@@ -4,7 +4,7 @@ import {LoginScreen} from '../onboarding/ui/LoginScreen';
 import {LandingScreen} from '../onboarding/ui/LandingScreen';
 import {SignupScreen} from '../onboarding/ui/Signup/SignupScreen';
 import {AuthProvider} from '../auth/AuthProvider';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useAuth} from '../auth/AuthProvider';
 import {Animated, View} from 'react-native';
@@ -49,6 +49,8 @@ const App = () => {
 const AppContent = () => {
   const {token} = useAuth();
   const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
+
+  const theme = useTheme()
 
   useEffect(() => {
     // Instantly set to 0 to ensure it's not visible

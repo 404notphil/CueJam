@@ -1,4 +1,3 @@
-// services/authService.js
 import {useAuth} from '../auth/AuthProvider';
 import {baseUrl} from './Common';
 
@@ -13,7 +12,7 @@ type SignupResult = 'Success' | 'ErrorDuringSignup';
 const loginUser = async (
   username: string,
   password: string,
-  setToken: (token: string) => void, // Add setToken as a parameter
+  setToken: (token: string) => void,
 ): Promise<LoginResult> => {
   try {
     const response = await fetch(baseUrl + '/user/login', {
@@ -44,7 +43,7 @@ const signUpUser = async (
   email: string,
   username: string,
   password: string,
-  setToken: (token: string) => void, // Add setToken as a parameter
+  setToken: (token: string) => void,
 ): Promise<SignupResult> => {
   try {
     const signupResponse = await fetch(baseUrl + '/user/signup', {
@@ -52,7 +51,6 @@ const signUpUser = async (
       headers: {
         'Content-Type': 'application/json',
       },
-      // Replace username and password with actual values you want to send
       body: JSON.stringify({
         email: email,
         username: username,

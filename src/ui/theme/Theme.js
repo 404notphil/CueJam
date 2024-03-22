@@ -1,12 +1,11 @@
 export const Themes = {
-  light: {
-    background: '#FFFFFF',
-    text: '#000000',
-    // Add other colors as needed
-  },
   dark: {
-    background: '#000000',
-    text: '#FFFFFF',
-    // Add other colors as needed
+    background: '#4B6496',
+    lightText: 'white',
+    errorYellowText: '#FFFF00',
+    buttonSurface: '#5FA9FF',
+    scrimColor: 'rgba(0, 0, 0, 0.5)',
+    borderColor: 'white',
+    borderWidth: 0.3,
   },
 };

@@ -12,15 +12,15 @@ export const ExpandableText = ({error, isCurrent}: ExpandableTextProps) => {
 
   useEffect(() => {
     Animated.timing(animationHeight.current, {
-      toValue: isCurrent ? 1 : 0, // 1 when expanded, 0 when collapsed
-      duration: 300, // Animation duration in milliseconds
+      toValue: isCurrent ? 1 : 0,
+      duration: 300,
       useNativeDriver: false, // Height animation does not support native driver
     }).start();
   }, [isCurrent]);
 
   const maxHeight = animationHeight.current.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 20], // or use pixels like '0%', '20%'
+    outputRange: [0, 20],
   });
 
   return (
@@ -41,6 +41,5 @@ const styles = StyleSheet.create({
   expandableView: {
     width: '100%',
     justifyContent: 'center',
-    // Adjust other styles as needed
   },
 });
