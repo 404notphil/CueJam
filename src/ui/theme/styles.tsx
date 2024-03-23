@@ -13,8 +13,6 @@ export const globalStyles = StyleSheet.create({
     margin: 32,
     padding: 16,
     backgroundColor: Themes.dark.background,
-    borderColor: Themes.dark.borderColor,
-    borderWidth: Themes.dark.borderWidth,
     borderRadius: 15,
     alignItems: 'center',
     alignSelf: 'center',
