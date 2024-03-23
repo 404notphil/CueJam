@@ -30,6 +30,13 @@ export function LandingScreen(): React.JSX.Element {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
+          MetronomeModule.loadSoundIntoByteArray();
+        }}
+        style={globalStyles.button}>
+        <Text>Load</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
           MetronomeModule.start();
         }}
         style={globalStyles.button}>
@@ -44,7 +51,7 @@ export function LandingScreen(): React.JSX.Element {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          MetronomeModule.setTempo(120);
+          MetronomeModule.setTempo(100);
         }}
         style={globalStyles.button}>
         <Text>Set tempo</Text>
