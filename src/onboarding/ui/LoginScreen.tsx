@@ -14,6 +14,7 @@ import {loginUser} from '../../services/AuthService';
 import {initialUiState, LoginActions} from '../reducers/LoginReducer';
 
 import {loginReducer} from '../reducers/LoginReducer';
+import { Themes } from '../../ui/theme/Theme';
 
 export function LoginScreen(): React.JSX.Element {
   const [uiState, dispatch] = useReducer(loginReducer, initialUiState);
@@ -66,7 +67,7 @@ export function LoginScreen(): React.JSX.Element {
                 </Pressable>
               )}
               {uiState.modalState.modalTitle == 'Loading' && (
-                <ActivityIndicator size="large" color="#00ff00" />
+                <ActivityIndicator size="large" color={Themes.dark.lightText} />
               )}
             </View>
           </View>

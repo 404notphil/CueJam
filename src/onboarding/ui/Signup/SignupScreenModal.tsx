@@ -3,6 +3,7 @@ import {Modal, Pressable, Text, View, ActivityIndicator} from 'react-native';
 import {SignupActions, SignupModalStates} from '../../reducers/SignupUiState';
 import {SignupModalStateType} from '../../reducers/SignupUiState';
 import {globalStyles} from '../../../ui/theme/styles';
+import { Themes } from '../../../ui/theme/Theme';
 
 export function SignupScreenModal(
   modalState: SignupModalStateType,
@@ -38,7 +39,7 @@ export function SignupScreenModal(
             </Pressable>
           )}
           {modalState === SignupModalStates.Loading && (
-            <ActivityIndicator size="large" color="#00ff00" />
+            <ActivityIndicator size="large" color={Themes.dark.lightText} />
           )}
         </View>
       </View>

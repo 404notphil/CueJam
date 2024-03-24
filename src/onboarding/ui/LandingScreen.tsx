@@ -5,57 +5,43 @@ import {TouchableOpacity, StyleSheet, Text, View} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {globalStyles} from '../../ui/theme/styles';
 import {NativeModules} from 'react-native';
+import {useAuth} from '../../auth/AuthProvider';
 
 export function LandingScreen(): React.JSX.Element {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const onLoginPressedd = () => {
-    navigation.navigate('Login');
-  };
-  const onSignupPressed = () => {
-    navigation.navigate('Signup');
-  };
+    const {setToken} = useAuth();
 
-  const {MetronomeModule} = NativeModules;
+    const onLoginPressedd = () => {
+      navigation.navigate('Login');
+    };
+    const onSignupPressed = () => {
+      navigation.navigate('Signup');
+    };
 
-  return (
-    <View style={globalStyles.screenContainer}>
-      <Text style={globalStyles.title}>Welcome</Text>
-      <TouchableOpacity onPress={onLoginPressedd} style={globalStyles.button}>
-        <Text style={globalStyles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={onSignupPressed} style={globalStyles.button}>
-        <Text style={globalStyles.buttonText}>Sign up</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          MetronomeModule.loadSoundIntoByteArray();
-        }}
-        style={globalStyles.button}>
-        <Text>Load</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          MetronomeModule.start();
-        }}
-        style={globalStyles.button}>
-        <Text>Start metronome</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          MetronomeModule.stop();
-        }}
-        style={globalStyles.button}>
-        <Text>Stop metronome</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          MetronomeModule.setTempo(100);
-        }}
-        style={globalStyles.button}>
-        <Text>Set tempo</Text>
-      </TouchableOpacity>
-    </View>
-  );
+    const {MetronomeModule} = NativeModules;
+    // MetronomeModule.setTempo(100);
+    // MetronomeModule.stop();
+    // MetronomeModule.start();
+    // MetronomeModule.loadSoundIntoByteArray();
+
+    return (
+      <View style={globalStyles.screenContainer}>
+        <Text style={globalStyles.title}>Welcome</Text>
+        <TouchableOpacity onPress={onLoginPressedd} style={globalStyles.button}>
+          <Text style={globalStyles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onSignupPressed} style={globalStyles.button}>
+          <Text style={globalStyles.buttonText}>Sign up</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setToken('temp');
+          }}
+          style={globalStyles.button}>
+          <Text>Load</Text>
+        </TouchableOpacity>
+      </View>
+    );
 }

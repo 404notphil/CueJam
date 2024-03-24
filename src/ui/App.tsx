@@ -4,37 +4,42 @@ import {LoginScreen} from '../onboarding/ui/LoginScreen';
 import {LandingScreen} from '../onboarding/ui/LandingScreen';
 import {SignupScreen} from '../onboarding/ui/Signup/SignupScreen';
 import {AuthProvider} from '../auth/AuthProvider';
-import {NavigationContainer, useTheme} from '@react-navigation/native';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useAuth} from '../auth/AuthProvider';
-import {Animated, View} from 'react-native';
+import {Animated, View, ColorValue, useColorScheme} from 'react-native';
+import { Themes } from './theme/Theme';
 
 const Stack = createNativeStackNavigator();
 
-const AuthStack = () => (
-  <Stack.Navigator
-    initialRouteName="Landing"
-    screenOptions={{
-      headerShown: false,
-      animation: 'fade',
-      contentStyle: {backgroundColor: '#4B6496'},
-    }}>
-    <Stack.Screen name="Landing" component={LandingScreen} />
-    <Stack.Screen name="Login" component={LoginScreen} />
-    <Stack.Screen name="Signup" component={SignupScreen} />
-  </Stack.Navigator>
-);
+function AuthStack(): React.JSX.Element {
+  return (
+    <Stack.Navigator
+      initialRouteName="Landing"
+      screenOptions={{
+        headerShown: false,
+        animation: 'fade',
+        contentStyle: {backgroundColor: 'black'},
+      }}>
+      <Stack.Screen name="Landing" component={LandingScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Signup" component={SignupScreen} />
+    </Stack.Navigator>
+  );
+}
 
-const HomeStack = () => (
-  <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
-      animation: 'fade',
-      contentStyle: {backgroundColor: '#4B6496'},
-    }}>
-    <Stack.Screen name="Home" component={HomeScreen} />
-  </Stack.Navigator>
-);
+function HomeStack(): React.JSX.Element {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: 'fade',
+        contentStyle: {backgroundColor: 'black'},
+      }}>
+      <Stack.Screen name="Home" component={HomeScreen} />
+    </Stack.Navigator>
+  );
+}
 
 const App = () => {
   return (
@@ -50,8 +55,6 @@ const AppContent = () => {
   const {token} = useAuth();
   const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
 
-  const theme = useTheme()
-
   useEffect(() => {
     // Instantly set to 0 to ensure it's not visible
     fadeAnim.setValue(0);
@@ -64,10 +67,11 @@ const AppContent = () => {
   }, [token]); // Depend on token to trigger animation
 
   return (
-    <View style={{flex: 1, backgroundColor: '#4B6496'}}>
+    <View style={{flex: 1, backgroundColor: Themes.dark.background}}>
       <Animated.View style={{flex: 1, opacity: fadeAnim}}>
         {token ? <HomeStack /> : <AuthStack />}
       </Animated.View>
+      {/* <View style={{flex: 1, backgroundColor: 'blue', opacity: 0}} /> */}
     </View>
   );
 };
