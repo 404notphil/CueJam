@@ -9,6 +9,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useAuth} from '../auth/AuthProvider';
 import {Animated, View, ColorValue, useColorScheme} from 'react-native';
 import { Themes } from './theme/Theme';
+import {ConfigureDrillScreen} from '../MainApp/SettingsScreen';
+import {DrillScreen} from '../MainApp/DrillScreen';
+import {SavedDrillsScreen} from '../MainApp/SavedDrillsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,7 +31,7 @@ function AuthStack(): React.JSX.Element {
   );
 }
 
-function HomeStack(): React.JSX.Element {
+function NonAuthStack(): React.JSX.Element {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -37,6 +40,9 @@ function HomeStack(): React.JSX.Element {
         contentStyle: {backgroundColor: 'black'},
       }}>
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="ConfigureDrill" component={ConfigureDrillScreen} />
+      <Stack.Screen name="Drill" component={DrillScreen} />
+      <Stack.Screen name="SavedDrills" component={SavedDrillsScreen} />
     </Stack.Navigator>
   );
 }
@@ -69,7 +75,7 @@ const AppContent = () => {
   return (
     <View style={{flex: 1, backgroundColor: Themes.dark.background}}>
       <Animated.View style={{flex: 1, opacity: fadeAnim}}>
-        {token ? <HomeStack /> : <AuthStack />}
+        {token ? <NonAuthStack /> : <AuthStack />}
       </Animated.View>
       {/* <View style={{flex: 1, backgroundColor: 'blue', opacity: 0}} /> */}
     </View>

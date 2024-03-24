@@ -40,7 +40,7 @@ export function LandingScreen(): React.JSX.Element {
             setToken('temp');
           }}
           style={globalStyles.button}>
-          <Text>Load</Text>
+          <Text style={globalStyles.buttonText}>Enter as guest</Text>
         </TouchableOpacity>
       </View>
     );
