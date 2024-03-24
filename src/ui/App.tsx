@@ -4,14 +4,15 @@ import {LoginScreen} from '../onboarding/ui/LoginScreen';
 import {LandingScreen} from '../onboarding/ui/LandingScreen';
 import {SignupScreen} from '../onboarding/ui/Signup/SignupScreen';
 import {AuthProvider} from '../auth/AuthProvider';
-import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useAuth} from '../auth/AuthProvider';
-import {Animated, View, ColorValue, useColorScheme} from 'react-native';
-import { Themes } from './theme/Theme';
+import {Animated, View, Text, TouchableOpacity} from 'react-native';
+import {Themes} from './theme/Theme';
 import {ConfigureDrillScreen} from '../MainApp/SettingsScreen';
 import {DrillScreen} from '../MainApp/DrillScreen';
 import {SavedDrillsScreen} from '../MainApp/SavedDrillsScreen';
+import {globalStyles} from './theme/styles';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,7 +23,7 @@ function AuthStack(): React.JSX.Element {
       screenOptions={{
         headerShown: false,
         animation: 'fade',
-        contentStyle: {backgroundColor: 'black'},
+        contentStyle: {backgroundColor: Themes.dark.background},
       }}>
       <Stack.Screen name="Landing" component={LandingScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
@@ -35,11 +36,16 @@ function NonAuthStack(): React.JSX.Element {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
         animation: 'fade',
-        contentStyle: {backgroundColor: 'black'},
+        contentStyle: {backgroundColor: Themes.dark.background},
+        header: () => <MainAppHeader isHomeScreen={false} />,
       }}>
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{header: () => <MainAppHeader isHomeScreen={true} />}}
+      />
       <Stack.Screen name="ConfigureDrill" component={ConfigureDrillScreen} />
       <Stack.Screen name="Drill" component={DrillScreen} />
       <Stack.Screen name="SavedDrills" component={SavedDrillsScreen} />
@@ -81,5 +87,42 @@ const AppContent = () => {
     </View>
   );
 };
+
+function AppBar(): React.JSX.Element {
+  return (
+    <View style={{height: 100, backgroundColor: Themes.dark.background}}></View>
+  );
+}
+
+interface AppHeaderProps {
+  isHomeScreen: boolean;
+}
+
+function MainAppHeader(props: AppHeaderProps) {
+  const navigation = useNavigation();
+  const {token, setToken} = useAuth();
+  return (
+    <View
+      style={{
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        flexDirection: 'row',
+        paddingRight: 5,
+      }}>
+      <TouchableOpacity
+        onPress={() => {
+          props.isHomeScreen ? setToken(null) : navigation.navigate('Home');
+        }}
+        style={[
+          globalStyles.button,
+          {height: 40, padding: 10, marginVertical: 16, marginHorizontal: 16},
+        ]}>
+        <Text style={globalStyles.buttonText}>
+          {props.isHomeScreen ? (token == 'temp' ? 'Login' : 'Logout') : 'Home'}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 
 export default App;

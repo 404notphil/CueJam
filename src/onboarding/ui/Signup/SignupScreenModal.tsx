@@ -31,7 +31,7 @@ export function SignupScreenModal(
 
           {modalState.modalButtonText && (
             <Pressable
-              style={[globalStyles.button, globalStyles.button]}
+              style={globalStyles.button}
               onPress={() => {
                 dispatch(SignupActions.tryAgainPressed());
               }}>

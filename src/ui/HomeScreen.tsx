@@ -13,29 +13,17 @@ export function HomeScreen(): React.JSX.Element {
 
   return (
     <View style={globalStyles.screenContainer}>
-      <Text style={globalStyles.title}>HomeScreen</Text>
-      <Text style={globalStyles.fieldHeader}>Token:</Text>
-      <Text style={globalStyles.smallText}>{token}</Text>
-      <TouchableOpacity
-        onPress={() => {
-          setToken(null);
-        }}
-        style={globalStyles.button}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
+      <Text style={globalStyles.title}>NotePrompter</Text>
+      <Text style={[globalStyles.smallText, {marginTop: 0, paddingLeft: 60}]}>
+        by tunepruner
+      </Text>
+
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('ConfigureDrill');
         }}
         style={globalStyles.button}>
         <Text>Configure drill</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Drill');
-        }}
-        style={globalStyles.button}>
-        <Text>Drill</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {

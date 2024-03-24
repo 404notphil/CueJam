@@ -59,7 +59,7 @@ export function LoginScreen(): React.JSX.Element {
               </Text>
               {uiState.modalState?.modalButtonText && (
                 <Pressable
-                  style={[globalStyles.button, globalStyles.button]}
+                  style={globalStyles.button}
                   onPress={() => {
                     dispatch(LoginActions.tryAgainPressed());
                   }}>
