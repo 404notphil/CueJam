@@ -5,7 +5,6 @@ import {globalStyles} from './theme/styles';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation/RootStackParamList';
-import SvgComponent from './SvgComponent';
 import {Image} from 'react-native';
 
 export function HomeScreen(): React.JSX.Element {
