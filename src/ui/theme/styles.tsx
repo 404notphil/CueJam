@@ -3,6 +3,18 @@ import {Themes} from './Theme';
 import {ThemeProvider} from '@react-navigation/native';
 
 export const globalStyles = StyleSheet.create({
+  shadowStyle: {
+    shadowColor: 'black',
+            shadowOffset: {
+              width: 0, // Adjust as needed
+              height: 4, // Adjust as needed
+            },
+            shadowOpacity: 0.3, // Adjust as needed
+            shadowRadius: 5, // Adjust as needed
+
+            // Important for Android
+            elevation: 8, // Adjust as needed
+  },
   modalOuter: {
     backgroundColor: Themes.dark.scrimColor,
     flex: 1,
