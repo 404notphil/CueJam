@@ -28,11 +28,11 @@ export function HomeScreen(): React.JSX.Element {
           {alignItems: 'center', justifyContent: 'flex-end'},
         ]}>
         <Text style={[globalStyles.fieldHeader, styles.fieldHeader]}>
-          Configure drill
+          New drill
         </Text>
         <Image
           style={{height: 100, width: 130}}
-          source={require('./create_drill_icon_large.png')}
+          source={require('../assets/create_drill_icon_large.png')}
           resizeMode="contain" // Add this line
         />
       </TouchableOpacity>
@@ -48,8 +48,8 @@ export function HomeScreen(): React.JSX.Element {
 
         <Image
           style={{height: 100, width: 130}}
-          source={require('./saved_drills_icon_large.png')}
-          resizeMode="contain" // Add this line
+          source={require('../assets/saved_drills_icon_large.png')}
+          resizeMode="contain"
         />
       </TouchableOpacity>
     </View>

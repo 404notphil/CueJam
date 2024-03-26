@@ -21,16 +21,11 @@ export function SignupScreen(): React.JSX.Element {
           uiState.modalState.modalMessage,
           dispatch,
         )}
-
       {/* Header */}
       <Text style={globalStyles.title}>Signup</Text>
-
       <EmailFieldAndErrors dispatch={dispatch} uiState={uiState} />
-
       {UsernameFieldAndErrors(dispatch, uiState)}
-
       <PasswordFieldAndErrors dispatch={dispatch} uiState={uiState} />
-
       {SignupButton(dispatch, uiState)}
     </View>
   );

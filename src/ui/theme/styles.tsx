@@ -5,15 +5,15 @@ import {ThemeProvider} from '@react-navigation/native';
 export const globalStyles = StyleSheet.create({
   shadowStyle: {
     shadowColor: 'black',
-            shadowOffset: {
-              width: 0, // Adjust as needed
-              height: 4, // Adjust as needed
-            },
-            shadowOpacity: 0.3, // Adjust as needed
-            shadowRadius: 5, // Adjust as needed
+    shadowOffset: {
+      width: 0, // Adjust as needed
+      height: 4, // Adjust as needed
+    },
+    shadowOpacity: 0.3, // Adjust as needed
+    shadowRadius: 5, // Adjust as needed
 
-            // Important for Android
-            elevation: 8, // Adjust as needed
+    // Important for Android
+    elevation: 8, // Adjust as needed
   },
   modalOuter: {
     backgroundColor: Themes.dark.scrimColor,
@@ -48,6 +48,11 @@ export const globalStyles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'arciform',
   },
+  mediumText: {
+    fontSize: 20,
+    color: Themes.dark.lightText,
+    fontFamily: 'arciform',
+  },
   textInputArea: {
     height: 40,
     marginTop: 8,
@@ -79,7 +84,7 @@ export const globalStyles = StyleSheet.create({
     color: Themes.dark.lightText,
     textAlign: 'center',
     fontFamily: 'arciform',
-    fontSize: 16,
+    fontSize: 20,
   },
   smallText: {
     marginTop: 16,

@@ -9,7 +9,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useAuth} from '../auth/AuthProvider';
 import {Animated, View, Text, TouchableOpacity} from 'react-native';
 import {Themes} from './theme/Theme';
-import {ConfigureDrillScreen} from '../MainApp/SettingsScreen';
+import {ConfigureDrillScreen} from '../MainApp/ConfigureDrillScreen';
 import {DrillScreen} from '../MainApp/DrillScreen';
 import {SavedDrillsScreen} from '../MainApp/SavedDrillsScreen';
 import {globalStyles} from './theme/styles';
