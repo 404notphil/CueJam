@@ -29,17 +29,21 @@ export function LandingScreen(): React.JSX.Element {
     return (
       <View style={globalStyles.screenContainer}>
         <Text style={globalStyles.title}>Welcome</Text>
-        <TouchableOpacity onPress={onLoginPressedd} style={globalStyles.button}>
+        <TouchableOpacity
+          onPress={onLoginPressedd}
+          style={[globalStyles.button, {marginVertical: 32}]}>
           <Text style={globalStyles.buttonText}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onSignupPressed} style={globalStyles.button}>
+        <TouchableOpacity
+          onPress={onSignupPressed}
+          style={[globalStyles.button, {marginVertical: 32}]}>
           <Text style={globalStyles.buttonText}>Sign up</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             setToken('temp');
           }}
-          style={globalStyles.button}>
+          style={[globalStyles.button, {marginVertical: 32}]}>
           <Text style={globalStyles.buttonText}>Enter as guest</Text>
         </TouchableOpacity>
       </View>

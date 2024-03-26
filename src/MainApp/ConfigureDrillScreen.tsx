@@ -54,6 +54,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
               flexDirection: 'row',
               alignItems: 'center',
               paddingRight: 16,
+              marginVertical: 20,
             }}>
             <Text style={[globalStyles.mediumText, {flex: 2, marginEnd: 16}]}>
               {item.title}

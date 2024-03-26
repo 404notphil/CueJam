@@ -71,7 +71,6 @@ export const globalStyles = StyleSheet.create({
   button: {
     backgroundColor: Themes.dark.buttonSurface,
     padding: 16,
-    marginVertical: 32,
     borderRadius: 5,
   },
   modalErrorText: {

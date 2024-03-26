@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation/RootStackParamList';
 import {Image} from 'react-native';
+import AnimatedExample from './TestAnimation';
 
 export function HomeScreen(): React.JSX.Element {
   const {token, setToken} = useAuth();
@@ -14,18 +15,17 @@ export function HomeScreen(): React.JSX.Element {
 
   return (
     <View style={globalStyles.screenContainer}>
-      <Text style={globalStyles.title}>NotePrompter</Text>
-      <Text style={[globalStyles.smallText, {marginTop: 0, paddingLeft: 60}]}>
-        by tunepruner
-      </Text>
-
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('ConfigureDrill');
         }}
         style={[
           globalStyles.button,
-          {alignItems: 'center', justifyContent: 'flex-end'},
+          {
+            marginVertical: 32,
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          },
         ]}>
         <Text style={[globalStyles.fieldHeader, styles.fieldHeader]}>
           New drill
@@ -42,7 +42,11 @@ export function HomeScreen(): React.JSX.Element {
         }}
         style={[
           globalStyles.button,
-          {alignItems: 'center', justifyContent: 'flex-end'},
+          {
+            marginVertical: 32,
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          },
         ]}>
         <Text style={globalStyles.fieldHeader}>Saved Drills</Text>
 
@@ -52,6 +56,7 @@ export function HomeScreen(): React.JSX.Element {
           resizeMode="contain"
         />
       </TouchableOpacity>
+      <AnimatedExample />
     </View>
   );
 }
