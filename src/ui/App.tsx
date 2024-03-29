@@ -13,6 +13,8 @@ import {ConfigureDrillScreen} from '../MainApp/ConfigureDrillScreen';
 import {DrillScreen} from '../MainApp/DrillScreen';
 import {SavedDrillsScreen} from '../MainApp/SavedDrillsScreen';
 import {MainAppHeader} from './MainAppHeader';
+import {Provider} from 'react-redux';
+import {store} from '../store/store';
 
 export type ScreenName = 'Home' | 'ConfigureDrill' | 'SavedDrills' | 'Drill';
 
@@ -101,12 +103,14 @@ const AppContent = () => {
   }, [token]); // Depend on token to trigger animation
 
   return (
-    <View style={{flex: 1, backgroundColor: Themes.dark.background}}>
-      <Animated.View style={{flex: 1, opacity: fadeAnim}}>
-        {token ? <AuthorizedStack /> : <NonAuthorizedStack />}
-      </Animated.View>
-      {/* <View style={{flex: 1, backgroundColor: 'blue', opacity: 0}} /> */}
-    </View>
+    <Provider store={store}>
+      <View style={{flex: 1, backgroundColor: Themes.dark.background}}>
+        <Animated.View style={{flex: 1, opacity: fadeAnim}}>
+          {token ? <AuthorizedStack /> : <NonAuthorizedStack />}
+        </Animated.View>
+        {/* <View style={{flex: 1, backgroundColor: 'blue', opacity: 0}} /> */}
+      </View>
+    </Provider>
   );
 };
 

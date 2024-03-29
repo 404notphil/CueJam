@@ -1,4 +1,3 @@
-import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View, Platform} from 'react-native';
 import {useAuth} from '../auth/AuthProvider';
 import {globalStyles} from './theme/styles';
