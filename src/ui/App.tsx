@@ -18,7 +18,7 @@ export type ScreenName = 'Home' | 'ConfigureDrill' | 'SavedDrills' | 'Drill';
 
 const Stack = createNativeStackNavigator();
 
-function AuthStack(): React.JSX.Element {
+function NonAuthorizedStack(): React.JSX.Element {
   return (
     <Stack.Navigator
       initialRouteName="Landing"
@@ -34,7 +34,7 @@ function AuthStack(): React.JSX.Element {
   );
 }
 
-function NonAuthStack(): React.JSX.Element {
+function AuthorizedStack(): React.JSX.Element {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -103,7 +103,7 @@ const AppContent = () => {
   return (
     <View style={{flex: 1, backgroundColor: Themes.dark.background}}>
       <Animated.View style={{flex: 1, opacity: fadeAnim}}>
-        {token ? <NonAuthStack /> : <AuthStack />}
+        {token ? <AuthorizedStack /> : <NonAuthorizedStack />}
       </Animated.View>
       {/* <View style={{flex: 1, backgroundColor: 'blue', opacity: 0}} /> */}
     </View>
