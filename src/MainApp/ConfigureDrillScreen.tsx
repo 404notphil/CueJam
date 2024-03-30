@@ -111,7 +111,7 @@ const SettingRow: React.FC<SettingProps> = props => {
             alignItems: 'center',
           },
         ]}
-        onPress={() => props.onPress}>
+        onPress={() => props.onPress()}>
         <Text style={globalStyles.buttonText}>{props.buttonText}</Text>
         <Image
           style={{paddingHorizontal: 16, height: 10, width: 10}}
