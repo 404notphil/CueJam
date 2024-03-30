@@ -17,6 +17,7 @@ interface SettingProps {
 export function ConfigureDrillScreen(): React.JSX.Element {
   const [tonalContextDialogVisible, setTonalContextDialogVisible] =
     useState(false);
+  const [tempoDialogVisible, setTempoContextDialogVisible] = useState(false);
   const [chordQualitiesDialogVisible, setChordQualitiesDialogVisible] =
     useState(false);
   const [beatsPerChordDialogVisible, setBeatsPerChordDialogVisible] =
@@ -33,7 +34,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
       <SettingRow
         {...{
           title: 'Drill name',
-          buttonText: 'Action 1',
+          buttonText: 'Save',
           onPress: () => console.log('Item 1 pressed'),
         }}
       />
@@ -41,48 +42,48 @@ export function ConfigureDrillScreen(): React.JSX.Element {
       <SettingRow
         {...{
           title: 'tempo',
-          buttonText: 'Action 2',
-          onPress: () => console.log('Item 2 pressed'),
+          buttonText: drill.tempo + ' bpm',
+          onPress: () => setTempoContextDialogVisible(true),
         }}
       />
 
       <SettingRow
         {...{
           title: 'beats per chord',
-          buttonText: 'Action 3',
-          onPress: () => console.log('Item 3 pressed'),
+          buttonText: drill.beatsPerChord.toString(),
+          onPress: () => setBeatsPerChordDialogVisible(true),
         }}
       />
 
       <SettingRow
         {...{
           title: 'note names',
-          buttonText: 'Action 3',
-          onPress: () => console.log('Item 3 pressed'),
+          buttonText: drill.noteNames.length.toString(),
+          onPress: () => setNoteNamesDialogVisible(true),
         }}
       />
 
       <SettingRow
         {...{
           title: 'prompt algorithm',
-          buttonText: 'Action 3',
-          onPress: () => console.log('Item 3 pressed'),
+          buttonText: drill.promptAlgorithm,
+          onPress: () => setPromptAlgorithmDialogVisible(true),
         }}
       />
 
       <SettingRow
         {...{
           title: 'tonal context',
-          buttonText: 'Action 3',
-          onPress: () => console.log('Item 3 pressed'),
+          buttonText: drill.tonalContext,
+          onPress: () => setTonalContextDialogVisible(true),
         }}
       />
 
       <SettingRow
         {...{
           title: 'chord qualities',
-          buttonText: 'Action 3',
-          onPress: () => console.log('Item 3 pressed'),
+          buttonText: drill.chordQualities.length.toString(),
+          onPress: () => setChordQualitiesDialogVisible(true),
         }}
       />
     </View>
@@ -121,4 +122,12 @@ const SettingRow: React.FC<SettingProps> = props => {
       </TouchableOpacity>
     </View>
   );
+};
+
+interface TempoDialogProps {
+  tempo: number;
+  onClose: () => void;
+}
+const TempoDialog: React.FC<TempoDialogProps> = props => {
+  return <View />;
 };
