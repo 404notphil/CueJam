@@ -1,5 +1,5 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-import {RootState} from './rootReducer';
+import { RootState } from '../store';
 
 type Flag = 'DummyFlag1' | 'DummyFlag2' | 'DummyFlag3';
 

@@ -1,11 +1,29 @@
 import {Text, View, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import {Themes} from '../ui/theme/Theme';
-import React from 'react';
+import React, {useState} from 'react';
 import {globalStyles} from '../ui/theme/styles';
 import {Image} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../store/store';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
+import { selectConfigureDrill, setDrillName } from '../store/reducers/configureDrillReducer';
 
 export function ConfigureDrillScreen(): React.JSX.Element {
-  const data = [
+  const [tonalContextDialogVisible, setTonalContextDialogVisible] =
+    useState(false);
+  const [chordQualitiesDialogVisible, setChordQualitiesDialogVisible] =
+    useState(false);
+  const [beatsPerChordDialogVisible, setBeatsPerChordDialogVisible] =
+    useState(false);
+  const [noteNamesDialogVisible, setNoteNamesDialogVisible] = useState(false);
+  const [promptAlgorithmDialogVisible, setPromptAlgorithmDialogVisible] =
+    useState(false);
+
+  const drill = useAppSelector(selectConfigureDrill);
+  const dispatch = useAppDispatch();
+
+
+  const options = [
     {
       title: 'Drill name',
       buttonText: 'Action 1',
@@ -46,7 +64,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   return (
     <View style={globalStyles.screenContainer}>
       <FlatList
-        data={data}
+        data={options}
         renderItem={({item}) => (
           <View
             key={item.title}

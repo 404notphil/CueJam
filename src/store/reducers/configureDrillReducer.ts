@@ -1,3 +1,13 @@
+import {PayloadAction, createSlice} from '@reduxjs/toolkit';
+import {RootState} from '../store';
+import {
+  AllChordQualities,
+  AllNoteNames,
+  ChordQuality,
+  NoteName,
+  TonalContext,
+} from './configureDrillTypes';
+
 export interface ConfigureDrillState {
   drillName: string;
   tempo: number;
@@ -19,86 +29,10 @@ export interface ConfigureDrillState {
     | 16
     | 17;
   noteNames: NoteName[];
-  promptAlgorithm:
-    | 'random'
-    | 'chromatic'
-    | 'descending5ths'
-    | 'ascending5ths'
-    | 'tonerow';
-  tonalContext: 'chord quality' | 'key' | 'scale' | 'mode' | 'none';
+  promptAlgorithm: PromptAlgorithm;
+  tonalContext: TonalContext;
   chordQualities: ChordQuality[];
 }
-
-type NoteName =
-  | 'A'
-  | 'Bb'
-  | 'B'
-  | 'C'
-  | 'C#'
-  | 'D'
-  | 'Eb'
-  | 'E'
-  | 'F'
-  | 'F#'
-  | 'G'
-  | 'G#';
-const AllNoteNames: NoteName[] = [
-  'A',
-  'Bb',
-  'B',
-  'C',
-  'C#',
-  'D',
-  'Eb',
-  'E',
-  'F',
-  'F#',
-  'G',
-  'G#',
-];
-
-type ChordQuality =
-  | 'major triad'
-  | 'minor triad'
-  | 'diminished triad'
-  | 'augmented triad'
-  | 'sus 2 triad'
-  | 'sus 4 triad'
-  | 'dominant 7th'
-  | 'major 7th'
-  | 'minor 7th'
-  | 'minor major 7th'
-  | 'augmented 7th'
-  | 'augmented major 7th'
-  | 'full diminished 7th'
-  | 'half full diminished 7th'
-  | 'dominant 7th sus 4';
-
-const AllChordQualities: ChordQuality[] = [
-  'major triad',
-  'minor triad',
-  'diminished triad',
-  'augmented triad',
-  'sus 2 triad',
-  'sus 4 triad',
-  'dominant 7th',
-  'major 7th',
-  'minor 7th',
-  'minor major 7th',
-  'augmented 7th',
-  'augmented major 7th',
-  'full diminished 7th',
-  'half full diminished 7th',
-  'dominant 7th sus 4',
-];
-
-const SET_DRILL_NAME = 'SET_DRILL_NAME';
-const SET_TEMPO = 'SET_TEMPO';
-const SET_BEATS_PER_CHORD = 'SET_BEATS_PER_CHORD';
-const SET_NOTE_NAMES = 'SET_NOTE_NAMES';
-const SET_PROMPT_ALGORITHM = 'SET_PROMPT_ALGORITHM';
-const SET_TONAL_CONTEXT = 'SET_TONAL_CONTEXT';
-const SET_CHORD_QUALITIES = 'SET_CHORD_QUALITIES';
 
 const initialState: ConfigureDrillState = {
   drillName: '',
@@ -110,64 +44,53 @@ const initialState: ConfigureDrillState = {
   chordQualities: AllChordQualities,
 };
 
-// export const setDrillName = () => ({type: SET_DRILL_NAME});
-type SetDrillNameAction = {
-  type: 'SET_DRILL_NAME';
-};
-type SetTempoAction = {
-  type: 'SET_TEMPO';
-};
-type SetBeatsPerChord = {
-  type: 'SET_BEATS_PER_CHORD';
-};
-type SetNoteNames = {
-  type: 'SET_NOTE_NAMES';
-};
-type SetPromptAglorithm = {
-  type: 'SET_PROMPT_ALGORITHM';
-};
-type SetTonalContext = {
-  type: 'SET_TONAL_CONTEXT';
-};
-type SetChordQualities = {
-  type: 'SET_CHORD_QUALITIES';
-};
+type PromptAlgorithm =
+  | 'random'
+  | 'chromatic'
+  | 'descending5ths'
+  | 'ascending5ths'
+  | 'tonerow';
 
-type ConfigureDrillAction =
-  | SetDrillNameAction
-  | SetTempoAction
-  | SetBeatsPerChord
-  | SetNoteNames
-  | SetPromptAglorithm
-  | SetTonalContext
-  | SetChordQualities;
+export const configureDrillSlice = createSlice({
+  name: 'featureFlags',
+  initialState: initialState,
+  reducers: {
+    setDrillName: (state, action: PayloadAction<string>) => {
+      state.drillName = action.payload;
+    },
+    setTempo: (state, action: PayloadAction<number>) => {
+      state.tempo = action.payload;
+    },
+    setBeatsPerChord: (state, action: PayloadAction<number>) => {
+      /* todo */
+    },
+    setNoteNames: (state, action: PayloadAction<NoteName[]>) => {
+      /* todo */
+    },
+    setPromptAlgorithm: (state, action: PayloadAction<PromptAlgorithm>) => {
+      /* todo */
+    },
+    setTonalContext: (state, action: PayloadAction<TonalContext>) => {
+      /* todo */
+    },
+    setChordQuality: (state, action: PayloadAction<ChordQuality[]>) => {
+      /* todo */
+    },
+  },
+});
 
-export function configureDrillReducer(
-  state: ConfigureDrillState = initialState,
-  action: ConfigureDrillAction,
-): ConfigureDrillState {
-  switch (action.type) {
-    case 'SET_DRILL_NAME': {
-      return initialState; // TODO fix
-    }
-    case 'SET_TEMPO': {
-      return initialState; // TODO fix
-    }
-    case 'SET_BEATS_PER_CHORD': {
-      return initialState; // TODO fix
-    }
-    case 'SET_NOTE_NAMES': {
-      return initialState; // TODO fix
-    }
-    case 'SET_PROMPT_ALGORITHM': {
-      return initialState; // TODO fix
-    }
-    case 'SET_TONAL_CONTEXT': {
-      return initialState; // TODO fix
-    }
-    case 'SET_CHORD_QUALITIES': {
-      return initialState; // TODO fix
-    }
-  }
-  return initialState;
-}
+export default configureDrillSlice.reducer;
+
+export const selectConfigureDrill: (
+  state: RootState,
+) => ConfigureDrillState = state => state.drillConfiguration;
+
+export const {
+  setDrillName,
+  setTempo,
+  setBeatsPerChord,
+  setNoteNames,
+  setPromptAlgorithm,
+  setTonalContext,
+  setChordQuality,
+} = configureDrillSlice.actions;
