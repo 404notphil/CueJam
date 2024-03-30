@@ -6,7 +6,7 @@ import {
   ChordQuality,
   NoteName,
   TonalContext,
-} from './configureDrillTypes';
+} from './ConfigureDrillTypes';
 
 export interface ConfigureDrillState {
   drillName: string;

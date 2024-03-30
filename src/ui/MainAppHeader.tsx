@@ -98,16 +98,18 @@ const AppHeaderTitle: React.FC<AppHeaderTitleProps> = props => {
     <View style={{}}>
       {largeText ? (
         <Text style={[globalStyles.title, {fontSize: 50, margin: 16}]}>
-          Large Text
+          {screenTitle}
         </Text>
       ) : (
         <Text style={[globalStyles.title, {fontSize: 30, margin: 16}]}>
-          Small Text
+          {screenTitle}
         </Text>
       )}
-      <Text style={[globalStyles.smallText, {marginTop: 0, paddingLeft: 60}]}>
-        by tunepruner
-      </Text>
+      {largeText && (
+        <Text style={[globalStyles.smallText, {marginTop: 0, paddingLeft: 60}]}>
+          by tunepruner
+        </Text>
+      )}
     </View>
   );
 };
