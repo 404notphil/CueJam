@@ -1,4 +1,4 @@
-interface ConfigureDrillState {
+export interface ConfigureDrillState {
   drillName: string;
   tempo: number;
   beatsPerChord:
@@ -142,7 +142,8 @@ type ConfigureDrillAction =
   | SetTonalContext
   | SetChordQualities;
 
-function configureDrillReducer(
+export function configureDrillReducer(
+  state: ConfigureDrillState = initialState,
   action: ConfigureDrillAction,
 ): ConfigureDrillState {
   switch (action.type) {
@@ -168,4 +169,5 @@ function configureDrillReducer(
       return initialState; // TODO fix
     }
   }
+  return initialState;
 }
