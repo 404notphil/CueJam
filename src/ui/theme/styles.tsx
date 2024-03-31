@@ -21,9 +21,9 @@ export const globalStyles = StyleSheet.create({
   },
   modalInner: {
     position: 'absolute',
-    top: '25%',
-    margin: 32,
-    padding: 16,
+    top: '20%',
+    margin: 16,
+    padding: 1,
     backgroundColor: Themes.dark.background,
     borderRadius: 15,
     alignItems: 'center',

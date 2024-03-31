@@ -6,7 +6,9 @@ import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
   selectConfigureDrill,
   setDrillName,
+  setTempo,
 } from '../store/reducers/configureDrillReducer';
+import {SetTempoModal} from './SetTempoModal';
 
 interface SettingProps {
   title: string;
@@ -86,6 +88,13 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           onPress: () => setChordQualitiesDialogVisible(true),
         }}
       />
+
+      <SetTempoModal
+        modalIsVisible={tempoDialogVisible}
+        tempo={drill.tempo}
+        onSetTempo={(tempo: number) => dispatch(setTempo(tempo))}
+        onClose={() => setTempoContextDialogVisible(false)}
+      />
     </View>
   );
 }
@@ -122,12 +131,4 @@ const SettingRow: React.FC<SettingProps> = props => {
       </TouchableOpacity>
     </View>
   );
-};
-
-interface TempoDialogProps {
-  tempo: number;
-  onClose: () => void;
-}
-const TempoDialog: React.FC<TempoDialogProps> = props => {
-  return <View />;
 };
