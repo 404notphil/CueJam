@@ -1,4 +1,9 @@
-import {Modal, TouchableWithoutFeedback, View} from 'react-native';
+import {
+  GestureResponderEvent,
+  Modal,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {globalStyles} from './theme/styles';
 
 interface AppModalProps {
