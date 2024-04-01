@@ -1,4 +1,4 @@
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, TextInput} from 'react-native';
 import React, {useState} from 'react';
 import {globalStyles} from '../ui/theme/styles';
 import {Image} from 'react-native';
@@ -33,15 +33,25 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const drill = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
 
+  const handleSaveDrill = () => {
+    /* todo */
+  };
+
   return (
     <View style={globalStyles.screenContainer}>
-      <SettingRow
-        {...{
-          title: 'Drill name',
-          buttonText: 'Save',
-          onPress: () => console.log('Item 1 pressed'),
-        }}
-      />
+      <View style={{flexDirection: 'row'}}>
+        <TextInput
+          style={[globalStyles.textInputArea, {flex: 1, marginEnd: 16}]}
+          onChangeText={newText => dispatch(setDrillName(newText))}
+          placeholder="Type drill name here">
+          {drill.drillName}
+        </TextInput>
+        <TouchableOpacity
+          style={globalStyles.button}
+          onPress={() => handleSaveDrill()}>
+          <Text style={globalStyles.buttonText}>Save</Text>
+        </TouchableOpacity>
+      </View>
 
       <SettingRow
         {...{

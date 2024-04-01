@@ -19,7 +19,7 @@ export interface ConfigureDrillState {
 }
 
 const initialState: ConfigureDrillState = {
-  drillName: '',
+  drillName: 'starting name',
   tempo: 100,
   beatsPerChord: 4,
   noteNames: AllNoteNames,
