@@ -8,12 +8,14 @@ import {
   setBeatsPerChord,
   setDrillName,
   setNoteNames,
+  setPromptAlgorithm,
   setTempo,
 } from '../store/reducers/configureDrillReducer';
 import {SetTempoModal} from './SetTempoModal';
 import {SetBeatsPerChordModal} from './SetBeatsPerChordModal';
 import {SetNoteNamesModal} from './SetNoteNamesModal';
-import {NoteName} from '../store/reducers/ConfigureDrillTypes';
+import {NoteName, PromptAlgorithm} from '../store/reducers/ConfigureDrillTypes';
+import {SetPromptAlgorithmModal} from './SetPromptAlgorithmModal';
 
 interface SettingProps {
   title: string;
@@ -127,6 +129,15 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           dispatch(setNoteNames(noteNames))
         }
         onDismiss={() => setNoteNamesDialogVisible(false)}
+      />
+
+      <SetPromptAlgorithmModal
+        modalIsVisible={promptAlgorithmDialogVisible}
+        promptAlgorithm={drill.promptAlgorithm}
+        onSetPromptAlgorithm={(promptAlgorithm: PromptAlgorithm) =>
+          dispatch(setPromptAlgorithm(promptAlgorithm))
+        }
+        onDismiss={() => setPromptAlgorithmDialogVisible(false)}
       />
     </View>
   );

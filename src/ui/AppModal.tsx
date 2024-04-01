@@ -39,7 +39,6 @@ export const AppModal: React.FC<AppModalProps> = props => {
           <View
             style={[
               globalStyles.modalInner,
-              {top: '10%', padding: 16},
               {...props.innerModalStyles},
             ]}
             onStartShouldSetResponder={preventDismiss}>

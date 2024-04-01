@@ -1,4 +1,18 @@
 
+export type PromptAlgorithm =
+  | 'random'
+  | 'chromatic'
+  | 'descending5ths'
+  | 'ascending5ths'
+  | 'tonerow';
+
+export const AllPromptAlgorithms: PromptAlgorithm[] = [
+  'random',
+  'chromatic',
+  'descending5ths',
+  'ascending5ths',
+  'tonerow',
+];
 
 export type NoteName =
   | 'A'

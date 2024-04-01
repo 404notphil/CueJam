@@ -5,6 +5,7 @@ import {
   AllNoteNames,
   ChordQuality,
   NoteName,
+  PromptAlgorithm,
   TonalContext,
 } from './ConfigureDrillTypes';
 
@@ -19,7 +20,7 @@ export interface ConfigureDrillState {
 }
 
 const initialState: ConfigureDrillState = {
-  drillName: 'starting name',
+  drillName: '',
   tempo: 100,
   beatsPerChord: 4,
   noteNames: AllNoteNames,
@@ -27,13 +28,6 @@ const initialState: ConfigureDrillState = {
   tonalContext: 'chord quality',
   chordQualities: AllChordQualities,
 };
-
-type PromptAlgorithm =
-  | 'random'
-  | 'chromatic'
-  | 'descending5ths'
-  | 'ascending5ths'
-  | 'tonerow';
 
 export const configureDrillSlice = createSlice({
   name: 'featureFlags',
@@ -49,10 +43,10 @@ export const configureDrillSlice = createSlice({
       state.beatsPerChord = action.payload;
     },
     setNoteNames: (state, action: PayloadAction<NoteName[]>) => {
-      state.noteNames = action.payload
+      state.noteNames = action.payload;
     },
     setPromptAlgorithm: (state, action: PayloadAction<PromptAlgorithm>) => {
-      /* todo */
+      state.promptAlgorithm = action.payload;
     },
     setTonalContext: (state, action: PayloadAction<TonalContext>) => {
       /* todo */
