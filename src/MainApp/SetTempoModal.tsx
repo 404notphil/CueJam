@@ -1,4 +1,4 @@
-import React, {SetStateAction, useState} from 'react';
+import React, {SetStateAction, useEffect, useState} from 'react';
 import {
   Modal,
   Pressable,
@@ -9,6 +9,11 @@ import {
   Image,
 } from 'react-native';
 import {globalStyles} from '../ui/theme/styles';
+import Animated, {
+  useSharedValue,
+  withSpring,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
 interface SetTempoModalProps {
   modalIsVisible: boolean;
@@ -39,60 +44,86 @@ export const SetTempoModal: React.FC<SetTempoModalProps> = props => {
       }}>
       <View style={globalStyles.modalOuter}>
         <View style={[globalStyles.modalInner, {top: '10%', padding: 16}]}>
-          <View /* The big row where everything lives. */
-            style={{
-              flexDirection: 'row',
-            }}>
+          <View>
+            {/* Title */}
             <View
               style={{
+                flexDirection: 'row',
                 alignItems: 'center',
-                alignContent: 'center',
-                marginRight: 16,
-              }}
-              /* The column where the title, the tempo viewer, and the "bpm" sub header live.  */
-            >
-              {/* Title */}
-              <Text style={[globalStyles.fieldHeader, {flex: 1}]}>Tempo</Text>
-
-              <TempoViewerComponent
-                tempo={currentDisplayedTempo}
-                setTempo={(tempo: number) => setCurrentDisplayedTempo(tempo)}
-              />
-
-              <Text
-                style={[globalStyles.fieldHeader, {flex: 1, color: 'yellow'}]}>
-                bpm
+                margin: 16,
+              }}>
+              <Text style={[globalStyles.fieldHeader, {marginTop: 0, flex: 1}]}>
+                Tempo
               </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  props.onClose();
+                  props.onSetTempo(currentDisplayedTempo);
+                }}>
+                <Image
+                  style={{height: 20, width: 20, margin: 20}}
+                  source={require('../assets/check_mark.png')}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
             </View>
-            <View /* The column where the 6 tempo adjustment buttons go.  */>
+            <View
+              style={{
+                flexDirection: 'row',
+              }}>
               <IncrementButton
                 {...incrementButtonArgs}
-                bpmDistance={-10}
+                bpmDistance={1}
                 icon={'../assets/triple_up_arrow.png'}
               />
               <IncrementButton
                 {...incrementButtonArgs}
-                bpmDistance={-5}
+                bpmDistance={5}
                 icon={'../assets/double_up_arrow.png'}
               />
               <IncrementButton
                 {...incrementButtonArgs}
-                bpmDistance={-1}
+                bpmDistance={10}
                 icon={'../assets/single_up_arrow.png'}
               />
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+                alignItems: 'center',
+              }}>
+              <TempoViewerComponent
+                tempo={currentDisplayedTempo}
+                setTempo={(tempo: number) => setCurrentDisplayedTempo(tempo)}
+              />
+              <Text
+                style={[
+                  globalStyles.fieldHeader,
+                  {
+                    color: 'yellow',
+                    textAlign: 'center',
+                  },
+                ]}>
+                bpm
+              </Text>
+            </View>
+
+            <View style={{flexDirection: 'row'}}>
               <IncrementButton
                 {...incrementButtonArgs}
-                bpmDistance={1}
+                bpmDistance={-1}
                 icon={'../assets/single_down_arrow.png'}
               />
               <IncrementButton
                 {...incrementButtonArgs}
-                bpmDistance={5}
+                bpmDistance={-5}
                 icon={'../assets/double_down_arrow.png'}
               />
               <IncrementButton
                 {...incrementButtonArgs}
-                bpmDistance={10}
+                bpmDistance={-10}
                 icon={'../assets/triple_down_arrow.png'}
               />
             </View>
@@ -120,13 +151,19 @@ const IncrementButton: React.FC<IncrementButtonProps> = props => {
         globalStyles.button,
         {
           padding: 8,
+          width: 60,
+          height: 60,
           flexDirection: 'row',
-          marginVertical: 6,
+          margin: 6,
           alignItems: 'center',
           justifyContent: 'center',
         },
       ]}>
-      <Text style={globalStyles.fieldHeader}>{props.bpmDistance}</Text>
+      <Text style={[globalStyles.fieldHeader, {marginTop: 0}]}>
+        {props.bpmDistance < 0
+          ? props.bpmDistance
+          : '+' + props.bpmDistance.toString()}
+      </Text>
 
       {/* <Image
                     style={{height: 30, width: 30}}
@@ -143,9 +180,31 @@ interface TempoViewerProps {
 }
 
 const TempoViewerComponent: React.FC<TempoViewerProps> = props => {
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    opacity.value = 0; // Reset opacity to 0
+    opacity.value = withSpring(1); // Animate opacity to 1
+  }, [props.tempo]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+    };
+  });
+
   return (
-    <Text style={[globalStyles.title, {flex: 1, height: 50, width: 50}]}>
-      {props.tempo.toString()}
-    </Text>
+    <Animated.View style={[animatedStyle]}>
+      <Text
+        style={[
+          globalStyles.title,
+          {
+            fontSize: 80,
+            textAlign: 'center',
+          },
+        ]}>
+        {props.tempo.toString()}
+      </Text>
+    </Animated.View>
   );
 };
