@@ -109,9 +109,18 @@ const SettingRow: React.FC<SettingProps> = props => {
         paddingRight: 16,
         marginVertical: 20,
       }}>
-      <Text style={[globalStyles.mediumText, {flex: 2, marginEnd: 16}]}>
-        {props.title}
-      </Text>
+      <View style={{flex: 2, flexDirection: 'row'}}>
+        <Text style={globalStyles.mediumText}>{props.title}</Text>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'white',
+            height: 1,
+            alignSelf: 'center',
+            margin: 16,
+          }}
+        />
+      </View>
       <TouchableOpacity
         style={[
           globalStyles.button,
