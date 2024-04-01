@@ -20,7 +20,7 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
   },
   modalInner: {
-    position: 'absolute',
+    position: 'relative',
     top: '20%',
     margin: 16,
     padding: 1,
@@ -75,6 +75,8 @@ export const globalStyles = StyleSheet.create({
   },
   chipStyle: {
     height: 40,
+    width: 70,
+    margin: 10,
     backgroundColor: Themes.dark.buttonSurface,
     borderColor: 'white',
     borderWidth: 0,
@@ -83,6 +85,8 @@ export const globalStyles = StyleSheet.create({
   },
   selectedChipStyle: {
     height: 40,
+    width: 70,
+    margin: 10,
     backgroundColor: Themes.dark.buttonSurface,
     borderColor: 'white',
     borderWidth: 1,

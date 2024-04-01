@@ -11,6 +11,11 @@ interface AppModalProps {
 }
 
 export const AppModal: React.FC<AppModalProps> = props => {
+  const preventDismiss = (event: GestureResponderEvent) => {
+    event.stopPropagation();
+    return true;
+  };
+
   return (
     <Modal
       animationType="fade"
@@ -31,7 +36,8 @@ export const AppModal: React.FC<AppModalProps> = props => {
               globalStyles.modalInner,
               {top: '10%', padding: 16},
               {...props.innerModalStyles},
-            ]}>
+            ]}
+            onStartShouldSetResponder={preventDismiss}>
             {props.children}
           </View>
         </View>
