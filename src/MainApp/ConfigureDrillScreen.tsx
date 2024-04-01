@@ -1,4 +1,10 @@
-import {Text, View, TouchableOpacity, TextInput} from 'react-native';
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {globalStyles} from '../ui/theme/styles';
 import {Image} from 'react-native';
@@ -90,7 +96,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   });
 
   return (
-    <View style={globalStyles.screenContainer}>
+    <ScrollView style={globalStyles.screenContainer}>
       <View style={{flexDirection: 'row'}}>
         <TextInput
           style={[globalStyles.textInputArea, {flex: 1, marginEnd: 16}]}
@@ -233,7 +239,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         }
         onDismiss={() => setChordQualitiesDialogVisible(false)}
       />
-    </View>
+    </ScrollView>
   );
 }
 
