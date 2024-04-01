@@ -93,7 +93,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         modalIsVisible={tempoDialogVisible}
         tempo={drill.tempo}
         onSetTempo={(tempo: number) => dispatch(setTempo(tempo))}
-        onClose={() => setTempoContextDialogVisible(false)}
+        onDismiss={() => setTempoContextDialogVisible(false)}
       />
     </View>
   );

@@ -1,12 +1,12 @@
-import React, {SetStateAction, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Modal,
   Pressable,
   Text,
   View,
-  ActivityIndicator,
   TouchableOpacity,
   Image,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {globalStyles} from '../ui/theme/styles';
 import Animated, {
@@ -14,12 +14,14 @@ import Animated, {
   withSpring,
   useAnimatedStyle,
 } from 'react-native-reanimated';
+import {Themes} from '../ui/theme/Theme';
+import {AppModal} from '../ui/AppModal';
 
 interface SetTempoModalProps {
   modalIsVisible: boolean;
   tempo: number;
   onSetTempo: (tempo: number) => void;
-  onClose: () => void;
+  onDismiss: () => void;
 }
 
 export const SetTempoModal: React.FC<SetTempoModalProps> = props => {
@@ -34,103 +36,96 @@ export const SetTempoModal: React.FC<SetTempoModalProps> = props => {
   };
 
   return (
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={props.modalIsVisible}
-      onRequestClose={() => {
-        props.onClose();
-        props.onSetTempo(currentDisplayedTempo);
-      }}>
-      <View style={globalStyles.modalOuter}>
-        <View style={[globalStyles.modalInner, {top: '10%', padding: 16}]}>
-          <View>
-            {/* Title */}
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                margin: 16,
-              }}>
-              <Text style={[globalStyles.fieldHeader, {marginTop: 0, flex: 1}]}>
-                Tempo
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  props.onClose();
-                  props.onSetTempo(currentDisplayedTempo);
-                }}>
-                <Image
-                  style={{height: 20, width: 20, margin: 20}}
-                  source={require('../assets/check_mark.png')}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-              }}>
-              <IncrementButton
-                {...incrementButtonArgs}
-                bpmDistance={1}
-                icon={'../assets/triple_up_arrow.png'}
-              />
-              <IncrementButton
-                {...incrementButtonArgs}
-                bpmDistance={5}
-                icon={'../assets/double_up_arrow.png'}
-              />
-              <IncrementButton
-                {...incrementButtonArgs}
-                bpmDistance={10}
-                icon={'../assets/single_up_arrow.png'}
-              />
-            </View>
+    <AppModal
+      {...props}
+      innerModalStyles={{top: '10%', padding: 16}}
+      dismissingShouldFinish={true}
+      onFinish={() => props.onSetTempo(currentDisplayedTempo)}>
+      <View>
+        {/* Title */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            margin: 16,
+          }}>
+          <Text style={[globalStyles.fieldHeader, {marginTop: 0, flex: 1}]}>
+            Tempo
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              props.onDismiss();
+              props.onSetTempo(currentDisplayedTempo);
+            }}>
+            <Image
+              style={{height: 20, width: 20, margin: 20}}
+              source={require('../assets/check_mark.png')}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          <IncrementButton
+            {...incrementButtonArgs}
+            bpmDistance={1}
+            icon={'../assets/triple_up_arrow.png'}
+          />
+          <IncrementButton
+            {...incrementButtonArgs}
+            bpmDistance={5}
+            icon={'../assets/double_up_arrow.png'}
+          />
+          <IncrementButton
+            {...incrementButtonArgs}
+            bpmDistance={10}
+            icon={'../assets/single_up_arrow.png'}
+          />
+        </View>
 
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-              }}>
-              <TempoViewerComponent
-                tempo={currentDisplayedTempo}
-                setTempo={(tempo: number) => setCurrentDisplayedTempo(tempo)}
-              />
-              <Text
-                style={[
-                  globalStyles.fieldHeader,
-                  {
-                    color: 'yellow',
-                    textAlign: 'center',
-                  },
-                ]}>
-                bpm
-              </Text>
-            </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+          }}>
+          <TempoViewerComponent
+            tempo={currentDisplayedTempo}
+            setTempo={(tempo: number) => setCurrentDisplayedTempo(tempo)}
+          />
+          <Text
+            style={[
+              globalStyles.fieldHeader,
+              {
+                color: 'yellow',
+                textAlign: 'center',
+              },
+            ]}>
+            bpm
+          </Text>
+        </View>
 
-            <View style={{flexDirection: 'row'}}>
-              <IncrementButton
-                {...incrementButtonArgs}
-                bpmDistance={-1}
-                icon={'../assets/single_down_arrow.png'}
-              />
-              <IncrementButton
-                {...incrementButtonArgs}
-                bpmDistance={-5}
-                icon={'../assets/double_down_arrow.png'}
-              />
-              <IncrementButton
-                {...incrementButtonArgs}
-                bpmDistance={-10}
-                icon={'../assets/triple_down_arrow.png'}
-              />
-            </View>
-          </View>
+        <View style={{flexDirection: 'row'}}>
+          <IncrementButton
+            {...incrementButtonArgs}
+            bpmDistance={-1}
+            icon={'../assets/single_down_arrow.png'}
+          />
+          <IncrementButton
+            {...incrementButtonArgs}
+            bpmDistance={-5}
+            icon={'../assets/double_down_arrow.png'}
+          />
+          <IncrementButton
+            {...incrementButtonArgs}
+            bpmDistance={-10}
+            icon={'../assets/triple_down_arrow.png'}
+          />
         </View>
       </View>
-    </Modal>
+    </AppModal>
   );
 };
 
