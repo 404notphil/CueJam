@@ -6,7 +6,7 @@ import {View} from 'react-native';
 interface SetBeatsPerChordModalProps {
   modalIsVisible: boolean;
   beatsPerChord: number;
-  onSetBeatsPerChord: (tempo: number) => void;
+  onSetBeatsPerChord: (beatsPerChord: number) => void;
   onDismiss: () => void;
 }
 

@@ -15,6 +15,7 @@ import {SavedDrillsScreen} from '../MainApp/SavedDrillsScreen';
 import {MainAppHeader} from './MainAppHeader';
 import {Provider} from 'react-redux';
 import {store} from '../store/store';
+import {PaperProvider} from 'react-native-paper';
 
 export type ScreenName = 'Home' | 'ConfigureDrill' | 'SavedDrills' | 'Drill';
 
@@ -104,12 +105,14 @@ const AppContent = () => {
 
   return (
     <Provider store={store}>
-      <View style={{flex: 1, backgroundColor: Themes.dark.background}}>
-        <Animated.View style={{flex: 1, opacity: fadeAnim}}>
-          {token ? <AuthorizedStack /> : <NonAuthorizedStack />}
-        </Animated.View>
-        {/* <View style={{flex: 1, backgroundColor: 'blue', opacity: 0}} /> */}
-      </View>
+      <PaperProvider>
+        <View style={{flex: 1, backgroundColor: Themes.dark.background}}>
+          <Animated.View style={{flex: 1, opacity: fadeAnim}}>
+            {token ? <AuthorizedStack /> : <NonAuthorizedStack />}
+          </Animated.View>
+          {/* <View style={{flex: 1, backgroundColor: 'blue', opacity: 0}} /> */}
+        </View>
+      </PaperProvider>
     </Provider>
   );
 };

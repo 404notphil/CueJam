@@ -7,10 +7,13 @@ import {
   selectConfigureDrill,
   setBeatsPerChord,
   setDrillName,
+  setNoteNames,
   setTempo,
 } from '../store/reducers/configureDrillReducer';
 import {SetTempoModal} from './SetTempoModal';
 import {SetBeatsPerChordModal} from './SetBeatsPerChordModal';
+import {SetNoteNamesModal} from './SetNoteNamesModal';
+import {NoteName} from '../store/reducers/ConfigureDrillTypes';
 
 interface SettingProps {
   title: string;
@@ -115,6 +118,15 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           dispatch(setBeatsPerChord(beatsPerChord))
         }
         onDismiss={() => setBeatsPerChordDialogVisible(false)}
+      />
+
+      <SetNoteNamesModal
+        modalIsVisible={noteNamesDialogVisible}
+        noteNames={drill.noteNames}
+        onSetNoteNames={(noteNames: NoteName[]) =>
+          dispatch(setNoteNames(noteNames))
+        }
+        onDismiss={() => setNoteNamesDialogVisible(false)}
       />
     </View>
   );

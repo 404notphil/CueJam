@@ -73,6 +73,22 @@ export const globalStyles = StyleSheet.create({
     padding: 16,
     borderRadius: 5,
   },
+  chipStyle: {
+    height: 40,
+    backgroundColor: Themes.dark.buttonSurface,
+    borderColor: 'white',
+    borderWidth: 0,
+    borderRadius: 20,
+    justifyContent: 'center',
+  },
+  selectedChipStyle: {
+    height: 40,
+    backgroundColor: Themes.dark.buttonSurface,
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 20,
+    justifyContent: 'center',
+  },
   modalErrorText: {
     color: Themes.dark.errorYellowText,
     textAlign: 'center',

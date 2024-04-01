@@ -49,7 +49,7 @@ export const configureDrillSlice = createSlice({
       state.beatsPerChord = action.payload;
     },
     setNoteNames: (state, action: PayloadAction<NoteName[]>) => {
-      /* todo */
+      state.noteNames = action.payload
     },
     setPromptAlgorithm: (state, action: PayloadAction<PromptAlgorithm>) => {
       /* todo */
