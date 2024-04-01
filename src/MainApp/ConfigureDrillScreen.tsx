@@ -70,14 +70,14 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   useEffect(() => {
     if (drillIsSaved) {
-      animatedHeight.value = 60;
+      animatedHeight.value = 0;
       animatedOpacity.value = 0;
-      animatedHeight.value = withSpring(180);
+      animatedHeight.value = withSpring(120);
       animatedOpacity.value = withSpring(1);
     } else {
-      animatedHeight.value = 180;
+      animatedHeight.value = 120;
       animatedOpacity.value = 1;
-      animatedHeight.value = withSpring(60);
+      animatedHeight.value = withSpring(0);
       animatedOpacity.value = withSpring(0);
     }
   }, [drillIsSaved]);
@@ -104,21 +104,22 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           placeholder="Type drill name here">
           {drill.drillName}
         </TextInput>
-        <Animated.View
-          style={[animatedHeightStyle, {alignContent: 'space-between'}]}>
-          <TouchableOpacity
-            style={[globalStyles.button, {marginBottom: 8, width: 100}]}
-            onPress={() => handleSaveDrill()}>
-            <Text
-              style={[
-                globalStyles.buttonText,
-                drillIsSaved ? {color: 'grey'} : {color: 'white'},
-              ]}>
-              {drillIsSaved ? 'Saved' : 'Save'}
-            </Text>
-          </TouchableOpacity>
-          <Animated.View
-            style={[animatedOpacityStyle, {alignContent: 'space-between'}]}>
+        <TouchableOpacity
+          style={[globalStyles.button, {marginBottom: 8, width: 100}]}
+          onPress={() => handleSaveDrill()}>
+          <Text
+            style={[
+              globalStyles.buttonText,
+              drillIsSaved ? {color: 'grey'} : {color: 'white'},
+            ]}>
+            {drillIsSaved ? 'Saved' : 'Save'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View>
+        <Animated.View style={animatedHeightStyle}>
+          <Animated.View style={animatedOpacityStyle}>
             {drillIsSaved && (
               <TouchableOpacity
                 style={[globalStyles.button, {marginBottom: 8}]}
@@ -136,7 +137,6 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           </Animated.View>
         </Animated.View>
       </View>
-
       <SettingRow
         {...{
           title: 'tempo',
@@ -250,7 +250,6 @@ const SettingRow: React.FC<SettingProps> = props => {
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        paddingRight: 16,
         marginVertical: 20,
       }}>
       <View style={{flex: 2, flexDirection: 'row'}}>
@@ -269,15 +268,14 @@ const SettingRow: React.FC<SettingProps> = props => {
         style={[
           globalStyles.button,
           {
-            flex: 1,
             flexDirection: 'row',
-            alignItems: 'center',
+            justifyContent: 'flex-end',
           },
         ]}
         onPress={() => props.onPress()}>
-        <Text style={globalStyles.buttonText}>{props.buttonText}</Text>
+        <Text style={[globalStyles.buttonText]}>{props.buttonText}</Text>
         <Image
-          style={{paddingHorizontal: 16, height: 10, width: 10}}
+          style={{height: 10, width: 10, marginStart: 10}}
           source={require('../assets/edit_icon.png')}
           resizeMode="contain"
         />
