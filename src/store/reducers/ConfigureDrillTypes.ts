@@ -79,3 +79,5 @@ export const AllChordQualities: ChordQuality[] = [
 ];
 
 export type TonalContext = 'chord quality' | 'key' | 'scale' | 'mode' | 'none';
+
+export const AllTonalContexts: TonalContext[] = ['chord quality' ,'key' ,'scale' ,'mode' ,'none'];

@@ -2,44 +2,40 @@ import React, {useState} from 'react';
 import {AppModal} from '../ui/AppModal';
 import {NumberSelectorView} from './NumberSelectorView';
 import {
-  AllPromptAlgorithms,
-  PromptAlgorithm,
+  AllTonalContexts,
+  TonalContext,
 } from '../store/reducers/ConfigureDrillTypes';
 import {Text, View} from 'react-native';
 import {globalStyles} from '../ui/theme/styles';
 import {RadioButton} from 'react-native-paper';
 
-interface SetPromptAlgorithmModalProps {
+interface SetTonalContextModalProps {
   modalIsVisible: boolean;
-  promptAlgorithm: PromptAlgorithm;
-  onSetPromptAlgorithm: (promptAlgorithm: PromptAlgorithm) => void;
+  tonalContext: TonalContext;
+  onSetTonalContext: (tonalContext: TonalContext) => void;
   onDismiss: () => void;
 }
 
-export const SetPromptAlgorithmModal: React.FC<
-  SetPromptAlgorithmModalProps
-> = props => {
-  const [currentDisplayedPromptAlgorithm, setCurrentDisplayedPromptAlgorithm] =
-    useState(props.promptAlgorithm);
+export const TonalContextModal: React.FC<SetTonalContextModalProps> = props => {
+  const [currentDisplayedTonalContext, setCurrentDisplayedTonalContext] =
+    useState(props.tonalContext);
 
   return (
     <AppModal
       {...props}
       innerModalStyles={{top: '20%', padding: 20}}
       dismissingShouldFinish={true}
-      onFinish={() =>
-        props.onSetPromptAlgorithm(currentDisplayedPromptAlgorithm)
-      }>
+      onFinish={() => props.onSetTonalContext(currentDisplayedTonalContext)}>
       <Text style={[globalStyles.fieldHeader, {marginVertical: 30}]}>
-        prompt algorithm
+        tonal context
       </Text>
       <RadioButton.Group
         onValueChange={value =>
-          setCurrentDisplayedPromptAlgorithm(value as PromptAlgorithm)
+          setCurrentDisplayedTonalContext(value as TonalContext)
         }
-        value={currentDisplayedPromptAlgorithm}>
+        value={currentDisplayedTonalContext}>
         <View>
-          {AllPromptAlgorithms.map(item => (
+          {AllTonalContexts.map(item => (
             <View key={item}>
               <Text>{item}</Text>
               <RadioButton value={item} />

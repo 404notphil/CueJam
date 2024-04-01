@@ -10,12 +10,18 @@ import {
   setNoteNames,
   setPromptAlgorithm,
   setTempo,
+  setTonalContext,
 } from '../store/reducers/configureDrillReducer';
 import {SetTempoModal} from './SetTempoModal';
 import {SetBeatsPerChordModal} from './SetBeatsPerChordModal';
 import {SetNoteNamesModal} from './SetNoteNamesModal';
-import {NoteName, PromptAlgorithm} from '../store/reducers/ConfigureDrillTypes';
+import {
+  NoteName,
+  PromptAlgorithm,
+  TonalContext,
+} from '../store/reducers/ConfigureDrillTypes';
 import {SetPromptAlgorithmModal} from './SetPromptAlgorithmModal';
+import {TonalContextModal} from './TonalContextModal';
 
 interface SettingProps {
   title: string;
@@ -138,6 +144,15 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           dispatch(setPromptAlgorithm(promptAlgorithm))
         }
         onDismiss={() => setPromptAlgorithmDialogVisible(false)}
+      />
+
+      <TonalContextModal
+        modalIsVisible={tonalContextDialogVisible}
+        tonalContext={drill.tonalContext}
+        onSetTonalContext={(tonalContext: TonalContext) =>
+          dispatch(setTonalContext(tonalContext))
+        }
+        onDismiss={() => setTonalContextDialogVisible(false)}
       />
     </View>
   );

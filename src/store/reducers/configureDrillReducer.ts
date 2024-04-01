@@ -49,7 +49,7 @@ export const configureDrillSlice = createSlice({
       state.promptAlgorithm = action.payload;
     },
     setTonalContext: (state, action: PayloadAction<TonalContext>) => {
-      /* todo */
+      state.tonalContext = action.payload;
     },
     setChordQuality: (state, action: PayloadAction<ChordQuality[]>) => {
       /* todo */
