@@ -11,23 +11,7 @@ import {
 export interface ConfigureDrillState {
   drillName: string;
   tempo: number;
-  beatsPerChord:
-    | 1
-    | 2
-    | 3
-    | 4
-    | 5
-    | 6
-    | 7
-    | 8
-    | 9
-    | 10
-    | 11
-    | 12
-    | 14
-    | 15
-    | 16
-    | 17;
+  beatsPerChord: number;
   noteNames: NoteName[];
   promptAlgorithm: PromptAlgorithm;
   tonalContext: TonalContext;
@@ -62,7 +46,7 @@ export const configureDrillSlice = createSlice({
       state.tempo = action.payload;
     },
     setBeatsPerChord: (state, action: PayloadAction<number>) => {
-      /* todo */
+      state.beatsPerChord = action.payload;
     },
     setNoteNames: (state, action: PayloadAction<NoteName[]>) => {
       /* todo */

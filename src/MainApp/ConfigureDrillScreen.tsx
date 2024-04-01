@@ -5,10 +5,12 @@ import {Image} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
   selectConfigureDrill,
+  setBeatsPerChord,
   setDrillName,
   setTempo,
 } from '../store/reducers/configureDrillReducer';
 import {SetTempoModal} from './SetTempoModal';
+import {SetBeatsPerChordModal} from './SetBeatsPerChordModal';
 
 interface SettingProps {
   title: string;
@@ -19,7 +21,7 @@ interface SettingProps {
 export function ConfigureDrillScreen(): React.JSX.Element {
   const [tonalContextDialogVisible, setTonalContextDialogVisible] =
     useState(false);
-  const [tempoDialogVisible, setTempoContextDialogVisible] = useState(false);
+  const [tempoDialogVisible, setTempoDialogVisible] = useState(false);
   const [chordQualitiesDialogVisible, setChordQualitiesDialogVisible] =
     useState(false);
   const [beatsPerChordDialogVisible, setBeatsPerChordDialogVisible] =
@@ -45,7 +47,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         {...{
           title: 'tempo',
           buttonText: drill.tempo + ' bpm',
-          onPress: () => setTempoContextDialogVisible(true),
+          onPress: () => setTempoDialogVisible(true),
         }}
       />
 
@@ -93,7 +95,16 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         modalIsVisible={tempoDialogVisible}
         tempo={drill.tempo}
         onSetTempo={(tempo: number) => dispatch(setTempo(tempo))}
-        onDismiss={() => setTempoContextDialogVisible(false)}
+        onDismiss={() => setTempoDialogVisible(false)}
+      />
+
+      <SetBeatsPerChordModal
+        modalIsVisible={beatsPerChordDialogVisible}
+        beatsPerChord={drill.beatsPerChord}
+        onSetBeatsPerChord={(beatsPerChord: number) =>
+          dispatch(setBeatsPerChord(beatsPerChord))
+        }
+        onDismiss={() => setBeatsPerChordDialogVisible(false)}
       />
     </View>
   );

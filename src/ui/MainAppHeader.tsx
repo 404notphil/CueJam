@@ -72,8 +72,6 @@ const AppHeaderTitle: React.FC<AppHeaderTitleProps> = props => {
     }
   }
 
-  console.log('12345' + props.screenName);
-
   useEffect(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setLargeText(props.screenName === 'Home');
