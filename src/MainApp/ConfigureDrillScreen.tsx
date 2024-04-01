@@ -6,6 +6,7 @@ import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
   selectConfigureDrill,
   setBeatsPerChord,
+  setChordQualities,
   setDrillName,
   setNoteNames,
   setPromptAlgorithm,
@@ -16,12 +17,14 @@ import {SetTempoModal} from './SetTempoModal';
 import {SetBeatsPerChordModal} from './SetBeatsPerChordModal';
 import {SetNoteNamesModal} from './SetNoteNamesModal';
 import {
+  ChordQuality,
   NoteName,
   PromptAlgorithm,
   TonalContext,
 } from '../store/reducers/ConfigureDrillTypes';
 import {SetPromptAlgorithmModal} from './SetPromptAlgorithmModal';
 import {TonalContextModal} from './TonalContextModal';
+import {SetChordQualitiesModal} from './ChordQualitiesModal';
 
 interface SettingProps {
   title: string;
@@ -153,6 +156,15 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           dispatch(setTonalContext(tonalContext))
         }
         onDismiss={() => setTonalContextDialogVisible(false)}
+      />
+
+      <SetChordQualitiesModal
+        modalIsVisible={chordQualitiesDialogVisible}
+        chordQualities={drill.chordQualities}
+        onSetChordQualities={(chordQualities: ChordQuality[]) =>
+          dispatch(setChordQualities(chordQualities))
+        }
+        onDismiss={() => setChordQualitiesDialogVisible(false)}
       />
     </View>
   );

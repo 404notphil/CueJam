@@ -51,8 +51,8 @@ export const configureDrillSlice = createSlice({
     setTonalContext: (state, action: PayloadAction<TonalContext>) => {
       state.tonalContext = action.payload;
     },
-    setChordQuality: (state, action: PayloadAction<ChordQuality[]>) => {
-      /* todo */
+    setChordQualities: (state, action: PayloadAction<ChordQuality[]>) => {
+      state.chordQualities = action.payload;
     },
   },
 });
@@ -70,5 +70,5 @@ export const {
   setNoteNames,
   setPromptAlgorithm,
   setTonalContext,
-  setChordQuality,
+  setChordQualities: setChordQualities,
 } = configureDrillSlice.actions;
