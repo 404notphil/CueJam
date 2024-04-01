@@ -1,5 +1,5 @@
 import {Text, View, TouchableOpacity, TextInput} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {globalStyles} from '../ui/theme/styles';
 import {Image} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
@@ -25,6 +25,11 @@ import {
 import {SetPromptAlgorithmModal} from './SetPromptAlgorithmModal';
 import {TonalContextModal} from './TonalContextModal';
 import {SetChordQualitiesModal} from './ChordQualitiesModal';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 
 interface SettingProps {
   title: string;
@@ -47,9 +52,42 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const drill = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
 
+  const [drillIsSaved, setDrillIsSaved] = useState(true);
+
   const handleSaveDrill = () => {
+    setDrillIsSaved(true);
     /* todo */
   };
+
+  const animatedHeight = useSharedValue(0);
+  const animatedOpacity = useSharedValue(0);
+
+  useEffect(() => {
+    if (drillIsSaved) {
+      animatedHeight.value = 60;
+      animatedOpacity.value = 0;
+      animatedHeight.value = withSpring(180);
+      animatedOpacity.value = withSpring(1);
+    } else {
+      animatedHeight.value = 180;
+      animatedOpacity.value = 1;
+      animatedHeight.value = withSpring(60);
+      animatedOpacity.value = withSpring(0);
+    }
+  }, [drillIsSaved]);
+
+  const animatedHeightStyle = useAnimatedStyle(() => {
+    return {
+      height: animatedHeight.value,
+    };
+  });
+
+  const animatedOpacityStyle = useAnimatedStyle(() => {
+    return {
+      height: animatedHeight.value,
+      opacity: animatedOpacity.value,
+    };
+  });
 
   return (
     <View style={globalStyles.screenContainer}>
@@ -60,18 +98,47 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           placeholder="Type drill name here">
           {drill.drillName}
         </TextInput>
-        <TouchableOpacity
-          style={globalStyles.button}
-          onPress={() => handleSaveDrill()}>
-          <Text style={globalStyles.buttonText}>Save</Text>
-        </TouchableOpacity>
+        <Animated.View
+          style={[animatedHeightStyle, {alignContent: 'space-between'}]}>
+          <TouchableOpacity
+            style={[globalStyles.button, {marginBottom: 8, width: 100}]}
+            onPress={() => handleSaveDrill()}>
+            <Text
+              style={[
+                globalStyles.buttonText,
+                drillIsSaved ? {color: 'grey'} : {color: 'white'},
+              ]}>
+              {drillIsSaved ? 'Saved' : 'Save'}
+            </Text>
+          </TouchableOpacity>
+          <Animated.View
+            style={[animatedOpacityStyle, {alignContent: 'space-between'}]}>
+            {drillIsSaved && (
+              <TouchableOpacity
+                style={[globalStyles.button, {marginBottom: 8}]}
+                onPress={() => handleSaveDrill()}>
+                <Text style={globalStyles.buttonText}>Play</Text>
+              </TouchableOpacity>
+            )}
+            {drillIsSaved && (
+              <TouchableOpacity
+                style={[globalStyles.button, {marginBottom: 8}]}
+                onPress={() => handleSaveDrill()}>
+                <Text style={globalStyles.buttonText}>Close</Text>
+              </TouchableOpacity>
+            )}
+          </Animated.View>
+        </Animated.View>
       </View>
 
       <SettingRow
         {...{
           title: 'tempo',
           buttonText: drill.tempo + ' bpm',
-          onPress: () => setTempoDialogVisible(true),
+          onPress: () => {
+            setTempoDialogVisible(true);
+            setDrillIsSaved(false);
+          },
         }}
       />
 
