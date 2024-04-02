@@ -8,6 +8,7 @@ import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {globalStyles} from '../ui/theme/styles';
 
 interface NumberSelectorViewProps {
+  title: string,
   selectedNumberInViewer: number;
   onSelectNumberInViewer: (numberToSelectInViewer: number) => void;
   onCommitSelectedNumber: (selectedNumber: number) => void;
@@ -22,7 +23,6 @@ export const NumberSelectorView: React.FC<NumberSelectorViewProps> = props => {
 
   return (
     <View>
-      {/* Title */}
       <View
         style={{
           flexDirection: 'row',
@@ -30,7 +30,7 @@ export const NumberSelectorView: React.FC<NumberSelectorViewProps> = props => {
           margin: 16,
         }}>
         <Text style={[globalStyles.fieldHeader, {marginTop: 0, flex: 1}]}>
-          Tempo
+          {props.title}
         </Text>
         <TouchableOpacity
           onPress={() => {

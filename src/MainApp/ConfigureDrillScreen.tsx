@@ -21,7 +21,7 @@ import {
   setTonalContext,
 } from '../store/reducers/configureDrillReducer';
 import {SetTempoModal} from './SetTempoModal';
-import {SetBeatsPerChordModal} from './SetBeatsPerChordModal';
+import {SetBeatsPerPromptModal} from './SetBeatsPerChordModal';
 import {SetNoteNamesModal} from './SetNoteNamesModal';
 import {
   ChordQuality,
@@ -52,7 +52,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const [tempoDialogVisible, setTempoDialogVisible] = useState(false);
   const [chordQualitiesDialogVisible, setChordQualitiesDialogVisible] =
     useState(false);
-  const [beatsPerChordDialogVisible, setBeatsPerChordDialogVisible] =
+  const [beatsPerChordDialogVisible, setBeatsPerPromptDialogVisible] =
     useState(false);
   const [noteNamesDialogVisible, setNoteNamesDialogVisible] = useState(false);
   const [promptAlgorithmDialogVisible, setPromptAlgorithmDialogVisible] =
@@ -162,9 +162,9 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
       <SettingRow
         {...{
-          title: 'beats per chord',
-          buttonText: drill.beatsPerChord.toString(),
-          onPress: () => setBeatsPerChordDialogVisible(true),
+          title: 'beats per prompt',
+          buttonText: drill.beatsPerPrompt.toString(),
+          onPress: () => setBeatsPerPromptDialogVisible(true),
         }}
       />
 
@@ -192,13 +192,15 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         }}
       />
 
-      <SettingRow
-        {...{
-          title: 'chord qualities',
-          buttonText: drill.chordQualities.length.toString(),
-          onPress: () => setChordQualitiesDialogVisible(true),
-        }}
-      />
+      {drill.tonalContext === 'chord quality' && (
+        <SettingRow
+          {...{
+            title: 'chord qualities',
+            buttonText: drill.chordQualities.length.toString(),
+            onPress: () => setChordQualitiesDialogVisible(true),
+          }}
+        />
+      )}
 
       <SetTempoModal
         modalIsVisible={tempoDialogVisible}
@@ -207,13 +209,13 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         onDismiss={() => setTempoDialogVisible(false)}
       />
 
-      <SetBeatsPerChordModal
+      <SetBeatsPerPromptModal
         modalIsVisible={beatsPerChordDialogVisible}
-        beatsPerChord={drill.beatsPerChord}
-        onSetBeatsPerChord={(beatsPerChord: number) =>
+        beatsPerPrompt={drill.beatsPerPrompt}
+        onSetBeatsPerPrompt={(beatsPerChord: number) =>
           dispatch(setBeatsPerChord(beatsPerChord))
         }
-        onDismiss={() => setBeatsPerChordDialogVisible(false)}
+        onDismiss={() => setBeatsPerPromptDialogVisible(false)}
       />
 
       <SetNoteNamesModal

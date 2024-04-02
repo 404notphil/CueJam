@@ -3,30 +3,31 @@ import {AppModal} from '../ui/AppModal';
 import {NumberSelectorView} from './NumberSelectorView';
 import {View} from 'react-native';
 
-interface SetBeatsPerChordModalProps {
+interface SetBeatsPerPromptModalProps {
   modalIsVisible: boolean;
-  beatsPerChord: number;
-  onSetBeatsPerChord: (beatsPerChord: number) => void;
+  beatsPerPrompt: number;
+  onSetBeatsPerPrompt: (beatsPerPrompt: number) => void;
   onDismiss: () => void;
 }
 
-export const SetBeatsPerChordModal: React.FC<
-  SetBeatsPerChordModalProps
+export const SetBeatsPerPromptModal: React.FC<
+  SetBeatsPerPromptModalProps
 > = props => {
-  const [currentDisplayedBeatsPerChord, setCurrentDisplayedBeatsPerChord] =
-    useState(props.beatsPerChord);
+  const [currentDisplayedBeatsPerPrompt, setCurrentDisplayedBeatsPerPrompt] =
+    useState(props.beatsPerPrompt);
 
   return (
     <AppModal
       {...props}
       innerModalStyles={{top: '10%', padding: 16}}
       dismissingShouldFinish={true}
-      onFinish={() => props.onSetBeatsPerChord(currentDisplayedBeatsPerChord)}>
+      onFinish={() => props.onSetBeatsPerPrompt(currentDisplayedBeatsPerPrompt)}>
       <NumberSelectorView
-        selectedNumberInViewer={currentDisplayedBeatsPerChord}
-        onSelectNumberInViewer={setCurrentDisplayedBeatsPerChord}
+        title={'beats per prompt'}
+        selectedNumberInViewer={currentDisplayedBeatsPerPrompt}
+        onSelectNumberInViewer={setCurrentDisplayedBeatsPerPrompt}
         onCommitSelectedNumber={() => {
-          props.onSetBeatsPerChord(currentDisplayedBeatsPerChord);
+          props.onSetBeatsPerPrompt(currentDisplayedBeatsPerPrompt);
           props.onDismiss();
         }}
       />

@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {AppModal} from '../ui/AppModal';
-import {NumberSelectorView} from './NumberSelectorView';
 import {
   AllTonalContexts,
   TonalContext,

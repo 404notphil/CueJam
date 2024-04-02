@@ -34,7 +34,7 @@ export function DrillScreen(): React.JSX.Element {
   const subscription = exampleEventEmitter.addListener('ClickEvent', data => {
     console.log('Event received', data);
     const beatData = JSON.parse(data);
-    setCurrentBeat((beatData.currentBeat % drill.beatsPerChord) + 1);
+    setCurrentBeat((beatData.currentBeat % drill.beatsPerPrompt) + 1);
   });
 
   useEffect(() => {
@@ -100,7 +100,7 @@ export function DrillScreen(): React.JSX.Element {
             />
           </TouchableOpacity>
           <Text style={[localStyles.metronomeText, {alignSelf: 'center'}]}>
-            {currentBeat + ' - ' + drill.beatsPerChord}
+            {currentBeat + ' - ' + drill.beatsPerPrompt}
           </Text>
         </View>
       </View>
