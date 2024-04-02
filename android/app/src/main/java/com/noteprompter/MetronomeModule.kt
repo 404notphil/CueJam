@@ -63,12 +63,23 @@ class MetronomeModule(reactContext: ReactApplicationContext) :
 
     override fun getName() = "MetronomeModule"
 
+    // Dummy event emitter for troubleshooting event subscriptions
     private fun emitEvent() {
         reactApplicationContext
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit("EventName", null) // You can pass a payload instead of `null`.
     }
 
+    private fun notifyUiOfClickEvent(currentBeat: Int) {
+        val json = """
+            {"currentBeat":"$currentBeat"}
+        """.trimIndent()
+        reactApplicationContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit("ClickEvent", json)
+    }
+
+    // Dummy event trigger for troubleshooting event subscriptions
     @ReactMethod
     fun triggerEvent() {
         emitEvent()
@@ -107,15 +118,17 @@ class MetronomeModule(reactContext: ReactApplicationContext) :
         if (soundData == null) loadSoundIntoByteArray()
 
         isPlaying = true
-        CoroutineScope(Dispatchers.Main).launch {
-            var isFirstBeat = true
 
+        var currentBeat = 1
+
+        CoroutineScope(Dispatchers.Main).launch {
             preWarmAudioTrack()
 
             scheduledFuture = scheduler.scheduleAtFixedRate({
-                playBeat(isFirstBeat)
-                isFirstBeat = false
-            }, 4, beatInterval.toLong(), TimeUnit.MILLISECONDS)
+                playBeat(currentBeat == 1)
+                notifyUiOfClickEvent(currentBeat)
+                currentBeat++
+            }, 0, beatInterval.toLong(), TimeUnit.MILLISECONDS)
             Log.d("12345", "started")
         }
     }

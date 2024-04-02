@@ -13,11 +13,16 @@ import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {selectConfigureDrill} from '../store/reducers/configureDrillReducer';
 import {globalStyles} from '../ui/theme/styles';
 import {Divider} from 'react-native-paper';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 
 export function DrillScreen(): React.JSX.Element {
   const drill = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
+  const [isPlaying, setIsPlaying] = useState(false);
+  const pauseButton = require('../assets/pause_button.png');
+  const playButton = require('../assets/play_button.png');
+  const imageSource = isPlaying ? pauseButton : playButton;
+  const [currentBeat, setCurrentBeat] = useState(0);
 
   const {MetronomeModule} = NativeModules;
   // MetronomeModule.setTempo(100);
@@ -26,8 +31,10 @@ export function DrillScreen(): React.JSX.Element {
   // MetronomeModule.loadSoundIntoByteArray();
   MetronomeModule.triggerEvent();
   const exampleEventEmitter = new NativeEventEmitter(MetronomeModule);
-  const subscription = exampleEventEmitter.addListener('EventName', data => {
+  const subscription = exampleEventEmitter.addListener('ClickEvent', data => {
     console.log('Event received', data);
+    const beatData = JSON.parse(data);
+    setCurrentBeat((beatData.currentBeat % drill.beatsPerChord) + 1);
   });
 
   useEffect(() => {
@@ -72,18 +79,28 @@ export function DrillScreen(): React.JSX.Element {
             flexDirection: 'row',
             justifyContent: 'space-around',
           }}>
-          <TouchableOpacity style={{alignSelf: 'center', margin: 20}}>
+          <TouchableOpacity
+            onPress={() => {
+              if (isPlaying) {
+                MetronomeModule.stop();
+                setCurrentBeat(1);
+              } else {
+                MetronomeModule.start();
+              }
+              setIsPlaying(!isPlaying);
+            }}
+            style={{alignSelf: 'center', margin: 20}}>
             <Image
               style={{
                 height: 70,
                 width: 70,
               }}
-              source={require('../assets/play_button.png')}
+              source={imageSource}
               resizeMode="contain"
             />
           </TouchableOpacity>
           <Text style={[localStyles.metronomeText, {alignSelf: 'center'}]}>
-            1 - 4
+            {currentBeat + ' - ' + drill.beatsPerChord}
           </Text>
         </View>
       </View>
