@@ -64,7 +64,7 @@ function AuthorizedStack(): React.JSX.Element {
         name="Drill"
         component={DrillScreen}
         options={{
-          header: () => <MainAppHeader screenName="Drill" />,
+          headerShown: false,
         }}
       />
       <Stack.Screen

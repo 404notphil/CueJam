@@ -36,6 +36,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import {useNavigation} from '@react-navigation/native';
 
 interface SettingProps {
   title: string;
@@ -57,6 +58,8 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   const drill = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
+
+  const navigation = useNavigation();
 
   const [drillIsSaved, setDrillIsSaved] = useState(true);
 
@@ -123,14 +126,18 @@ export function ConfigureDrillScreen(): React.JSX.Element {
             {drillIsSaved && (
               <TouchableOpacity
                 style={[globalStyles.button, {marginBottom: 8}]}
-                onPress={() => handleSaveDrill()}>
+                onPress={() => {
+                  navigation.navigate('Drill');
+                }}>
                 <Text style={globalStyles.buttonText}>Play</Text>
               </TouchableOpacity>
             )}
             {drillIsSaved && (
               <TouchableOpacity
                 style={[globalStyles.button, {marginBottom: 8}]}
-                onPress={() => handleSaveDrill()}>
+                onPress={() => {
+                  navigation.goBack();
+                }}>
                 <Text style={globalStyles.buttonText}>Close</Text>
               </TouchableOpacity>
             )}

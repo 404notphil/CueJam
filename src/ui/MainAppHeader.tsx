@@ -51,9 +51,6 @@ interface AppHeaderTitleProps {
 
 const AppHeaderTitle: React.FC<AppHeaderTitleProps> = props => {
   let screenTitle: 'Configure Drill' | 'NotePrompter' | 'Saved Drills';
-  const [fontSizeAnimation] = useState(
-    new Animated.Value(props.screenName === 'Home' ? 1 : 0),
-  ); // 0 is the initial value
 
   const [largeText, setLargeText] = useState(true);
 
@@ -76,21 +73,6 @@ const AppHeaderTitle: React.FC<AppHeaderTitleProps> = props => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setLargeText(props.screenName === 'Home');
   }, [props.screenName]);
-
-  useEffect(() => {
-    console.log(
-      '12345 Component did mount or props/screenName did change' +
-        props.screenName,
-    );
-    return () => {
-      console.log(
-        '12345 Component will unmount or before props/screenName will change again' +
-          props.screenName,
-      );
-    };
-  }, [props.screenName]); // Dependency array
-
-  console.log('12345 Component rendering or re-rendering' + props.screenName);
 
   return (
     <View style={{}}>
