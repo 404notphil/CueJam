@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Define the shape of the context
+// The context will contain the auth token. 
 interface AuthContextType {
   token: string | null;
   setToken: (token: string | null) => void;

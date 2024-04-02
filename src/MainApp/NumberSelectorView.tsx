@@ -9,7 +9,6 @@ import {globalStyles} from '../ui/theme/styles';
 
 interface NumberSelectorViewProps {
   title: string;
-  type: 'tempo' | 'beats';
   selectedNumberInViewer: number;
   onSelectNumberInViewer: (numberToSelectInViewer: number) => void;
   onCommitSelectedNumber: (selectedNumber: number) => void;
