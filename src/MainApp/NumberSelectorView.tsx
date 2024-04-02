@@ -8,7 +8,8 @@ import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {globalStyles} from '../ui/theme/styles';
 
 interface NumberSelectorViewProps {
-  title: string,
+  title: string;
+  type: 'tempo' | 'beats';
   selectedNumberInViewer: number;
   onSelectNumberInViewer: (numberToSelectInViewer: number) => void;
   onCommitSelectedNumber: (selectedNumber: number) => void;
@@ -43,6 +44,26 @@ export const NumberSelectorView: React.FC<NumberSelectorViewProps> = props => {
           />
         </TouchableOpacity>
       </View>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+          alignItems: 'center',
+        }}>
+        <NumberViewerComponent numberToView={props.selectedNumberInViewer} />
+        <Text
+          style={[
+            globalStyles.fieldHeader,
+            {
+              color: 'yellow',
+              textAlign: 'center',
+            },
+          ]}>
+          bpm
+        </Text>
+      </View>
+
       <View
         style={{
           flexDirection: 'row',
@@ -62,25 +83,6 @@ export const NumberSelectorView: React.FC<NumberSelectorViewProps> = props => {
           bpmDistance={10}
           icon={'../assets/single_up_arrow.png'}
         />
-      </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-        }}>
-        <NumberViewerComponent numberToView={props.selectedNumberInViewer} />
-        <Text
-          style={[
-            globalStyles.fieldHeader,
-            {
-              color: 'yellow',
-              textAlign: 'center',
-            },
-          ]}>
-          bpm
-        </Text>
       </View>
 
       <View style={{flexDirection: 'row'}}>
