@@ -10,6 +10,7 @@ import {globalStyles} from '../ui/theme/styles';
 import {Image} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
+  ConfigureDrillState,
   selectConfigureDrill,
   setBeatsPerChord,
   setChordQualities,
@@ -35,6 +36,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import {useNavigation} from '@react-navigation/native';
 
@@ -61,11 +63,14 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   const navigation = useNavigation();
 
-  const [drillIsSaved, setDrillIsSaved] = useState(true);
+  const [drillIsSaved, setDrillIsSaved] = useState(false);
+
+  let lastSavedDrill: ConfigureDrillState | undefined = undefined;
 
   const handleSaveDrill = () => {
+    lastSavedDrill = drill;
+    /* todo: save drill*/
     setDrillIsSaved(true);
-    /* todo */
   };
 
   const animatedHeight = useSharedValue(0);
@@ -75,13 +80,13 @@ export function ConfigureDrillScreen(): React.JSX.Element {
     if (drillIsSaved) {
       animatedHeight.value = 0;
       animatedOpacity.value = 0;
-      animatedHeight.value = withSpring(120);
-      animatedOpacity.value = withSpring(1);
+      animatedHeight.value = withTiming(120);
+      animatedOpacity.value = withTiming(1);
     } else {
       animatedHeight.value = 120;
       animatedOpacity.value = 1;
-      animatedHeight.value = withSpring(0);
-      animatedOpacity.value = withSpring(0);
+      animatedHeight.value = withTiming(0);
+      animatedOpacity.value = withTiming(0);
     }
   }, [drillIsSaved]);
 
