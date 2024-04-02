@@ -1,5 +1,7 @@
 import {
   Image,
+  NativeEventEmitter,
+  NativeModules,
   StyleSheet,
   Text,
   Touchable,
@@ -11,10 +13,28 @@ import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {selectConfigureDrill} from '../store/reducers/configureDrillReducer';
 import {globalStyles} from '../ui/theme/styles';
 import {Divider} from 'react-native-paper';
+import {useEffect} from 'react';
 
 export function DrillScreen(): React.JSX.Element {
   const drill = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
+
+  const {MetronomeModule} = NativeModules;
+  // MetronomeModule.setTempo(100);
+  // MetronomeModule.stop();
+  // MetronomeModule.start();
+  // MetronomeModule.loadSoundIntoByteArray();
+  MetronomeModule.triggerEvent();
+  const exampleEventEmitter = new NativeEventEmitter(MetronomeModule);
+  const subscription = exampleEventEmitter.addListener('EventName', data => {
+    console.log('Event received', data);
+  });
+
+  useEffect(() => {
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   return (
     <View

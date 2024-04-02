@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.modules.core.DeviceEventManagerModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ import java.io.IOException
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
+
 
 @RequiresApi(Build.VERSION_CODES.M)
 class MetronomeModule(reactContext: ReactApplicationContext) :
@@ -60,6 +62,17 @@ class MetronomeModule(reactContext: ReactApplicationContext) :
     }
 
     override fun getName() = "MetronomeModule"
+
+    private fun emitEvent() {
+        reactApplicationContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit("EventName", null) // You can pass a payload instead of `null`.
+    }
+
+    @ReactMethod
+    fun triggerEvent() {
+        emitEvent()
+    }
 
     @ReactMethod
     fun loadSoundIntoByteArray() {
