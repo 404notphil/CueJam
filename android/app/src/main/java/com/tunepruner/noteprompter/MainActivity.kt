@@ -1,4 +1,4 @@
-package com.noteprompter
+package com.tunepruner.noteprompter
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
