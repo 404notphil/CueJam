@@ -1,4 +1,4 @@
-package com.noteprompter
+package com.tunepruner.noteprompter
 
 import android.content.res.Resources
 import android.media.AudioAttributes
