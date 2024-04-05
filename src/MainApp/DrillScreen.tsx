@@ -31,13 +31,13 @@ export function DrillScreen(): React.JSX.Element {
   // MetronomeModule.loadSoundIntoByteArray();
   MetronomeModule.triggerEvent();
   const exampleEventEmitter = new NativeEventEmitter(MetronomeModule);
-  const subscription = exampleEventEmitter.addListener('ClickEvent', data => {
-    console.log('Event received', data);
-    const beatData = JSON.parse(data);
-    setCurrentBeat((beatData.currentBeat % drill.beatsPerPrompt) + 1);
-  });
-
+  
   useEffect(() => {
+    const subscription = exampleEventEmitter.addListener('ClickEvent', data => {
+      console.log('12345 Event received', data);
+      const beatData = JSON.parse(data);
+      setCurrentBeat((beatData.currentBeat % drill.beatsPerPrompt) + 1);
+    });
     return () => {
       subscription.remove();
     };

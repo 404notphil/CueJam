@@ -158,6 +158,7 @@ class MetronomeModule(reactContext: ReactApplicationContext) :
     }
 
     private fun playBeat(firstBeat: Boolean = false) {
+        Log.d("12345", "playBeat was called ${plays.size}")
         soundData?.let {
             audioTrack?.play()
             audioTrack?.write(it, 0, it.size)
