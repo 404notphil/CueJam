@@ -30,6 +30,44 @@ const NoteNameDefinitions = [
 export type NoteName = (typeof NoteNameDefinitions)[number];
 export const AllNoteNames = [...NoteNameDefinitions] as NoteName[];
 
+const IntervalDefinitions = [
+  'minor second',
+  'major second',
+  'minor third',
+  'major third',
+  'perfect fourth',
+  'tritone',
+  'perfect fifth',
+  'minor sixth',
+  'major sixth',
+  'minor seventh',
+  'major seventh',
+] as const;
+
+export type Interval = (typeof IntervalDefinitions)[number]
+export const AllIntervals = [...IntervalDefinitions] as Interval[]
+
+function getNoteNameAtInterval(originalNoteName: NoteName, interval: Interval, isUpwards: boolean = true): NoteName {
+  const intervalDistance = AllIntervals.indexOf(interval) + 1
+  const oldNoteAsNumber = AllNoteNames.indexOf(originalNoteName)
+  const newNoteAsNumber = isUpwards ? (oldNoteAsNumber + intervalDistance) : oldNoteAsNumber - intervalDistance
+  if (newNoteAsNumber < 0) throw Error('Requested interval reachest below the lowest allowed note!')
+  const pitchClass  = newNoteAsNumber % 12
+  return AllNoteNames[pitchClass]
+}
+
+export function getNoteNameAtFifthBelow(originalNoteName: NoteName): NoteName {
+  return getNoteNameAtInterval(originalNoteName, 'perfect fifth', false)
+}
+
+export function getNoteNameAtFifthAbove(originalNoteName: NoteName): NoteName {
+  return getNoteNameAtInterval(originalNoteName, 'perfect fifth')
+}
+
+export function getRandomNoteName(): NoteName {
+  return AllNoteNames[Math.floor(Math.random() * AllNoteNames.length)]
+}
+
 const ChordQualityDefinitions = [
   'major triad',
   'minor triad',

@@ -21,7 +21,7 @@ export interface ConfigureDrillState {
 
 const initialState: ConfigureDrillState = {
   drillName: '',
-  tempo: 100,
+  tempo: 150,
   beatsPerPrompt: 4,
   noteNames: AllNoteNames,
   promptAlgorithm: 'random',

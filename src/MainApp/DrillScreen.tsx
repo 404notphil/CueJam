@@ -29,17 +29,22 @@ export function DrillScreen(): React.JSX.Element {
   // MetronomeModule.stop();
   // MetronomeModule.start();
   // MetronomeModule.loadSoundIntoByteArray();
-  MetronomeModule.triggerEvent();
-  const exampleEventEmitter = new NativeEventEmitter(MetronomeModule);
-  
+  const clickEventEmitter = new NativeEventEmitter(MetronomeModule);
+
   useEffect(() => {
-    const subscription = exampleEventEmitter.addListener('ClickEvent', data => {
+    MetronomeModule.bindService();
+    MetronomeModule.setTempo(drill.tempo);
+
+    const subscription = clickEventEmitter.addListener('ClickEvent', data => {
       console.log('12345 Event received', data);
       const beatData = JSON.parse(data);
       setCurrentBeat((beatData.currentBeat % drill.beatsPerPrompt) + 1);
     });
     return () => {
       subscription.remove();
+      MetronomeModule.stop();
+      MetronomeModule.cleanup();
+      MetronomeModule.unbindService();
     };
   }, []);
 
