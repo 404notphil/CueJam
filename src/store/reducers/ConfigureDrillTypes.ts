@@ -89,6 +89,10 @@ const ChordQualityDefinitions = [
 export type ChordQuality = (typeof ChordQualityDefinitions)[number];
 export const AllChordQualities = [...ChordQualityDefinitions] as ChordQuality[];
 
+export function getRandomChordQuality(): ChordQuality {
+  return AllChordQualities[Math.floor(Math.random() * AllChordQualities.length)]
+}
+
 const TonalContextsDefinitions = [
   'chord quality',
   'key',

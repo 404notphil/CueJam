@@ -15,19 +15,14 @@ private const val CHANNEL_ID = "METRONOME SERVICE"
 private const val STOP_SERVICE = "STOP_METRONOME_SERVICE"
 private const val MAX_BPM = 220
 private const val MIN_BPM = 40
-/**
- * The Metronome service is responsible for playing, stoping and timing the ticks.
- * It is a started AND bound service, so it can persist and survive device rotation, and allow
- * The fragments to bind keep referencing it.
- * The service is starting foreground mode on play() and exits it on stop().
- */
+
 class MetronomeService : Service() {
     private val binder = MetronomeBinder()
     private lateinit var soundPool: SoundPool
     private var tickJob: Job? = null
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     var bpm = 100
-    private var beatsPerMeasure = 4
+    var beatsPerMeasure = 4
     private var interval = 600
     var isPlaying = false
         private set
@@ -92,28 +87,6 @@ class MetronomeService : Service() {
         startForeground(1, notification)
     }
 
-    fun setBeatsUp(): Int {
-        if(beatsPerMeasure < 9) {
-            beatsPerMeasure++
-            if (isPlaying) {
-                pause()
-                play()
-            }
-        }
-        return beatsPerMeasure
-    }
-
-    fun setBeatsDown(): Int {
-        if(beatsPerMeasure > 1) {
-            beatsPerMeasure--
-            if (isPlaying) {
-                pause()
-                play()
-            }
-        }
-        return beatsPerMeasure
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         Log.i(TAG, "Metronome service destroyed")
@@ -136,7 +109,7 @@ class MetronomeService : Service() {
                     delay(interval.toLong())
                     if (tick % rhythm.value == 0) {
                         for (t in tickListeners) {
-                            t.onTick(interval)
+                            t.onTick(tick)
                         }
                         if (emphasis && tick == 0) {
                             rate = 1.4f

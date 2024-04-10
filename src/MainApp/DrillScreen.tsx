@@ -14,6 +14,10 @@ import {selectConfigureDrill} from '../store/reducers/configureDrillReducer';
 import {globalStyles} from '../ui/theme/styles';
 import {Divider} from 'react-native-paper';
 import {useEffect, useState} from 'react';
+import {
+  getRandomChordQuality,
+  getRandomNoteName,
+} from '../store/reducers/ConfigureDrillTypes';
 
 export function DrillScreen(): React.JSX.Element {
   const drill = useAppSelector(selectConfigureDrill);
@@ -23,22 +27,29 @@ export function DrillScreen(): React.JSX.Element {
   const playButton = require('../assets/play_button.png');
   const imageSource = isPlaying ? pauseButton : playButton;
   const [currentBeat, setCurrentBeat] = useState(0);
+  const [currentNote, setCurrentNote] = useState(getRandomNoteName());
+  const [nextNote, setNextNote] = useState(getRandomNoteName());
+  const [currentChordQuality, setCurrentChordQuality] = useState(
+    getRandomChordQuality(),
+  );
+  const [nextChordQuality, setNextChordQuality] = useState(
+    getRandomChordQuality(),
+  );
 
   const {MetronomeModule} = NativeModules;
-  // MetronomeModule.setTempo(100);
-  // MetronomeModule.stop();
-  // MetronomeModule.start();
   // MetronomeModule.loadSoundIntoByteArray();
   const clickEventEmitter = new NativeEventEmitter(MetronomeModule);
 
   useEffect(() => {
     MetronomeModule.bindService();
     MetronomeModule.setTempo(drill.tempo);
+    MetronomeModule.setBeatsPerPrompt(drill.beatsPerPrompt)
 
     const subscription = clickEventEmitter.addListener('ClickEvent', data => {
       console.log('12345 Event received', data);
       const beatData = JSON.parse(data);
-      setCurrentBeat((beatData.currentBeat % drill.beatsPerPrompt) + 1);
+      const beat = (beatData.currentBeat % drill.beatsPerPrompt) + 1;
+      setCurrentBeat(beat);
     });
     return () => {
       subscription.remove();
@@ -47,6 +58,15 @@ export function DrillScreen(): React.JSX.Element {
       MetronomeModule.unbindService();
     };
   }, []);
+
+  useEffect(() => {
+    if (currentBeat === 1) {
+      setCurrentNote(nextNote);
+      setNextNote(getRandomNoteName());
+      setCurrentChordQuality(nextChordQuality);
+      setNextChordQuality(getRandomChordQuality());
+    }
+  }, [currentBeat]);
 
   return (
     <View
@@ -64,15 +84,19 @@ export function DrillScreen(): React.JSX.Element {
         </Text>
 
         <Divider style={{backgroundColor: 'white', marginHorizontal: 30}} />
-        <Text style={localStyles.promptText}>Gb</Text>
-        <Text style={localStyles.promptSubtitleText}>Maj7</Text>
+        <Text style={localStyles.promptText}>{currentNote}</Text>
+        <Text style={localStyles.promptSubtitleText}>
+          {currentChordQuality}
+        </Text>
       </View>
 
       <View style={{flex: 3}}>
         <Divider style={{backgroundColor: 'white', marginHorizontal: 30}} />
-        <Text style={[localStyles.promptText, {color: 'grey'}]}>C</Text>
+        <Text style={[localStyles.promptText, {color: 'grey'}]}>
+          {nextNote}
+        </Text>
         <Text style={[localStyles.promptSubtitleText, {color: 'grey'}]}>
-          m7B5
+          {nextChordQuality}
         </Text>
       </View>
 

@@ -63,6 +63,11 @@ class MetronomeModule(reactContext: ReactApplicationContext) :
         metronomeService?.setBpm(tempo)
     }
 
+    @ReactMethod
+    fun setBeatsPerPrompt(beatsPerPrompt: Int) {
+        metronomeService?.beatsPerMeasure = beatsPerPrompt
+    }
+
     private fun notifyUiOfClickEvent(currentBeat: Int) {
         val json = """
             {"currentBeat":"$currentBeat"}
