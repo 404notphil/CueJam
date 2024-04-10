@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {AppModal} from '../ui/AppModal';
 import {
   AllPromptAlgorithms,
@@ -20,6 +20,10 @@ export const SetPromptAlgorithmModal: React.FC<
 > = props => {
   const [currentDisplayedPromptAlgorithm, setCurrentDisplayedPromptAlgorithm] =
     useState(props.promptAlgorithm);
+
+  useEffect(() => {
+    setCurrentDisplayedPromptAlgorithm(props.promptAlgorithm);
+  }, [props.promptAlgorithm]);
 
   return (
     <AppModal

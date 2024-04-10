@@ -7,7 +7,9 @@ import android.content.ServiceConnection
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
@@ -19,8 +21,10 @@ private const val TAG = "12345"
 class MainActivity : ReactActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val intent = Intent(this, MetronomeService::class.java)
-        startForegroundService(intent)
+        Handler(Looper.getMainLooper()).post{
+            val intent = Intent(this, MetronomeService::class.java)
+            startForegroundService(intent)
+        }
     }
 
     /**

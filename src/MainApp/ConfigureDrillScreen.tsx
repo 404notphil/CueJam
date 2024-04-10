@@ -43,6 +43,7 @@ import {useNavigation} from '@react-navigation/native';
 interface SettingProps {
   title: string;
   buttonText: string;
+  enabled: boolean;
   onPress: () => void;
 }
 
@@ -89,6 +90,12 @@ export function ConfigureDrillScreen(): React.JSX.Element {
       animatedOpacity.value = withTiming(0);
     }
   }, [drillIsSaved]);
+
+  useEffect(() => {
+    if (drill.noteNames.length !== 12) {
+      dispatch(setPromptAlgorithm('random'));
+    }
+  }, [drill.noteNames.length]);
 
   const animatedHeightStyle = useAnimatedStyle(() => {
     return {
@@ -153,6 +160,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         {...{
           title: 'tempo',
           buttonText: drill.tempo + ' bpm',
+          enabled: true,
           onPress: () => {
             setTempoDialogVisible(true);
             setDrillIsSaved(false);
@@ -164,6 +172,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         {...{
           title: 'beats per prompt',
           buttonText: drill.beatsPerPrompt.toString(),
+          enabled: true,
           onPress: () => setBeatsPerPromptDialogVisible(true),
         }}
       />
@@ -172,6 +181,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         {...{
           title: 'note names',
           buttonText: drill.noteNames.length.toString(),
+          enabled: true,
           onPress: () => setNoteNamesDialogVisible(true),
         }}
       />
@@ -180,7 +190,11 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         {...{
           title: 'prompt algorithm',
           buttonText: drill.promptAlgorithm,
-          onPress: () => setPromptAlgorithmDialogVisible(true),
+          enabled: drill.noteNames.length === 12,
+          onPress: () => {
+            if (drill.noteNames.length === 12)
+              setPromptAlgorithmDialogVisible(true);
+          },
         }}
       />
 
@@ -188,6 +202,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         {...{
           title: 'tonal context',
           buttonText: drill.tonalContext,
+          enabled: true,
           onPress: () => setTonalContextDialogVisible(true),
         }}
       />
@@ -197,6 +212,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           {...{
             title: 'chord qualities',
             buttonText: drill.chordQualities.length.toString(),
+            enabled: true,
             onPress: () => setChordQualitiesDialogVisible(true),
           }}
         />
@@ -285,6 +301,7 @@ const SettingRow: React.FC<SettingProps> = props => {
             flexDirection: 'row',
             justifyContent: 'flex-end',
           },
+          props.enabled ? {opacity: 1} : {opacity: 0.5},
         ]}
         onPress={() => props.onPress()}>
         <Text style={[globalStyles.buttonText]}>{props.buttonText}</Text>

@@ -1,10 +1,8 @@
 
 const PromptAlgorithmDefinitions = [
   'random',
-  'chromatic',
   'descending5ths',
   'ascending5ths',
-  'tonerow',
 ] as const;
 
 export type PromptAlgorithm = (typeof PromptAlgorithmDefinitions)[number];
@@ -64,8 +62,8 @@ export function getNoteNameAtFifthAbove(originalNoteName: NoteName): NoteName {
   return getNoteNameAtInterval(originalNoteName, 'perfect fifth')
 }
 
-export function getRandomNoteName(): NoteName {
-  return AllNoteNames[Math.floor(Math.random() * AllNoteNames.length)]
+export function getRandomNoteName(noteNameFilter: NoteName[] = AllNoteNames): NoteName {
+  return noteNameFilter[Math.floor(Math.random() * noteNameFilter.length)]
 }
 
 const ChordQualityDefinitions = [

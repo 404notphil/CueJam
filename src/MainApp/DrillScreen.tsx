@@ -27,8 +27,10 @@ export function DrillScreen(): React.JSX.Element {
   const playButton = require('../assets/play_button.png');
   const imageSource = isPlaying ? pauseButton : playButton;
   const [currentBeat, setCurrentBeat] = useState(0);
-  const [currentNote, setCurrentNote] = useState(getRandomNoteName());
-  const [nextNote, setNextNote] = useState(getRandomNoteName());
+  const [currentNote, setCurrentNote] = useState(
+    getRandomNoteName(drill.noteNames),
+  );
+  const [nextNote, setNextNote] = useState(getRandomNoteName(drill.noteNames));
   const [currentChordQuality, setCurrentChordQuality] = useState(
     getRandomChordQuality(),
   );
@@ -37,7 +39,6 @@ export function DrillScreen(): React.JSX.Element {
   );
 
   const {MetronomeModule} = NativeModules;
-  // MetronomeModule.loadSoundIntoByteArray();
   const clickEventEmitter = new NativeEventEmitter(MetronomeModule);
 
   useEffect(() => {
@@ -62,7 +63,7 @@ export function DrillScreen(): React.JSX.Element {
   useEffect(() => {
     if (currentBeat === 1) {
       setCurrentNote(nextNote);
-      setNextNote(getRandomNoteName());
+      setNextNote(getRandomNoteName(drill.noteNames));
       setCurrentChordQuality(nextChordQuality);
       setNextChordQuality(getRandomChordQuality());
     }
