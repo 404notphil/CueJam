@@ -101,3 +101,36 @@ const TonalContextsDefinitions = [
 
 export type TonalContext = (typeof TonalContextsDefinitions)[number];
 export const AllTonalContexts = [...TonalContextsDefinitions] as TonalContext[];
+
+const ScaleDefinitions = [
+  'major',
+  'natural minor',
+  'harmonic minor',
+  'melodic minor',
+  'major pentatonic',
+  'minor pentatonic',
+  'blues',
+  'bebop',
+  'whole tone',
+  'chromatic',
+  'altered',
+];
+
+export type Scale = (typeof ScaleDefinitions)[number];
+export const AllScales = [...ScaleDefinitions] as Scale[];
+
+export type Key = 'major' | 'minor';
+export const AllKeys: Key[] = ['major', 'minor'];
+
+const ModeDefinitions = [
+  'ionian',
+  'dorian',
+  'phrygian',
+  'lydian',
+  'mixolydian',
+  'aeolian',
+  'locrian',
+];
+
+export type Mode = (typeof ModeDefinitions)[number];
+export const AllModes = [...ModeDefinitions] as Mode[];
