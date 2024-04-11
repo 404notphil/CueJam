@@ -119,8 +119,16 @@ const ScaleDefinitions = [
 export type Scale = (typeof ScaleDefinitions)[number];
 export const AllScales = [...ScaleDefinitions] as Scale[];
 
+export function getRandomScale(): Scale {
+  return AllScales[Math.floor(Math.random() * AllScales.length)];
+}
+
 export type Key = 'major' | 'minor';
 export const AllKeys: Key[] = ['major', 'minor'];
+
+export function getRandomKey(): Key {
+  return AllKeys[Math.floor(Math.random() * AllKeys.length)];
+}
 
 const ModeDefinitions = [
   'ionian',
@@ -134,3 +142,7 @@ const ModeDefinitions = [
 
 export type Mode = (typeof ModeDefinitions)[number];
 export const AllModes = [...ModeDefinitions] as Mode[];
+
+export function getRandomMode(): Mode {
+  return AllModes[Math.floor(Math.random() * AllModes.length)];
+}

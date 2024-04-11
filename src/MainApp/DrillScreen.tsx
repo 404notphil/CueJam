@@ -16,12 +16,37 @@ import {Divider} from 'react-native-paper';
 import {useEffect, useState} from 'react';
 import {
   getRandomChordQuality,
+  getRandomKey,
+  getRandomMode,
   getRandomNoteName,
+  getRandomScale,
 } from '../store/reducers/ConfigureDrillTypes';
 
 export function DrillScreen(): React.JSX.Element {
   const drill = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
+
+  const getRandomTonalContextValue = () => {
+    switch (drill.tonalContext) {
+      case 'chord quality':
+        return getRandomChordQuality();
+      case 'key':
+        return getRandomKey();
+      case 'mode':
+        return getRandomMode();
+      case 'scale':
+        return getRandomScale();
+      default:
+        return null;
+    }
+  };
+  const [currentTonalContextValue, setCurrentTonalContextValue] = useState<
+    string | null
+  >(getRandomTonalContextValue());
+  const [nextTonalContextValue, setNextTonalContextValue] = useState<
+    string | null
+  >(getRandomTonalContextValue());
+
   const [isPlaying, setIsPlaying] = useState(false);
   const pauseButton = require('../assets/pause_button.png');
   const playButton = require('../assets/play_button.png');
@@ -31,12 +56,6 @@ export function DrillScreen(): React.JSX.Element {
     getRandomNoteName(drill.noteNames),
   );
   const [nextNote, setNextNote] = useState(getRandomNoteName(drill.noteNames));
-  const [currentChordQuality, setCurrentChordQuality] = useState(
-    getRandomChordQuality(),
-  );
-  const [nextChordQuality, setNextChordQuality] = useState(
-    getRandomChordQuality(),
-  );
 
   const {MetronomeModule} = NativeModules;
   const clickEventEmitter = new NativeEventEmitter(MetronomeModule);
@@ -44,7 +63,7 @@ export function DrillScreen(): React.JSX.Element {
   useEffect(() => {
     MetronomeModule.bindService();
     MetronomeModule.setTempo(drill.tempo);
-    MetronomeModule.setBeatsPerPrompt(drill.beatsPerPrompt)
+    MetronomeModule.setBeatsPerPrompt(drill.beatsPerPrompt);
 
     const subscription = clickEventEmitter.addListener('ClickEvent', data => {
       console.log('12345 Event received', data);
@@ -64,8 +83,8 @@ export function DrillScreen(): React.JSX.Element {
     if (currentBeat === 1) {
       setCurrentNote(nextNote);
       setNextNote(getRandomNoteName(drill.noteNames));
-      setCurrentChordQuality(nextChordQuality);
-      setNextChordQuality(getRandomChordQuality());
+      setCurrentTonalContextValue(nextTonalContextValue);
+      setNextTonalContextValue(getRandomTonalContextValue());
     }
   }, [currentBeat]);
 
@@ -87,7 +106,7 @@ export function DrillScreen(): React.JSX.Element {
         <Divider style={{backgroundColor: 'white', marginHorizontal: 30}} />
         <Text style={localStyles.promptText}>{currentNote}</Text>
         <Text style={localStyles.promptSubtitleText}>
-          {currentChordQuality}
+          {currentTonalContextValue}
         </Text>
       </View>
 
@@ -97,7 +116,7 @@ export function DrillScreen(): React.JSX.Element {
           {nextNote}
         </Text>
         <Text style={[localStyles.promptSubtitleText, {color: 'grey'}]}>
-          {nextChordQuality}
+          {nextTonalContextValue}
         </Text>
       </View>
 
