@@ -31,7 +31,14 @@ class MetronomeModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun bindService() {
+    fun initializeMetronomeService() {
+        val intent = Intent("com.tunepruner.noteprompter.START_METRONOME_SERVICE")
+        reactApplicationContext.sendBroadcast(intent)
+        bindService()
+    }
+
+    //    @ReactMethod
+    private fun bindService() {
         Intent(reactApplicationContext, MetronomeService::class.java).also { intent ->
             reactApplicationContext.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }

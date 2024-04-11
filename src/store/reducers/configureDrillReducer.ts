@@ -3,9 +3,11 @@ import {RootState} from '../store';
 import {
   AllChordQualities,
   AllNoteNames,
+  AllScales,
   ChordQuality,
   NoteName,
   PromptAlgorithm,
+  Scale,
   TonalContext,
 } from './ConfigureDrillTypes';
 
@@ -17,6 +19,7 @@ export interface ConfigureDrillState {
   promptAlgorithm: PromptAlgorithm;
   tonalContext: TonalContext;
   chordQualities: ChordQuality[];
+  scales: Scale[],
 }
 
 const initialState: ConfigureDrillState = {
@@ -27,6 +30,7 @@ const initialState: ConfigureDrillState = {
   promptAlgorithm: 'random',
   tonalContext: 'chord quality',
   chordQualities: AllChordQualities,
+  scales: AllScales,
 };
 
 export const configureDrillSlice = createSlice({
@@ -54,6 +58,9 @@ export const configureDrillSlice = createSlice({
     setChordQualities: (state, action: PayloadAction<ChordQuality[]>) => {
       state.chordQualities = action.payload;
     },
+    setScales: (state, action: PayloadAction<Scale[]>) => {
+      state.scales = action.payload;
+    },
   },
 });
 
@@ -71,4 +78,5 @@ export const {
   setPromptAlgorithm,
   setTonalContext,
   setChordQualities: setChordQualities,
+  setScales: setScales,
 } = configureDrillSlice.actions;

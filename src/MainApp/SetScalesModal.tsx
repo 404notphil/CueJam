@@ -1,62 +1,49 @@
 import React, {useState} from 'react';
 import {AppModal} from '../ui/AppModal';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {
-  AllChordQualities,
-  ChordQuality,
-} from '../store/reducers/ConfigureDrillTypes';
+import {AllScales, Scale} from '../store/reducers/ConfigureDrillTypes';
 import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
 
-interface SetChordQualitiesModalProps {
+interface SetScalesModalProps {
   modalIsVisible: boolean;
-  chordQualities: ChordQuality[];
-  onSetChordQualities: (chordQualities: ChordQuality[]) => void;
+  scales: Scale[];
+  onSetScales: (scales: Scale[]) => void;
   onDismiss: () => void;
 }
 
-const AllChordQualitiesEnabled = AllChordQualities.reduce(
-  (accumulator, noteName) => {
-    accumulator[noteName] = true;
-    return accumulator;
-  },
-  {} as Record<ChordQuality, boolean>,
-);
+const AllScalesEnabled = AllScales.reduce((accumulator, noteName) => {
+  accumulator[noteName] = true;
+  return accumulator;
+}, {} as Record<Scale, boolean>);
 
-const NoChordQualitiesEnabled = AllChordQualities.reduce(
-  (accumulator, noteName) => {
-    accumulator[noteName] = false;
-    return accumulator;
-  },
-  {} as Record<ChordQuality, boolean>,
-);
+const NoScalesEnabled = AllScales.reduce((accumulator, noteName) => {
+  accumulator[noteName] = false;
+  return accumulator;
+}, {} as Record<Scale, boolean>);
 
-export const SetChordQualitiesModal: React.FC<
-  SetChordQualitiesModalProps
-> = props => {
-  const [currentDisplayedChordQualities, setCurrentDisplayedChordQualities] =
-    useState(
-      AllChordQualities.reduce((accumulator, noteName) => {
-        accumulator[noteName] = props.chordQualities.includes(noteName);
-        return accumulator;
-      }, {} as Record<ChordQuality, boolean>),
-    );
+export const SetScalesModal: React.FC<SetScalesModalProps> = props => {
+  const [currentDisplayedScales, setCurrentDisplayedScales] = useState(
+    AllScales.reduce((accumulator, noteName) => {
+      accumulator[noteName] = props.scales.includes(noteName);
+      return accumulator;
+    }, {} as Record<Scale, boolean>),
+  );
 
-  const toggleChordQuality = (noteName: ChordQuality) => {
-    setCurrentDisplayedChordQualities(prevState => ({
+  const toggleScale = (noteName: Scale) => {
+    setCurrentDisplayedScales(prevState => ({
       ...prevState,
       [noteName]: !prevState[noteName],
     }));
   };
 
-  const stateAsChordQualityArray = () => {
-    const result = Object.entries(currentDisplayedChordQualities)
+  const stateAsScaleArray = () => {
+    const result = Object.entries(currentDisplayedScales)
       .filter(item => {
         return item[1];
       })
-      .map(item => item[0] as ChordQuality);
-    console.log('12345 result = ' + result.length);
+      .map(item => item[0] as Scale);
     return result;
   };
 
@@ -65,17 +52,17 @@ export const SetChordQualitiesModal: React.FC<
       {...props}
       innerModalStyles={{top: '5%', padding: 16, marginHorizontal: 20}}
       dismissingShouldFinish={true}
-      onFinish={() => props.onSetChordQualities(stateAsChordQualityArray())}>
+      onFinish={() => props.onSetScales(stateAsScaleArray())}>
       <View>
         <View style={{flexDirection: 'row'}}>
           <Text style={[globalStyles.fieldHeader, {marginBottom: 20}]}>
-            chord qualities
+            scales
           </Text>
           <View style={{flex: 1}} />
           <View>
             <TouchableOpacity
               onPress={() => {
-                setCurrentDisplayedChordQualities(AllChordQualitiesEnabled);
+                setCurrentDisplayedScales(AllScalesEnabled);
               }}
               style={[
                 globalStyles.button,
@@ -85,7 +72,7 @@ export const SetChordQualitiesModal: React.FC<
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                setCurrentDisplayedChordQualities(NoChordQualitiesEnabled);
+                setCurrentDisplayedScales(NoScalesEnabled);
               }}
               style={[
                 globalStyles.button,
@@ -98,20 +85,18 @@ export const SetChordQualitiesModal: React.FC<
           </View>
         </View>
         <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-          {Object.entries(currentDisplayedChordQualities).map(
-            (noteName, index) => (
-              <Chip
-                key={index}
-                style={
-                  noteName[1]
-                    ? localStyles.selectedChipStyle
-                    : localStyles.chipStyle
-                }
-                onPress={() => toggleChordQuality(noteName[0] as ChordQuality)}>
-                {noteName}
-              </Chip>
-            ),
-          )}
+          {Object.entries(currentDisplayedScales).map((noteName, index) => (
+            <Chip
+              key={index}
+              style={
+                noteName[1]
+                  ? localStyles.selectedChipStyle
+                  : localStyles.chipStyle
+              }
+              onPress={() => toggleScale(noteName[0] as Scale)}>
+              {noteName}
+            </Chip>
+          ))}
         </View>
       </View>
     </AppModal>

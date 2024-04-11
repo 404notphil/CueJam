@@ -61,7 +61,7 @@ export function DrillScreen(): React.JSX.Element {
   const clickEventEmitter = new NativeEventEmitter(MetronomeModule);
 
   useEffect(() => {
-    MetronomeModule.bindService();
+    MetronomeModule.initializeMetronomeService();
     MetronomeModule.setTempo(drill.tempo);
     MetronomeModule.setBeatsPerPrompt(drill.beatsPerPrompt);
 

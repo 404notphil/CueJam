@@ -27,5 +27,10 @@
             android:name=".MetronomeService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
+        <receiver android:name=".ServiceStarterReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="com.tunepruner.noteprompter.START_METRONOME_SERVICE" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

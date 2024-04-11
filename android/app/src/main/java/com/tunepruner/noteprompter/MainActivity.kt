@@ -1,16 +1,7 @@
 package com.tunepruner.noteprompter
 
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
-import android.content.pm.ServiceInfo
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.IBinder
-import android.os.Looper
-import android.util.Log
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
@@ -21,10 +12,8 @@ private const val TAG = "12345"
 class MainActivity : ReactActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Handler(Looper.getMainLooper()).post{
-            val intent = Intent(this, MetronomeService::class.java)
-            startForegroundService(intent)
-        }
+//        val intent = Intent(this, MetronomeService::class.java)
+//        startForegroundService(intent)
     }
 
     /**

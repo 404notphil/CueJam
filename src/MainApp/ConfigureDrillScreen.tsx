@@ -17,6 +17,7 @@ import {
   setDrillName,
   setNoteNames,
   setPromptAlgorithm,
+  setScales,
   setTempo,
   setTonalContext,
 } from '../store/reducers/configureDrillReducer';
@@ -27,11 +28,13 @@ import {
   ChordQuality,
   NoteName,
   PromptAlgorithm,
+  Scale,
   TonalContext,
 } from '../store/reducers/ConfigureDrillTypes';
 import {SetPromptAlgorithmModal} from './SetPromptAlgorithmModal';
 import {TonalContextModal} from './TonalContextModal';
-import {SetChordQualitiesModal} from './ChordQualitiesModal';
+import {SetChordQualitiesModal} from './SetChordQualitiesModal';
+import {SetScalesModal} from './SetScalesModal';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -53,6 +56,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const [tempoDialogVisible, setTempoDialogVisible] = useState(false);
   const [chordQualitiesDialogVisible, setChordQualitiesDialogVisible] =
     useState(false);
+  const [scalesDialogVisible, setScalesDialogVisible] = useState(false);
   const [beatsPerChordDialogVisible, setBeatsPerPromptDialogVisible] =
     useState(false);
   const [noteNamesDialogVisible, setNoteNamesDialogVisible] = useState(false);
@@ -221,6 +225,17 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         />
       )}
 
+      {drill.tonalContext === 'scale' && (
+        <SettingRow
+          {...{
+            title: 'scales',
+            buttonText: drill.scales.length.toString(),
+            enabled: true,
+            onPress: () => setScalesDialogVisible(true),
+          }}
+        />
+      )}
+
       <SetTempoModal
         modalIsVisible={tempoDialogVisible}
         tempo={drill.tempo}
@@ -271,6 +286,13 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           dispatch(setChordQualities(chordQualities))
         }
         onDismiss={() => setChordQualitiesDialogVisible(false)}
+      />
+
+      <SetScalesModal
+        modalIsVisible={scalesDialogVisible}
+        scales={drill.scales}
+        onSetScales={(scales: Scale[]) => dispatch(setScales(scales))}
+        onDismiss={() => setScalesDialogVisible(false)}
       />
     </ScrollView>
   );
