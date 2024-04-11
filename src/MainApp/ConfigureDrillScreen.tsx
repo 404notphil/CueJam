@@ -78,6 +78,10 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const animatedOpacity = useSharedValue(0);
 
   useEffect(() => {
+    setDrillIsSaved(drill === lastSavedDrill);
+  }, [drill]);
+
+  useEffect(() => {
     if (drillIsSaved) {
       animatedHeight.value = 0;
       animatedOpacity.value = 0;
@@ -163,7 +167,6 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           enabled: true,
           onPress: () => {
             setTempoDialogVisible(true);
-            setDrillIsSaved(false);
           },
         }}
       />
