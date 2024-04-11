@@ -2,10 +2,12 @@ import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 import {RootState} from '../store';
 import {
   AllChordQualities,
+  AllKeys,
   AllModes,
   AllNoteNames,
   AllScales,
   ChordQuality,
+  Key,
   Mode,
   NoteName,
   PromptAlgorithm,
@@ -23,6 +25,7 @@ export interface ConfigureDrillState {
   chordQualities: ChordQuality[];
   scales: Scale[];
   modes: Mode[];
+  keys: Key[];
 }
 
 const initialState: ConfigureDrillState = {
@@ -35,6 +38,7 @@ const initialState: ConfigureDrillState = {
   chordQualities: AllChordQualities,
   scales: AllScales,
   modes: AllModes,
+  keys: AllKeys,
 };
 
 export const configureDrillSlice = createSlice({
@@ -68,6 +72,9 @@ export const configureDrillSlice = createSlice({
     setModes: (state, action: PayloadAction<Mode[]>) => {
       state.modes = action.payload;
     },
+    setKeys: (state, action: PayloadAction<Key[]>) => {
+      state.keys = action.payload;
+    },
   },
 });
 
@@ -86,5 +93,6 @@ export const {
   setTonalContext,
   setChordQualities: setChordQualities,
   setScales: setScales,
-  setModes: setModes,
+  setKeys: setModes,
+  setKeys: setKeys,
 } = configureDrillSlice.actions;

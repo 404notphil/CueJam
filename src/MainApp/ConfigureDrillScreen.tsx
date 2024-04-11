@@ -15,6 +15,7 @@ import {
   setBeatsPerChord,
   setChordQualities,
   setDrillName,
+  setKeys,
   setModes,
   setNoteNames,
   setPromptAlgorithm,
@@ -27,6 +28,7 @@ import {SetBeatsPerPromptModal} from './SetBeatsPerChordModal';
 import {SetNoteNamesModal} from './SetNoteNamesModal';
 import {
   ChordQuality,
+  Key,
   Mode,
   NoteName,
   PromptAlgorithm,
@@ -45,6 +47,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useNavigation} from '@react-navigation/native';
 import {SetModesModal} from './SetModesModal';
+import {SetKeysModal} from './SetKeysModal';
 
 interface SettingProps {
   title: string;
@@ -61,6 +64,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
     useState(false);
   const [scalesDialogVisible, setScalesDialogVisible] = useState(false);
   const [modesDialogVisible, setModesDialogVisible] = useState(false);
+  const [keysDialogVisible, setKeysDialogVisible] = useState(false);
   const [beatsPerChordDialogVisible, setBeatsPerPromptDialogVisible] =
     useState(false);
   const [noteNamesDialogVisible, setNoteNamesDialogVisible] = useState(false);
@@ -251,6 +255,17 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         />
       )}
 
+      {drill.tonalContext === 'key' && (
+        <SettingRow
+          {...{
+            title: 'keys',
+            buttonText: drill.keys.length.toString(),
+            enabled: true,
+            onPress: () => setKeysDialogVisible(true),
+          }}
+        />
+      )}
+
       <SetTempoModal
         modalIsVisible={tempoDialogVisible}
         tempo={drill.tempo}
@@ -315,6 +330,13 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         modes={drill.modes}
         onSetModes={(modes: Mode[]) => dispatch(setModes(modes))}
         onDismiss={() => setModesDialogVisible(false)}
+      />
+
+      <SetKeysModal
+        modalIsVisible={keysDialogVisible}
+        keys={drill.keys}
+        onSetKeys={(keys: Key[]) => dispatch(setKeys(keys))}
+        onDismiss={() => setKeysDialogVisible(false)}
       />
     </ScrollView>
   );
