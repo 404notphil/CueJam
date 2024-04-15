@@ -24,7 +24,7 @@ import {
   setTonalContext,
 } from '../store/reducers/configureDrillReducer';
 import {SetTempoModal} from './SetTempoModal';
-import {SetBeatsPerPromptModal} from './SetBeatsPerChordModal';
+import {SetBeatsPerPromptModal} from './SetBeatsPerPromptModal';
 import {SetNoteNamesModal} from './SetNoteNamesModal';
 import {
   ChordQuality,
