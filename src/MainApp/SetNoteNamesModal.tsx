@@ -4,6 +4,7 @@ import {View, Text} from 'react-native';
 import {AllNoteNames, NoteName} from '../store/reducers/ConfigureDrillTypes';
 import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
+import {DrillConfigurationModal} from './DrillConfigurationModal';
 
 interface SetNoteNamesModalProps {
   modalIsVisible: boolean;
@@ -38,14 +39,20 @@ export const SetNoteNamesModal: React.FC<SetNoteNamesModalProps> = props => {
   };
 
   return (
-    <AppModal
+    <DrillConfigurationModal
       {...props}
-      innerModalStyles={{top: '10%', padding: 16, marginHorizontal: 50}}
-      dismissingShouldFinish={true}
-      onFinish={() => props.onSetNoteNames(stateAsNoteNameArray())}>
+      title={'note names'}
+      onDismiss={() => {
+        props.onSetNoteNames(stateAsNoteNameArray());
+        props.onDismiss();
+      }}>
       <View>
-        <Text style={globalStyles.fieldHeader}>Note names</Text>
-        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}>
           {Object.entries(currentDisplayedNoteNames).map((noteName, index) => (
             <Chip
               key={index}
@@ -61,6 +68,6 @@ export const SetNoteNamesModal: React.FC<SetNoteNamesModalProps> = props => {
           ))}
         </View>
       </View>
-    </AppModal>
+    </DrillConfigurationModal>
   );
 };
