@@ -26,27 +26,6 @@ export const NumberSelectorView: React.FC<NumberSelectorViewProps> = props => {
       <View
         style={{
           flexDirection: 'row',
-          alignItems: 'center',
-          margin: 16,
-        }}>
-        <Text style={[globalStyles.fieldHeader, {marginTop: 0, flex: 1}]}>
-          {props.title}
-        </Text>
-        <TouchableOpacity
-          onPress={() => {
-            props.onCommitSelectedNumber(props.selectedNumberInViewer);
-          }}>
-          <Image
-            style={{height: 20, width: 20, margin: 20}}
-            source={require('../assets/check_mark.png')}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-      </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
           justifyContent: 'space-evenly',
           alignItems: 'center',
         }}>

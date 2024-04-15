@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {AppModal} from '../ui/AppModal';
 import {NumberSelectorView} from './NumberSelectorView';
+import {DrillConfigurationModal} from './DrillConfigurationModal';
 
 interface SetTempoModalProps {
   modalIsVisible: boolean;
@@ -15,11 +16,13 @@ export const SetTempoModal: React.FC<SetTempoModalProps> = props => {
   );
 
   return (
-    <AppModal
+    <DrillConfigurationModal
       {...props}
-      innerModalStyles={{top: '10%', padding: 16}}
-      dismissingShouldFinish={true}
-      onFinish={() => props.onSetTempo(currentDisplayedTempo)}>
+      title={'tempo'}
+      onDismiss={() => {
+        props.onSetTempo(currentDisplayedTempo);
+        props.onDismiss();
+      }}>
       <NumberSelectorView
         title={'tempo'}
         selectedNumberInViewer={currentDisplayedTempo}
@@ -29,6 +32,6 @@ export const SetTempoModal: React.FC<SetTempoModalProps> = props => {
           props.onDismiss();
         }}
       />
-    </AppModal>
+    </DrillConfigurationModal>
   );
 };
