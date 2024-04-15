@@ -24,7 +24,6 @@ export const SetTempoModal: React.FC<SetTempoModalProps> = props => {
         props.onDismiss();
       }}>
       <NumberSelectorView
-        title={'tempo'}
         selectedNumberInViewer={currentDisplayedTempo}
         onSelectNumberInViewer={setCurrentDisplayedTempo}
         onCommitSelectedNumber={() => {

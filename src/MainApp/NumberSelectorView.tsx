@@ -8,7 +8,6 @@ import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {globalStyles} from '../ui/theme/styles';
 
 interface NumberSelectorViewProps {
-  title: string;
   selectedNumberInViewer: number;
   onSelectNumberInViewer: (numberToSelectInViewer: number) => void;
   onCommitSelectedNumber: (selectedNumber: number) => void;

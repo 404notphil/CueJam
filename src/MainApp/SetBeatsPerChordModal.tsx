@@ -23,7 +23,6 @@ export const SetBeatsPerPromptModal: React.FC<
       dismissingShouldFinish={true}
       onFinish={() => props.onSetBeatsPerPrompt(currentDisplayedBeatsPerPrompt)}>
       <NumberSelectorView
-        title={'beats per prompt'}
         selectedNumberInViewer={currentDisplayedBeatsPerPrompt}
         onSelectNumberInViewer={setCurrentDisplayedBeatsPerPrompt}
         onCommitSelectedNumber={() => {
