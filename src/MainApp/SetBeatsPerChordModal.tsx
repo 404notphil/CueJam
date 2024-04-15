@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {AppModal} from '../ui/AppModal';
 import {NumberSelectorView} from './NumberSelectorView';
 import {View} from 'react-native';
+import {DrillConfigurationModal} from './DrillConfigurationModal';
 
 interface SetBeatsPerPromptModalProps {
   modalIsVisible: boolean;
@@ -17,11 +18,13 @@ export const SetBeatsPerPromptModal: React.FC<
     useState(props.beatsPerPrompt);
 
   return (
-    <AppModal
+    <DrillConfigurationModal
       {...props}
-      innerModalStyles={{top: '10%', padding: 16}}
-      dismissingShouldFinish={true}
-      onFinish={() => props.onSetBeatsPerPrompt(currentDisplayedBeatsPerPrompt)}>
+      title={'beats per prompt'}
+      onDismiss={() => {
+        props.onSetBeatsPerPrompt(currentDisplayedBeatsPerPrompt);
+        props.onDismiss();
+      }}>
       <NumberSelectorView
         selectedNumberInViewer={currentDisplayedBeatsPerPrompt}
         onSelectNumberInViewer={setCurrentDisplayedBeatsPerPrompt}
@@ -30,6 +33,6 @@ export const SetBeatsPerPromptModal: React.FC<
           props.onDismiss();
         }}
       />
-    </AppModal>
+    </DrillConfigurationModal>
   );
 };

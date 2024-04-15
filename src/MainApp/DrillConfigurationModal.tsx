@@ -29,14 +29,15 @@ export const DrillConfigurationModal: React.FC<
             alignSelf: 'stretch',
             flexDirection: 'row',
             justifyContent: 'space-between',
+            alignItems: 'center',
             margin: 16,
           }}>
           <Text
             style={[
               globalStyles.fieldHeader,
               {
-                alignSelf: 'flex-start',
                 marginTop: 0,
+                marginEnd: 10,
               },
             ]}>
             {props.title}
@@ -48,7 +49,7 @@ export const DrillConfigurationModal: React.FC<
             }}>
             <Image
               style={{
-                alignSelf: 'flex-end',
+                marginStart: 10,
                 height: 20,
                 width: 20,
               }}
