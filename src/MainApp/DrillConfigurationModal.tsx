@@ -17,24 +17,41 @@ export const DrillConfigurationModal: React.FC<
     <View>
       <AppModal
         {...props}
-        innerModalStyles={{top: '10%', padding: 16}}
+        innerModalStyles={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 16,
+        }}
         dismissingShouldFinish={true}
         onFinish={() => props.onDismiss()}>
         <View
           style={{
+            alignSelf: 'stretch',
             flexDirection: 'row',
-            alignItems: 'center',
+            justifyContent: 'space-between',
             margin: 16,
           }}>
-          <Text style={[globalStyles.fieldHeader, {marginTop: 0, flex: 1}]}>
+          <Text
+            style={[
+              globalStyles.fieldHeader,
+              {
+                alignSelf: 'flex-start',
+                marginTop: 0,
+              },
+            ]}>
             {props.title}
           </Text>
+
           <TouchableOpacity
             onPress={() => {
               props.onDismiss();
             }}>
             <Image
-              style={{height: 20, width: 20, margin: 20}}
+              style={{
+                alignSelf: 'flex-end',
+                height: 20,
+                width: 20,
+              }}
               source={require('../assets/check_mark.png')}
               resizeMode="contain"
             />
