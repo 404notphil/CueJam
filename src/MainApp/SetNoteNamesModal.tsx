@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {AppModal} from '../ui/AppModal';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import {AllNoteNames, NoteName} from '../store/reducers/ConfigureDrillTypes';
 import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';

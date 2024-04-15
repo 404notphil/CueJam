@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
-import {AppModal} from '../ui/AppModal';
 import {NumberSelectorView} from './NumberSelectorView';
-import {View} from 'react-native';
 import {DrillConfigurationModal} from './DrillConfigurationModal';
 
 interface SetBeatsPerPromptModalProps {

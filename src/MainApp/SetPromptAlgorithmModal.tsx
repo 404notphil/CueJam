@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {AppModal} from '../ui/AppModal';
 import {
   AllPromptAlgorithms,
   PromptAlgorithm,
 } from '../store/reducers/ConfigureDrillTypes';
 import {Text, View} from 'react-native';
-import {globalStyles} from '../ui/theme/styles';
 import {RadioButton} from 'react-native-paper';
+import {DrillConfigurationModal} from './DrillConfigurationModal';
 
 interface SetPromptAlgorithmModalProps {
   modalIsVisible: boolean;
@@ -26,16 +25,13 @@ export const SetPromptAlgorithmModal: React.FC<
   }, [props.promptAlgorithm]);
 
   return (
-    <AppModal
+    <DrillConfigurationModal
       {...props}
-      innerModalStyles={{top: '20%', padding: 20}}
-      dismissingShouldFinish={true}
-      onFinish={() =>
-        props.onSetPromptAlgorithm(currentDisplayedPromptAlgorithm)
-      }>
-      <Text style={[globalStyles.fieldHeader, {marginVertical: 30}]}>
-        prompt algorithm
-      </Text>
+      title={'prompt algorithm'}
+      onDismiss={() => {
+        props.onSetPromptAlgorithm(currentDisplayedPromptAlgorithm);
+        props.onDismiss();
+      }}>
       <RadioButton.Group
         onValueChange={value =>
           setCurrentDisplayedPromptAlgorithm(value as PromptAlgorithm)
@@ -50,6 +46,6 @@ export const SetPromptAlgorithmModal: React.FC<
           ))}
         </View>
       </RadioButton.Group>
-    </AppModal>
+    </DrillConfigurationModal>
   );
 };
