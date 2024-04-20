@@ -80,7 +80,7 @@ const ChordQualityDefinitions = [
   'augmented 7th',
   'augmented major 7th',
   'full diminished 7th',
-  'half full diminished 7th',
+  'half diminished 7th',
   'dominant 7th sus 4',
 ] as const;
 

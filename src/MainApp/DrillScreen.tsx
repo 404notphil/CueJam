@@ -94,6 +94,7 @@ export function DrillScreen(): React.JSX.Element {
         flex: 1,
         backgroundColor: Themes.dark.background,
       }}>
+      {/* Half of screen dedicated to current prompt*/}
       <View style={{flex: 3}}>
         <Text
           style={[
@@ -104,22 +105,31 @@ export function DrillScreen(): React.JSX.Element {
         </Text>
 
         <Divider style={{backgroundColor: 'white', marginHorizontal: 30}} />
-        <Text style={localStyles.promptText}>{currentNote}</Text>
-        <Text style={localStyles.promptSubtitleText}>
-          {currentTonalContextValue}
-        </Text>
+
+        {/* Prompt for current value */}
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <Text style={localStyles.promptText}>{currentNote}</Text>
+          <Text style={localStyles.promptSubtitleText}>
+            {currentTonalContextValue}
+          </Text>
+        </View>
       </View>
 
+      {/* Half of screen dedicated to next prompt*/}
       <View style={{flex: 3}}>
         <Divider style={{backgroundColor: 'white', marginHorizontal: 30}} />
-        <Text style={[localStyles.promptText, {color: 'grey'}]}>
-          {nextNote}
-        </Text>
-        <Text style={[localStyles.promptSubtitleText, {color: 'grey'}]}>
-          {nextTonalContextValue}
-        </Text>
+
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <Text style={[localStyles.promptText, {color: 'grey'}]}>
+            {nextNote}
+          </Text>
+          <Text style={[localStyles.promptSubtitleText, {color: 'grey'}]}>
+            {nextTonalContextValue}
+          </Text>
+        </View>
       </View>
 
+      {/* Area of screen for controls */}
       <View>
         <Divider style={{backgroundColor: 'white', marginHorizontal: 30}} />
         <View
@@ -162,11 +172,10 @@ const localStyles = StyleSheet.create({
     ...globalStyles.title,
     fontSize: 80,
     textAlign: 'center',
-    marginTop: 70,
   },
   promptSubtitleText: {
     ...globalStyles.title,
-    fontSize: 50,
+    fontSize: 35,
     textAlign: 'center',
   },
   metronomeText: {
