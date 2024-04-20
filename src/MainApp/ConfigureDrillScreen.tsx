@@ -36,7 +36,7 @@ import {
   TonalContext,
 } from '../store/reducers/ConfigureDrillTypes';
 import {SetPromptAlgorithmModal} from './SetPromptAlgorithmModal';
-import {TonalContextModal} from './TonalContextModal';
+import {SetTonalContextModal} from './SetTonalContextModal';
 import {SetChordQualitiesModal} from './SetChordQualitiesModal';
 import {SetScalesModal} from './SetScalesModal';
 import Animated, {
@@ -300,7 +300,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         onDismiss={() => setPromptAlgorithmDialogVisible(false)}
       />
 
-      <TonalContextModal
+      <SetTonalContextModal
         modalIsVisible={tonalContextDialogVisible}
         tonalContext={drill.tonalContext}
         onSetTonalContext={(tonalContext: TonalContext) =>

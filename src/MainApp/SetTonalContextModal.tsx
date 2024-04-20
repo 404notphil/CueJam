@@ -7,6 +7,7 @@ import {
 import {Text, View} from 'react-native';
 import {globalStyles} from '../ui/theme/styles';
 import {RadioButton} from 'react-native-paper';
+import {DrillConfigurationModal} from './DrillConfigurationModal';
 
 interface SetTonalContextModalProps {
   modalIsVisible: boolean;
@@ -15,16 +16,20 @@ interface SetTonalContextModalProps {
   onDismiss: () => void;
 }
 
-export const TonalContextModal: React.FC<SetTonalContextModalProps> = props => {
+export const SetTonalContextModal: React.FC<
+  SetTonalContextModalProps
+> = props => {
   const [currentDisplayedTonalContext, setCurrentDisplayedTonalContext] =
     useState(props.tonalContext);
 
   return (
-    <AppModal
+    <DrillConfigurationModal
       {...props}
-      innerModalStyles={{top: '20%', padding: 20}}
-      dismissingShouldFinish={true}
-      onFinish={() => props.onSetTonalContext(currentDisplayedTonalContext)}>
+      title={'tonal context'}
+      onDismiss={() => {
+        props.onSetTonalContext(currentDisplayedTonalContext);
+        props.onDismiss();
+      }}>
       <Text style={[globalStyles.fieldHeader, {marginVertical: 30}]}>
         tonal context
       </Text>
@@ -42,6 +47,6 @@ export const TonalContextModal: React.FC<SetTonalContextModalProps> = props => {
           ))}
         </View>
       </RadioButton.Group>
-    </AppModal>
+    </DrillConfigurationModal>
   );
 };
