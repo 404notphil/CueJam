@@ -105,7 +105,7 @@ export function LoginScreen(): React.JSX.Element {
           );
           onLoginPressed();
         }}
-        style={globalStyles.button}>
+        style={[globalStyles.button, {marginTop: 16}]}>
         <Text style={globalStyles.buttonText}>Login</Text>
       </TouchableOpacity>
     </View>

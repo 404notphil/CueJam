@@ -5,6 +5,7 @@ import {AllScales, Scale} from '../store/reducers/ConfigureDrillTypes';
 import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
+import {DrillConfigurationModal} from './DrillConfigurationModal';
 
 interface SetScalesModalProps {
   modalIsVisible: boolean;
@@ -48,16 +49,15 @@ export const SetScalesModal: React.FC<SetScalesModalProps> = props => {
   };
 
   return (
-    <AppModal
+    <DrillConfigurationModal
       {...props}
-      innerModalStyles={{top: '5%', padding: 16, marginHorizontal: 20}}
-      dismissingShouldFinish={true}
-      onFinish={() => props.onSetScales(stateAsScaleArray())}>
+      title="scales"
+      onDismiss={() => {
+        props.onSetScales(stateAsScaleArray());
+        props.onDismiss();
+      }}>
       <View>
         <View style={{flexDirection: 'row'}}>
-          <Text style={[globalStyles.fieldHeader, {marginBottom: 20}]}>
-            scales
-          </Text>
           <View style={{flex: 1}} />
           <View>
             <TouchableOpacity
@@ -99,7 +99,7 @@ export const SetScalesModal: React.FC<SetScalesModalProps> = props => {
           ))}
         </View>
       </View>
-    </AppModal>
+    </DrillConfigurationModal>
   );
 };
 

@@ -5,6 +5,7 @@ import {AllKeys, Key} from '../store/reducers/ConfigureDrillTypes';
 import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
+import {DrillConfigurationModal} from './DrillConfigurationModal';
 
 interface SetKeysModalProps {
   modalIsVisible: boolean;
@@ -48,16 +49,15 @@ export const SetKeysModal: React.FC<SetKeysModalProps> = props => {
   };
 
   return (
-    <AppModal
+    <DrillConfigurationModal
       {...props}
-      innerModalStyles={{top: '5%', padding: 16, marginHorizontal: 20}}
-      dismissingShouldFinish={true}
-      onFinish={() => props.onSetKeys(stateAsKeyArray())}>
+      title="keys"
+      onDismiss={() => {
+        props.onSetKeys(stateAsKeyArray());
+        props.onDismiss();
+      }}>
       <View>
         <View style={{flexDirection: 'row'}}>
-          <Text style={[globalStyles.fieldHeader, {marginBottom: 20}]}>
-            keys
-          </Text>
           <View style={{flex: 1}} />
           <View>
             <TouchableOpacity
@@ -99,7 +99,7 @@ export const SetKeysModal: React.FC<SetKeysModalProps> = props => {
           ))}
         </View>
       </View>
-    </AppModal>
+    </DrillConfigurationModal>
   );
 };
 

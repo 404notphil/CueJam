@@ -64,7 +64,7 @@ export function SignupButton(
           ),
         );
       }}
-      style={globalStyles.button}>
+      style={[globalStyles.button, {marginTop: 16}]}>
       <Text style={globalStyles.buttonText}>Sign up</Text>
     </TouchableOpacity>
   );
