@@ -16,18 +16,19 @@ export const globalStyles = StyleSheet.create({
     elevation: 8, // Adjust as needed
   },
   modalOuter: {
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: Themes.dark.scrimColor,
     flex: 1,
   },
   modalInner: {
-    position: 'relative',
-    top: '20%',
     margin: 16,
-    padding: 1,
+    padding: 16,
     backgroundColor: Themes.dark.background,
     borderRadius: 15,
     alignItems: 'center',
     alignSelf: 'center',
+    justifyContent: 'center',
   },
   screenContainer: {
     padding: 24,

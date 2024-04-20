@@ -14,52 +14,45 @@ export const DrillConfigurationModal: React.FC<
   DrillConfigurationModalProps
 > = props => {
   return (
-    <View>
-      <AppModal
-        {...props}
-        innerModalStyles={{
-          justifyContent: 'center',
+    <AppModal
+      {...props}
+      dismissingShouldFinish={true}
+      onFinish={() => props.onDismiss()}>
+      <View
+        style={{
+          alignSelf: 'stretch',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          padding: 16,
-        }}
-        dismissingShouldFinish={true}
-        onFinish={() => props.onDismiss()}>
-        <View
-          style={{
-            alignSelf: 'stretch',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            margin: 16,
-          }}>
-          <Text
-            style={[
-              globalStyles.fieldHeader,
-              {
-                marginTop: 0,
-                marginEnd: 10,
-              },
-            ]}>
-            {props.title}
-          </Text>
+          margin: 16,
+        }}>
+        <Text
+          style={[
+            globalStyles.fieldHeader,
+            {
+              marginTop: 0,
+              marginEnd: 10,
+            },
+          ]}>
+          {props.title}
+        </Text>
 
-          <TouchableOpacity
-            onPress={() => {
-              props.onDismiss();
-            }}>
-            <Image
-              style={{
-                marginStart: 10,
-                height: 20,
-                width: 20,
-              }}
-              source={require('../assets/check_mark.png')}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
-        <View>{props.children}</View>
-      </AppModal>
-    </View>
+        <TouchableOpacity
+          onPress={() => {
+            props.onDismiss();
+          }}>
+          <Image
+            style={{
+              marginStart: 10,
+              height: 20,
+              width: 20,
+            }}
+            source={require('../assets/check_mark.png')}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      </View>
+      <View>{props.children}</View>
+    </AppModal>
   );
 };

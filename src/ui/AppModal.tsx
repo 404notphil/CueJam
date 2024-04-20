@@ -11,7 +11,6 @@ interface AppModalProps {
   dismissingShouldFinish: boolean;
   onDismiss: () => void;
   onFinish: () => void;
-  innerModalStyles: any;
   children: React.ReactNode;
 }
 
@@ -39,7 +38,6 @@ export const AppModal: React.FC<AppModalProps> = props => {
           <View
             style={[
               globalStyles.modalInner,
-              {...props.innerModalStyles},
             ]}
             onStartShouldSetResponder={preventDismiss}>
             {props.children}

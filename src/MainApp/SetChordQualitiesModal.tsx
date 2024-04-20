@@ -8,6 +8,7 @@ import {
 import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
+import {DrillConfigurationModal} from './DrillConfigurationModal';
 
 interface SetChordQualitiesModalProps {
   modalIsVisible: boolean;
@@ -60,16 +61,15 @@ export const SetChordQualitiesModal: React.FC<
   };
 
   return (
-    <AppModal
+    <DrillConfigurationModal
       {...props}
-      innerModalStyles={{top: '5%', padding: 16, marginHorizontal: 20}}
-      dismissingShouldFinish={true}
-      onFinish={() => props.onSetChordQualities(stateAsChordQualityArray())}>
+      title="chord qualities"
+      onDismiss={() => {
+        props.onSetChordQualities(stateAsChordQualityArray());
+        props.onDismiss();
+      }}>
       <View>
         <View style={{flexDirection: 'row'}}>
-          <Text style={[globalStyles.fieldHeader, {marginBottom: 20}]}>
-            chord qualities
-          </Text>
           <View style={{flex: 1}} />
           <View>
             <TouchableOpacity
@@ -113,7 +113,7 @@ export const SetChordQualitiesModal: React.FC<
           )}
         </View>
       </View>
-    </AppModal>
+    </DrillConfigurationModal>
   );
 };
 

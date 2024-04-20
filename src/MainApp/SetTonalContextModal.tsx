@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {AppModal} from '../ui/AppModal';
 import {
   AllTonalContexts,
   TonalContext,
@@ -30,9 +29,6 @@ export const SetTonalContextModal: React.FC<
         props.onSetTonalContext(currentDisplayedTonalContext);
         props.onDismiss();
       }}>
-      <Text style={[globalStyles.fieldHeader, {marginVertical: 30}]}>
-        tonal context
-      </Text>
       <RadioButton.Group
         onValueChange={value =>
           setCurrentDisplayedTonalContext(value as TonalContext)
