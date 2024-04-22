@@ -21,6 +21,8 @@ import {
   getRandomNoteName,
   getRandomScale,
 } from '../store/reducers/ConfigureDrillTypes';
+import {useOrientation} from '../util/useOrientation';
+import {LogBox} from 'react-native';
 
 export function DrillScreen(): React.JSX.Element {
   const drill = useAppSelector(selectConfigureDrill);
@@ -61,6 +63,8 @@ export function DrillScreen(): React.JSX.Element {
   const clickEventEmitter = new NativeEventEmitter(MetronomeModule);
 
   useEffect(() => {
+    LogBox.ignoreLogs(['new NativeEventEmitter']);
+
     MetronomeModule.initializeMetronomeService();
     MetronomeModule.setTempo(drill.tempo);
     MetronomeModule.setBeatsPerPrompt(drill.beatsPerPrompt);
@@ -88,14 +92,38 @@ export function DrillScreen(): React.JSX.Element {
     }
   }, [currentBeat]);
 
+  const orientation = useOrientation();
+  const divider = (
+    <View
+      style={
+        orientation === 'PORTRAIT'
+          ? {
+              backgroundColor: 'white',
+              height: 1,
+              marginHorizontal: 30,
+            }
+          : {
+              backgroundColor: 'white',
+              width: 1,
+              marginVertical: 30,
+            }
+      }
+    />
+  );
+
   return (
     <View
       style={{
         flex: 1,
+        flexDirection: orientation === 'PORTRAIT' ? 'column' : 'row',
         backgroundColor: Themes.dark.background,
       }}>
       {/* Half of screen dedicated to current prompt*/}
-      <View style={{flex: 3}}>
+      <View
+        style={{
+          flexDirection: orientation === 'PORTRAIT' ? 'column' : 'row',
+          flex: 3,
+        }}>
         <Text
           style={[
             globalStyles.smallText,
@@ -104,7 +132,7 @@ export function DrillScreen(): React.JSX.Element {
           {drill.drillName}
         </Text>
 
-        <Divider style={{backgroundColor: 'white', marginHorizontal: 30}} />
+        {divider}
 
         {/* Prompt for current value */}
         <View style={{flex: 1, justifyContent: 'center'}}>
@@ -116,8 +144,12 @@ export function DrillScreen(): React.JSX.Element {
       </View>
 
       {/* Half of screen dedicated to next prompt*/}
-      <View style={{flex: 3}}>
-        <Divider style={{backgroundColor: 'white', marginHorizontal: 30}} />
+      <View
+        style={{
+          flexDirection: orientation === 'PORTRAIT' ? 'column' : 'row',
+          flex: 3,
+        }}>
+        {divider}
 
         <View style={{flex: 1, justifyContent: 'center'}}>
           <Text style={[localStyles.promptText, {color: 'grey'}]}>
@@ -130,14 +162,22 @@ export function DrillScreen(): React.JSX.Element {
       </View>
 
       {/* Area of screen for controls */}
-      <View>
-        <Divider style={{backgroundColor: 'white', marginHorizontal: 30}} />
+      <View
+        style={{flexDirection: orientation === 'PORTRAIT' ? 'column' : 'row'}}>
+        {divider}
         <View
-          style={{
-            height: 200,
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-          }}>
+          style={[
+            orientation === 'PORTRAIT'
+              ? {
+                  height: 200,
+                  flexDirection: 'row',
+                }
+              : {
+                  width: 200,
+                  flexDirection: 'column',
+                },
+            {justifyContent: 'space-around', padding: 16},
+          ]}>
           <TouchableOpacity
             onPress={() => {
               if (isPlaying) {
@@ -158,8 +198,15 @@ export function DrillScreen(): React.JSX.Element {
               resizeMode="contain"
             />
           </TouchableOpacity>
+          <View style={{height: 100, width: 50}} />
           <Text style={[localStyles.metronomeText, {alignSelf: 'center'}]}>
-            {currentBeat + ' - ' + drill.beatsPerPrompt}
+            {currentBeat}
+          </Text>
+          <Text style={[localStyles.metronomeText, {alignSelf: 'center'}]}>
+            {' - '}
+          </Text>
+          <Text style={[localStyles.metronomeText, {alignSelf: 'center'}]}>
+            {drill.beatsPerPrompt}
           </Text>
         </View>
       </View>
