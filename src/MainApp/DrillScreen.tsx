@@ -176,8 +176,30 @@ export function DrillScreen(): React.JSX.Element {
                   width: 200,
                   flexDirection: 'column',
                 },
-            {justifyContent: 'space-around', padding: 16},
+            {
+              justifyContent: 'space-around',
+              alignContent: 'center',
+              padding: 16,
+            },
           ]}>
+          <Text
+            style={[
+              localStyles.metronomeText,
+              {width: 40, alignSelf: 'center'},
+            ]}>
+            {currentBeat}
+          </Text>
+          <Text style={[localStyles.metronomeText, {alignSelf: 'center'}]}>
+            {' - '}
+          </Text>
+          <Text
+            style={[
+              localStyles.metronomeText,
+              {width: 40, alignSelf: 'center'},
+            ]}>
+            {drill.beatsPerPrompt}
+          </Text>
+          <View style={{height: 100, width: 50}} />
           <TouchableOpacity
             onPress={() => {
               if (isPlaying) {
@@ -198,16 +220,6 @@ export function DrillScreen(): React.JSX.Element {
               resizeMode="contain"
             />
           </TouchableOpacity>
-          <View style={{height: 100, width: 50}} />
-          <Text style={[localStyles.metronomeText, {alignSelf: 'center'}]}>
-            {currentBeat}
-          </Text>
-          <Text style={[localStyles.metronomeText, {alignSelf: 'center'}]}>
-            {' - '}
-          </Text>
-          <Text style={[localStyles.metronomeText, {alignSelf: 'center'}]}>
-            {drill.beatsPerPrompt}
-          </Text>
         </View>
       </View>
     </View>
@@ -227,6 +239,7 @@ const localStyles = StyleSheet.create({
   },
   metronomeText: {
     ...globalStyles.title,
+    textAlign: 'center',
     fontSize: 60,
     color: Themes.dark.errorYellowText,
     marginTop: 0,

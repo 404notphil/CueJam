@@ -1,4 +1,3 @@
-// useOrientation.tsx
 import {useEffect, useState} from 'react';
 import {Dimensions} from 'react-native';
 
