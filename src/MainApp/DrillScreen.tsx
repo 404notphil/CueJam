@@ -12,7 +12,6 @@ import {Themes} from '../ui/theme/Theme';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {selectConfigureDrill} from '../store/reducers/configureDrillReducer';
 import {globalStyles} from '../ui/theme/styles';
-import {Divider} from 'react-native-paper';
 import {useEffect, useState} from 'react';
 import {
   getRandomChordQuality,
@@ -70,7 +69,6 @@ export function DrillScreen(): React.JSX.Element {
     MetronomeModule.setBeatsPerPrompt(drill.beatsPerPrompt);
 
     const subscription = clickEventEmitter.addListener('ClickEvent', data => {
-      console.log('12345 Event received', data);
       const beatData = JSON.parse(data);
       const beat = (beatData.currentBeat % drill.beatsPerPrompt) + 1;
       setCurrentBeat(beat);

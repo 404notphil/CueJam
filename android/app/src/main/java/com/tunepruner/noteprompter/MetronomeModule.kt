@@ -17,27 +17,32 @@ class MetronomeModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext), MetronomeService.TickListener {
     var isBound = false
     var metronomeService: MetronomeService? = null
+    // These should all be run in order once the service is connected, and emptied when disconnected.
+    private val metronomeServiceActions = ArrayDeque<() -> Unit>()
     private val connection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             metronomeService = (service as MetronomeService.MetronomeBinder).getService()
             metronomeService?.addTickListener(this@MetronomeModule)
             isBound = true
+            metronomeServiceActions.forEach { it.invoke() }
         }
 
         override fun onServiceDisconnected(className: ComponentName) {
             metronomeService = null
             isBound = false
+            metronomeServiceActions.clear()
         }
     }
 
     @ReactMethod
     fun initializeMetronomeService() {
+        Log.d(TAG, "starting bind service")
         val intent = Intent("com.tunepruner.noteprompter.START_METRONOME_SERVICE")
         reactApplicationContext.sendBroadcast(intent)
         bindService()
+        Log.d(TAG, "finished bind service")
     }
 
-    //    @ReactMethod
     private fun bindService() {
         Intent(reactApplicationContext, MetronomeService::class.java).also { intent ->
             reactApplicationContext.bindService(intent, connection, Context.BIND_AUTO_CREATE)
@@ -56,7 +61,6 @@ class MetronomeModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun start() {
-        Log.d(TAG, "start (native module): the service is null? -> ${metronomeService == null}")
         metronomeService?.play()
     }
 
@@ -67,12 +71,12 @@ class MetronomeModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun setTempo(tempo: Int) {
-        metronomeService?.setBpm(tempo)
+        metronomeServiceActions.add { metronomeService?.setBpm(tempo) }
     }
 
     @ReactMethod
     fun setBeatsPerPrompt(beatsPerPrompt: Int) {
-        metronomeService?.beatsPerMeasure = beatsPerPrompt
+        metronomeServiceActions.add { metronomeService?.beatsPerMeasure = beatsPerPrompt }
     }
 
     private fun notifyUiOfClickEvent(currentBeat: Int) {
