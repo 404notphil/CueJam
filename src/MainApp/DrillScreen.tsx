@@ -25,6 +25,11 @@ import {
 } from '../store/reducers/ConfigureDrillTypes';
 import {useOrientation} from '../util/useOrientation';
 import {LogBox} from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 
 export function DrillScreen(): React.JSX.Element {
   const drill = useAppSelector(selectConfigureDrill);
@@ -104,6 +109,22 @@ export function DrillScreen(): React.JSX.Element {
     }
   }, [currentBeat]);
 
+  const animatedFlex = useSharedValue(0);
+  const animatedOpacity = useSharedValue(0);
+  useEffect(() => {
+    animatedFlex.value = 0;
+    animatedOpacity.value = 0;
+    animatedFlex.value = withSpring(3);
+    animatedOpacity.value = withSpring(1);
+  }, [currentNote]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      flex: animatedFlex.value,
+      opacity: animatedOpacity.value,
+    };
+  });
+
   const orientation = useOrientation();
   const divider = (orientationArg: 'PORTRAIT' | 'LANDSCAPE') => (
     <View
@@ -173,11 +194,15 @@ export function DrillScreen(): React.JSX.Element {
           {divider(orientation)}
 
           {/* Next prompt view*/}
-          <View
-            style={{
-              flexDirection: 'column',
-              flex: 3,
-            }}>
+          <Animated.View
+            style={[
+              animatedStyle,
+              ,
+              {
+                flexDirection: 'column',
+                flex: 3,
+              },
+            ]}>
             <View style={{flex: 1, justifyContent: 'center'}}>
               <Text style={[localStyles.promptText, {color: 'grey'}]}>
                 {nextNote}
@@ -186,7 +211,7 @@ export function DrillScreen(): React.JSX.Element {
                 {nextTonalContextValue}
               </Text>
             </View>
-          </View>
+          </Animated.View>
         </View>
       </View>
 
