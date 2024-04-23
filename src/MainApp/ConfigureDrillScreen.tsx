@@ -48,6 +48,7 @@ import Animated, {
 import {useNavigation} from '@react-navigation/native';
 import {SetModesModal} from './SetModesModal';
 import {SetKeysModal} from './SetKeysModal';
+import {ExpandableText} from '../onboarding/ui/ExpandableText';
 
 interface SettingProps {
   title: string;
@@ -80,10 +81,17 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   let lastSavedDrill: ConfigureDrillState | undefined = undefined;
 
+  const [error, setError] = useState<string | undefined>();
+
   const handleSaveDrill = () => {
     lastSavedDrill = drill;
+    if (drill.drillName === null || drill.drillName.length === 0) {
+      setError('You must choose a name!');
+    } else {
+      setError(undefined);
+      setDrillIsSaved(true);
+    }
     /* todo: save drill*/
-    setDrillIsSaved(true);
   };
 
   const animatedHeight = useSharedValue(0);
@@ -135,6 +143,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           placeholder="Type drill name here">
           {drill.drillName}
         </TextInput>
+
         <TouchableOpacity
           style={[globalStyles.button, {marginBottom: 8, width: 100}]}
           onPress={() => handleSaveDrill()}>
@@ -147,6 +156,8 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           </Text>
         </TouchableOpacity>
       </View>
+
+      <ExpandableText error={error} isCurrent={error != undefined} />
 
       <View>
         <Animated.View style={animatedHeightStyle}>
