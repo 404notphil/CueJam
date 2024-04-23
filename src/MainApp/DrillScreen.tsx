@@ -63,6 +63,8 @@ export function DrillScreen(): React.JSX.Element {
   const playButton = require('../assets/play_button.png');
   const imageSource = isPlaying ? pauseButton : playButton;
   const [currentBeat, setCurrentBeat] = useState(0);
+  const [totalBeatsElapsed, setTotalBeatsElapsed] = useState(0);
+  const [totalPromptsElapsed, setTotalPromptsElapsed] = useState(0);
 
   const computeNextNoteName = (noteName: NoteName) => {
     switch (drill.promptOrder) {
@@ -133,6 +135,7 @@ export function DrillScreen(): React.JSX.Element {
     MetronomeModule.setBeatsPerPrompt(drill.beatsPerPrompt);
 
     const subscription = clickEventEmitter.addListener('ClickEvent', data => {
+      setTotalBeatsElapsed(totalBeatsElapsed + 1);
       const beatData = JSON.parse(data);
       const beat = (beatData.currentBeat % drill.beatsPerPrompt) + 1;
       setCurrentBeat(beat);
@@ -147,6 +150,7 @@ export function DrillScreen(): React.JSX.Element {
 
   useEffect(() => {
     if (currentBeat === 1) {
+      setTotalPromptsElapsed(totalPromptsElapsed + 1);
       setCurrentNote(nextNote);
       setNextNote(computeNextNoteName(nextNote));
       setCurrentTonalContextValue(nextTonalContextValue);
@@ -161,7 +165,7 @@ export function DrillScreen(): React.JSX.Element {
     animatedFlex.value = withTiming(3, {duration: 400}, () => {
       runOnJS(handleAnimationComplete)();
     });
-  }, [currentNote]);
+  }, [totalPromptsElapsed]);
 
   useEffect(() => {
     if (shouldShowNextPromptText) {
