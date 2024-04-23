@@ -96,8 +96,8 @@ const ChordQualityDefinitions = [
 export type ChordQuality = (typeof ChordQualityDefinitions)[number];
 export const AllChordQualities = [...ChordQualityDefinitions] as ChordQuality[];
 
-export function getRandomChordQuality(): ChordQuality {
-  return AllChordQualities[Math.floor(Math.random() * AllChordQualities.length)]
+export function getRandomChordQuality(chordQualities: ChordQuality[]): ChordQuality {
+  return chordQualities[Math.floor(Math.random() * chordQualities.length)]
 }
 
 const TonalContextsDefinitions = [
@@ -128,15 +128,15 @@ const ScaleDefinitions = [
 export type Scale = (typeof ScaleDefinitions)[number];
 export const AllScales = [...ScaleDefinitions] as Scale[];
 
-export function getRandomScale(): Scale {
-  return AllScales[Math.floor(Math.random() * AllScales.length)];
+export function getRandomScale(scales: Scale[]): Scale {
+  return scales[Math.floor(Math.random() * scales.length)];
 }
 
 export type Key = 'major' | 'minor';
 export const AllKeys: Key[] = ['major', 'minor'];
 
-export function getRandomKey(): Key {
-  return AllKeys[Math.floor(Math.random() * AllKeys.length)];
+export function getRandomKey(keys: Key[]): Key {
+  return keys[Math.floor(Math.random() * keys.length)];
 }
 
 const ModeDefinitions = [
@@ -152,6 +152,6 @@ const ModeDefinitions = [
 export type Mode = (typeof ModeDefinitions)[number];
 export const AllModes = [...ModeDefinitions] as Mode[];
 
-export function getRandomMode(): Mode {
-  return AllModes[Math.floor(Math.random() * AllModes.length)];
+export function getRandomMode(modes: Mode[]): Mode {
+  return modes[Math.floor(Math.random() * modes.length)];
 }

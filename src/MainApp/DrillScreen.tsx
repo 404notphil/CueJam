@@ -40,13 +40,13 @@ export function DrillScreen(): React.JSX.Element {
   const getRandomTonalContextValue = () => {
     switch (drill.tonalContext) {
       case 'chord quality':
-        return getRandomChordQuality();
+        return getRandomChordQuality(drill.chordQualities);
       case 'key':
-        return getRandomKey();
+        return getRandomKey(drill.keys);
       case 'mode':
-        return getRandomMode();
+        return getRandomMode(drill.modes);
       case 'scale':
-        return getRandomScale();
+        return getRandomScale(drill.scales);
       default:
         return null;
     }
