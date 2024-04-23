@@ -45,10 +45,21 @@ export const AllIntervals = [...IntervalDefinitions] as Interval[]
 
 function getNoteNameAtInterval(originalNoteName: NoteName, interval: Interval, isUpwards: boolean = true): NoteName {
   const intervalDistance = AllIntervals.indexOf(interval) + 1
-  const oldNoteAsNumber = AllNoteNames.indexOf(originalNoteName)
-  const newNoteAsNumber = isUpwards ? (oldNoteAsNumber + intervalDistance) : oldNoteAsNumber - intervalDistance
-  if (newNoteAsNumber < 0) throw Error('Requested interval reachest below the lowest allowed note!')
-  const pitchClass  = newNoteAsNumber % 12
+  console.log('12345 interval === ' + interval);
+  console.log('12345 intervalDistance === ' + intervalDistance);
+  const oldNoteAsNumber = AllNoteNames.indexOf(originalNoteName);
+  console.log('12345 originalNoteName === ' + originalNoteName);
+  console.log('12345 oldNoteAsNumberr === ' + oldNoteAsNumber);
+  const newNoteAsNumber = isUpwards
+    ? oldNoteAsNumber + intervalDistance
+    : oldNoteAsNumber - intervalDistance;
+  console.log('12345 newNoteAsNumber === ' + newNoteAsNumber);
+  const newNoteAsArrayIndex = newNoteAsNumber + 12;
+  const pitchClass = newNoteAsArrayIndex % 12;
+  console.log('12345 pitchClass === ' + pitchClass);
+  console.log(
+    '12345  AllNoteNames[pitchClass] === ' + AllNoteNames[pitchClass],
+  );
   return AllNoteNames[pitchClass]
 }
 

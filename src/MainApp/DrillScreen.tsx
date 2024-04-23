@@ -14,6 +14,9 @@ import {selectConfigureDrill} from '../store/reducers/configureDrillReducer';
 import {globalStyles} from '../ui/theme/styles';
 import {useEffect, useState} from 'react';
 import {
+  NoteName,
+  getNoteNameAtFifthAbove,
+  getNoteNameAtFifthBelow,
   getRandomChordQuality,
   getRandomKey,
   getRandomMode,
@@ -53,10 +56,21 @@ export function DrillScreen(): React.JSX.Element {
   const playButton = require('../assets/play_button.png');
   const imageSource = isPlaying ? pauseButton : playButton;
   const [currentBeat, setCurrentBeat] = useState(0);
+
+  const computeNextNoteName = (noteName: NoteName) => {
+    switch (drill.promptOrder) {
+      case 'random':
+        return getRandomNoteName(drill.noteNames);
+      case 'descending5ths':
+        return getNoteNameAtFifthBelow(noteName);
+      case 'ascending5ths':
+        return getNoteNameAtFifthAbove(noteName);
+    }
+  };
   const [currentNote, setCurrentNote] = useState(
     getRandomNoteName(drill.noteNames),
   );
-  const [nextNote, setNextNote] = useState(getRandomNoteName(drill.noteNames));
+  const [nextNote, setNextNote] = useState(computeNextNoteName(currentNote));
 
   const {MetronomeModule} = NativeModules;
   const clickEventEmitter = new NativeEventEmitter(MetronomeModule);
@@ -84,7 +98,7 @@ export function DrillScreen(): React.JSX.Element {
   useEffect(() => {
     if (currentBeat === 1) {
       setCurrentNote(nextNote);
-      setNextNote(getRandomNoteName(drill.noteNames));
+      setNextNote(computeNextNoteName(nextNote));
       setCurrentTonalContextValue(nextTonalContextValue);
       setNextTonalContextValue(getRandomTonalContextValue());
     }
