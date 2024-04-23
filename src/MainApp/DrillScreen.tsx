@@ -7,6 +7,7 @@ import {
   Touchable,
   TouchableOpacity,
   View,
+  Animated as RawAnimated,
 } from 'react-native';
 import {Themes} from '../ui/theme/Theme';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
@@ -26,9 +27,10 @@ import {
 import {useOrientation} from '../util/useOrientation';
 import {LogBox} from 'react-native';
 import Animated, {
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 
 export function DrillScreen(): React.JSX.Element {
@@ -81,6 +83,9 @@ export function DrillScreen(): React.JSX.Element {
   const {MetronomeModule} = NativeModules;
   const clickEventEmitter = new NativeEventEmitter(MetronomeModule);
 
+  const [shouldShowNextPromptText, setShouldShowNextPromptText] =
+    useState(false);
+
   useEffect(() => {
     LogBox.ignoreLogs(['new NativeEventEmitter']);
 
@@ -113,24 +118,40 @@ export function DrillScreen(): React.JSX.Element {
 
   const animatedFlex = useSharedValue(0);
   const animatedOpacity = useSharedValue(0);
+  const handleAnimationComplete = () => {
+    setShouldShowNextPromptText(true);
+  };
+  const [fadeAnim] = useState(new RawAnimated.Value(0));
+
   useEffect(() => {
     animatedFlex.value = 0;
-    animatedOpacity.value = 0;
-    animatedFlex.value = withSpring(3);
-    animatedOpacity.value = withSpring(1);
+    fadeAnim.setValue(0);
+    setShouldShowNextPromptText(false);
+    animatedFlex.value = withTiming(3, {duration: 400}, () => {
+      runOnJS(handleAnimationComplete)();
+    });
   }, [currentNote]);
+
+  useEffect(() => {
+    if (shouldShowNextPromptText) {
+      // On token change, animate the opacity
+      RawAnimated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true, // Use native driver for better performance
+      }).start();
+    }
+  }, [shouldShowNextPromptText]);
 
   const animatedStyleForPreviousPrompt = useAnimatedStyle(() => {
     return {
       flex: 3 - animatedFlex.value,
-      opacity: 1 - animatedOpacity.value,
     };
   });
 
   const animatedStyleForNextPrompt = useAnimatedStyle(() => {
     return {
       flex: animatedFlex.value,
-      opacity: animatedOpacity.value,
     };
   });
 
@@ -191,16 +212,10 @@ export function DrillScreen(): React.JSX.Element {
               animatedStyleForPreviousPrompt,
               {
                 flexDirection: 'column',
-                flex: 3,
               },
             ]}>
             {/* Previous value */}
-            <View style={{flex: 1, justifyContent: 'center'}}>
-              <Text style={localStyles.promptText}>{previousNote}</Text>
-              <Text style={localStyles.promptSubtitleText}>
-                {currentTonalContextValue}
-              </Text>
-            </View>
+            <View style={{flex: 1, justifyContent: 'center'}}></View>
           </Animated.View>
 
           {/* Current prompt view*/}
@@ -227,17 +242,17 @@ export function DrillScreen(): React.JSX.Element {
               ,
               {
                 flexDirection: 'column',
-                flex: 3,
               },
             ]}>
-            <View style={{flex: 1, justifyContent: 'center'}}>
+            <RawAnimated.View
+              style={{opacity: fadeAnim, flex: 1, justifyContent: 'center'}}>
               <Text style={[localStyles.promptText, {color: 'grey'}]}>
                 {nextNote}
               </Text>
               <Text style={[localStyles.promptSubtitleText, {color: 'grey'}]}>
                 {nextTonalContextValue}
               </Text>
-            </View>
+            </RawAnimated.View>
           </Animated.View>
         </View>
       </View>
