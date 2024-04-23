@@ -18,7 +18,7 @@ import {
   setKeys,
   setModes,
   setNoteNames,
-  setPromptAlgorithm,
+  setPromptOrder,
   setScales,
   setTempo,
   setTonalContext,
@@ -31,11 +31,11 @@ import {
   Key,
   Mode,
   NoteName,
-  PromptAlgorithm,
+  PromptOrder,
   Scale,
   TonalContext,
 } from '../store/reducers/ConfigureDrillTypes';
-import {SetPromptAlgorithmModal} from './SetPromptAlgorithmModal';
+import {SetPromptOrderModal} from './SetPromptOrderModal';
 import {SetTonalContextModal} from './SetTonalContextModal';
 import {SetChordQualitiesModal} from './SetChordQualitiesModal';
 import {SetScalesModal} from './SetScalesModal';
@@ -69,7 +69,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const [beatsPerChordDialogVisible, setBeatsPerPromptDialogVisible] =
     useState(false);
   const [noteNamesDialogVisible, setNoteNamesDialogVisible] = useState(false);
-  const [promptAlgorithmDialogVisible, setPromptAlgorithmDialogVisible] =
+  const [promptOrderDialogVisible, setPromptOrderDialogVisible] =
     useState(false);
 
   const drill = useAppSelector(selectConfigureDrill);
@@ -117,7 +117,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   useEffect(() => {
     if (drill.noteNames.length !== 12) {
-      dispatch(setPromptAlgorithm('random'));
+      dispatch(setPromptOrder('random'));
     }
   }, [drill.noteNames.length]);
 
@@ -214,12 +214,12 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
       <SettingRow
         {...{
-          title: 'prompt algorithm',
-          buttonText: drill.promptAlgorithm,
+          title: 'prompt order',
+          buttonText: drill.promptOrder,
           enabled: drill.noteNames.length === 12,
           onPress: () => {
             if (drill.noteNames.length === 12)
-              setPromptAlgorithmDialogVisible(true);
+              setPromptOrderDialogVisible(true);
           },
         }}
       />
@@ -302,13 +302,13 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         onDismiss={() => setNoteNamesDialogVisible(false)}
       />
 
-      <SetPromptAlgorithmModal
-        modalIsVisible={promptAlgorithmDialogVisible}
-        promptAlgorithm={drill.promptAlgorithm}
-        onSetPromptAlgorithm={(promptAlgorithm: PromptAlgorithm) =>
-          dispatch(setPromptAlgorithm(promptAlgorithm))
+      <SetPromptOrderModal
+        modalIsVisible={promptOrderDialogVisible}
+        promptOrder={drill.promptOrder}
+        onSetPromptOrder={(promptOrder: PromptOrder) =>
+          dispatch(setPromptOrder(promptOrder))
         }
-        onDismiss={() => setPromptAlgorithmDialogVisible(false)}
+        onDismiss={() => setPromptOrderDialogVisible(false)}
       />
 
       <SetTonalContextModal

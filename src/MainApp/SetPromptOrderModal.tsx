@@ -1,44 +1,44 @@
 import React, {useEffect, useState} from 'react';
 import {
-  AllPromptAlgorithms,
-  PromptAlgorithm,
+  AllPromptOrders,
+  PromptOrder,
 } from '../store/reducers/ConfigureDrillTypes';
 import {Text, View} from 'react-native';
 import {RadioButton} from 'react-native-paper';
 import {DrillConfigurationModal} from './DrillConfigurationModal';
 
-interface SetPromptAlgorithmModalProps {
+interface SetPromptOrderModalProps {
   modalIsVisible: boolean;
-  promptAlgorithm: PromptAlgorithm;
-  onSetPromptAlgorithm: (promptAlgorithm: PromptAlgorithm) => void;
+  promptOrder: PromptOrder;
+  onSetPromptOrder: (promptOrder: PromptOrder) => void;
   onDismiss: () => void;
 }
 
-export const SetPromptAlgorithmModal: React.FC<
-  SetPromptAlgorithmModalProps
+export const SetPromptOrderModal: React.FC<
+  SetPromptOrderModalProps
 > = props => {
-  const [currentDisplayedPromptAlgorithm, setCurrentDisplayedPromptAlgorithm] =
-    useState(props.promptAlgorithm);
+  const [currentDisplayedPromptOrder, setCurrentDisplayedPromptOrder] =
+    useState(props.promptOrder);
 
   useEffect(() => {
-    setCurrentDisplayedPromptAlgorithm(props.promptAlgorithm);
-  }, [props.promptAlgorithm]);
+    setCurrentDisplayedPromptOrder(props.promptOrder);
+  }, [props.promptOrder]);
 
   return (
     <DrillConfigurationModal
       {...props}
-      title={'prompt algorithm'}
+      title={'prompt order'}
       onDismiss={() => {
-        props.onSetPromptAlgorithm(currentDisplayedPromptAlgorithm);
+        props.onSetPromptOrder(currentDisplayedPromptOrder);
         props.onDismiss();
       }}>
       <RadioButton.Group
         onValueChange={value =>
-          setCurrentDisplayedPromptAlgorithm(value as PromptAlgorithm)
+          setCurrentDisplayedPromptOrder(value as PromptOrder)
         }
-        value={currentDisplayedPromptAlgorithm}>
+        value={currentDisplayedPromptOrder}>
         <View>
-          {AllPromptAlgorithms.map(item => (
+          {AllPromptOrders.map(item => (
             <View key={item}>
               <Text>{item}</Text>
               <RadioButton value={item} />

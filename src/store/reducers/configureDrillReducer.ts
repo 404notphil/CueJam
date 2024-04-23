@@ -10,7 +10,7 @@ import {
   Key,
   Mode,
   NoteName,
-  PromptAlgorithm,
+  PromptOrder,
   Scale,
   TonalContext,
 } from './ConfigureDrillTypes';
@@ -20,7 +20,7 @@ export interface ConfigureDrillState {
   tempo: number;
   beatsPerPrompt: number;
   noteNames: NoteName[];
-  promptAlgorithm: PromptAlgorithm;
+  promptOrder: PromptOrder;
   tonalContext: TonalContext;
   chordQualities: ChordQuality[];
   scales: Scale[];
@@ -33,7 +33,7 @@ const initialState: ConfigureDrillState = {
   tempo: 150,
   beatsPerPrompt: 4,
   noteNames: AllNoteNames,
-  promptAlgorithm: 'random',
+  promptOrder: 'random',
   tonalContext: 'chord quality',
   chordQualities: AllChordQualities,
   scales: AllScales,
@@ -57,8 +57,8 @@ export const configureDrillSlice = createSlice({
     setNoteNames: (state, action: PayloadAction<NoteName[]>) => {
       state.noteNames = action.payload;
     },
-    setPromptAlgorithm: (state, action: PayloadAction<PromptAlgorithm>) => {
-      state.promptAlgorithm = action.payload;
+    setPromptOrder: (state, action: PayloadAction<PromptOrder>) => {
+      state.promptOrder = action.payload;
     },
     setTonalContext: (state, action: PayloadAction<TonalContext>) => {
       state.tonalContext = action.payload;
@@ -89,7 +89,7 @@ export const {
   setTempo,
   setBeatsPerChord,
   setNoteNames,
-  setPromptAlgorithm,
+  setPromptOrder,
   setTonalContext,
   setChordQualities: setChordQualities,
   setScales: setScales,

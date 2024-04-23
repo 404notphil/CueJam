@@ -1,14 +1,12 @@
 
-const PromptAlgorithmDefinitions = [
+const PromptOrderDefinitions = [
   'random',
   'descending5ths',
   'ascending5ths',
 ] as const;
 
-export type PromptAlgorithm = (typeof PromptAlgorithmDefinitions)[number];
-export const AllPromptAlgorithms = [
-  ...PromptAlgorithmDefinitions,
-] as PromptAlgorithm[];
+export type PromptOrder = (typeof PromptOrderDefinitions)[number];
+export const AllPromptOrders = [...PromptOrderDefinitions] as PromptOrder[];
 
 const NoteNameDefinitions = [
   'A',
