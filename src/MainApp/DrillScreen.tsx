@@ -110,13 +110,13 @@ export function DrillScreen(): React.JSX.Element {
       style={
         orientationArg === 'PORTRAIT'
           ? {
-              backgroundColor: 'white',
-              height: 1,
+              backgroundColor: 'grey',
+              height: 0.3,
               marginHorizontal: 30,
               marginVertical: 10,
             }
           : {
-              backgroundColor: 'white',
+              backgroundColor: 'grey',
               width: 1,
               marginVertical: 30,
               marginHorizontal: 10,
