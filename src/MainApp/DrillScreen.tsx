@@ -105,36 +105,39 @@ export function DrillScreen(): React.JSX.Element {
   }, [currentBeat]);
 
   const orientation = useOrientation();
-  const divider = (
+  const divider = (orientationArg: 'PORTRAIT' | 'LANDSCAPE') => (
     <View
       style={
-        orientation === 'PORTRAIT'
+        orientationArg === 'PORTRAIT'
           ? {
               backgroundColor: 'white',
               height: 1,
               marginHorizontal: 30,
+              marginVertical: 10,
             }
           : {
               backgroundColor: 'white',
               width: 1,
               marginVertical: 30,
+              marginHorizontal: 10,
             }
       }
     />
   );
 
   return (
+    // Whole screen
     <View
       style={{
         flex: 1,
         flexDirection: orientation === 'PORTRAIT' ? 'column' : 'row',
         backgroundColor: Themes.dark.background,
       }}>
-      {/* Half of screen dedicated to current prompt*/}
+      {/* Title and prompts */}
       <View
         style={{
-          flexDirection: orientation === 'PORTRAIT' ? 'column' : 'row',
           flex: 3,
+          flexDirection: 'column',
         }}>
         <Text
           style={[
@@ -144,39 +147,56 @@ export function DrillScreen(): React.JSX.Element {
           {drill.drillName}
         </Text>
 
-        {divider}
+        {divider('PORTRAIT')}
 
-        {/* Prompt for current value */}
-        <View style={{flex: 1, justifyContent: 'center'}}>
-          <Text style={localStyles.promptText}>{currentNote}</Text>
-          <Text style={localStyles.promptSubtitleText}>
-            {currentTonalContextValue}
-          </Text>
+        {/* Prompts */}
+        <View
+          style={{
+            flexDirection: orientation === 'PORTRAIT' ? 'column' : 'row',
+            flex: 1,
+          }}>
+          {/* Current prompt view*/}
+          <View
+            style={{
+              flexDirection: 'column',
+              flex: 3,
+            }}>
+            {/* Current value */}
+            <View style={{flex: 1, justifyContent: 'center'}}>
+              <Text style={localStyles.promptText}>{currentNote}</Text>
+              <Text style={localStyles.promptSubtitleText}>
+                {currentTonalContextValue}
+              </Text>
+            </View>
+          </View>
+
+          {divider(orientation)}
+
+          {/* Next prompt view*/}
+          <View
+            style={{
+              flexDirection: 'column',
+              flex: 3,
+            }}>
+            <View style={{flex: 1, justifyContent: 'center'}}>
+              <Text style={[localStyles.promptText, {color: 'grey'}]}>
+                {nextNote}
+              </Text>
+              <Text style={[localStyles.promptSubtitleText, {color: 'grey'}]}>
+                {nextTonalContextValue}
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
 
-      {/* Half of screen dedicated to next prompt*/}
+      {/* Controls area */}
       <View
         style={{
           flexDirection: orientation === 'PORTRAIT' ? 'column' : 'row',
-          flex: 3,
+          flex: 1,
         }}>
-        {divider}
-
-        <View style={{flex: 1, justifyContent: 'center'}}>
-          <Text style={[localStyles.promptText, {color: 'grey'}]}>
-            {nextNote}
-          </Text>
-          <Text style={[localStyles.promptSubtitleText, {color: 'grey'}]}>
-            {nextTonalContextValue}
-          </Text>
-        </View>
-      </View>
-
-      {/* Area of screen for controls */}
-      <View
-        style={{flexDirection: orientation === 'PORTRAIT' ? 'column' : 'row'}}>
-        {divider}
+        {divider(orientation)}
         <View
           style={[
             orientation === 'PORTRAIT'
