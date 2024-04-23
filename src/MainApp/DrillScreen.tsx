@@ -72,6 +72,7 @@ export function DrillScreen(): React.JSX.Element {
         return getNoteNameAtFifthAbove(noteName);
     }
   };
+  const [previousNote, setPreviousNote] = useState('');
   const [currentNote, setCurrentNote] = useState(
     getRandomNoteName(drill.noteNames),
   );
@@ -102,6 +103,7 @@ export function DrillScreen(): React.JSX.Element {
 
   useEffect(() => {
     if (currentBeat === 1) {
+      setPreviousNote(currentNote);
       setCurrentNote(nextNote);
       setNextNote(computeNextNoteName(nextNote));
       setCurrentTonalContextValue(nextTonalContextValue);
@@ -118,7 +120,14 @@ export function DrillScreen(): React.JSX.Element {
     animatedOpacity.value = withSpring(1);
   }, [currentNote]);
 
-  const animatedStyle = useAnimatedStyle(() => {
+  const animatedStyleForPreviousPrompt = useAnimatedStyle(() => {
+    return {
+      flex: 3 - animatedFlex.value,
+      opacity: 1 - animatedOpacity.value,
+    };
+  });
+
+  const animatedStyleForNextPrompt = useAnimatedStyle(() => {
     return {
       flex: animatedFlex.value,
       opacity: animatedOpacity.value,
@@ -176,6 +185,24 @@ export function DrillScreen(): React.JSX.Element {
             flexDirection: orientation === 'PORTRAIT' ? 'column' : 'row',
             flex: 1,
           }}>
+          {/* Previous prompt view*/}
+          <Animated.View
+            style={[
+              animatedStyleForPreviousPrompt,
+              {
+                flexDirection: 'column',
+                flex: 3,
+              },
+            ]}>
+            {/* Previous value */}
+            <View style={{flex: 1, justifyContent: 'center'}}>
+              <Text style={localStyles.promptText}>{previousNote}</Text>
+              <Text style={localStyles.promptSubtitleText}>
+                {currentTonalContextValue}
+              </Text>
+            </View>
+          </Animated.View>
+
           {/* Current prompt view*/}
           <View
             style={{
@@ -196,7 +223,7 @@ export function DrillScreen(): React.JSX.Element {
           {/* Next prompt view*/}
           <Animated.View
             style={[
-              animatedStyle,
+              animatedStyleForNextPrompt,
               ,
               {
                 flexDirection: 'column',
