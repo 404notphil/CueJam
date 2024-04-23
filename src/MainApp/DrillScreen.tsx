@@ -74,7 +74,6 @@ export function DrillScreen(): React.JSX.Element {
         return getNoteNameAtFifthAbove(noteName);
     }
   };
-  const [previousNote, setPreviousNote] = useState('');
   const [currentNote, setCurrentNote] = useState(
     getRandomNoteName(drill.noteNames),
   );
@@ -85,6 +84,46 @@ export function DrillScreen(): React.JSX.Element {
 
   const [shouldShowNextPromptText, setShouldShowNextPromptText] =
     useState(false);
+
+  const animatedFlex = useSharedValue(0);
+  const handleAnimationComplete = () => {
+    setShouldShowNextPromptText(true);
+  };
+  const [fadeAnim] = useState(new RawAnimated.Value(0));
+
+  const animatedStyleForPreviousPrompt = useAnimatedStyle(() => {
+    return {
+      flex: 3 - animatedFlex.value,
+    };
+  });
+
+  const animatedStyleForNextPrompt = useAnimatedStyle(() => {
+    return {
+      flex: animatedFlex.value,
+    };
+  });
+
+  const orientation = useOrientation();
+
+  const divider = (orientationArg: 'PORTRAIT' | 'LANDSCAPE') => (
+    <View
+      style={
+        orientationArg === 'PORTRAIT'
+          ? {
+              backgroundColor: 'grey',
+              height: 0.3,
+              marginHorizontal: 30,
+              marginVertical: 10,
+            }
+          : {
+              backgroundColor: 'grey',
+              width: 1,
+              marginVertical: 30,
+              marginHorizontal: 10,
+            }
+      }
+    />
+  );
 
   useEffect(() => {
     LogBox.ignoreLogs(['new NativeEventEmitter']);
@@ -108,20 +147,12 @@ export function DrillScreen(): React.JSX.Element {
 
   useEffect(() => {
     if (currentBeat === 1) {
-      setPreviousNote(currentNote);
       setCurrentNote(nextNote);
       setNextNote(computeNextNoteName(nextNote));
       setCurrentTonalContextValue(nextTonalContextValue);
       setNextTonalContextValue(getRandomTonalContextValue());
     }
   }, [currentBeat]);
-
-  const animatedFlex = useSharedValue(0);
-  const animatedOpacity = useSharedValue(0);
-  const handleAnimationComplete = () => {
-    setShouldShowNextPromptText(true);
-  };
-  const [fadeAnim] = useState(new RawAnimated.Value(0));
 
   useEffect(() => {
     animatedFlex.value = 0;
@@ -142,39 +173,6 @@ export function DrillScreen(): React.JSX.Element {
       }).start();
     }
   }, [shouldShowNextPromptText]);
-
-  const animatedStyleForPreviousPrompt = useAnimatedStyle(() => {
-    return {
-      flex: 3 - animatedFlex.value,
-    };
-  });
-
-  const animatedStyleForNextPrompt = useAnimatedStyle(() => {
-    return {
-      flex: animatedFlex.value,
-    };
-  });
-
-  const orientation = useOrientation();
-  const divider = (orientationArg: 'PORTRAIT' | 'LANDSCAPE') => (
-    <View
-      style={
-        orientationArg === 'PORTRAIT'
-          ? {
-              backgroundColor: 'grey',
-              height: 0.3,
-              marginHorizontal: 30,
-              marginVertical: 10,
-            }
-          : {
-              backgroundColor: 'grey',
-              width: 1,
-              marginVertical: 30,
-              marginHorizontal: 10,
-            }
-      }
-    />
-  );
 
   return (
     // Whole screen
