@@ -4,6 +4,12 @@ import {
   writeDrillSuccess,
 } from '../store/reducers/configureDrillReducer';
 import {AppThunk} from '../store/store';
+import {
+  Drill,
+  loadFailure,
+  loadStart,
+  loadSuccess,
+} from '../store/reducers/allDrillsSlice';
 
 SQLite.enablePromise(true);
 
@@ -73,42 +79,47 @@ export const saveDrill = (): AppThunk => async (dispatch, getState) => {
   }
 };
 
-const fetchAllDrills = async (): Promise<any[]> => {
+export const loadAllDrills = (): AppThunk => async dispatch => {
   try {
-    const db = await SQLite.openDatabase({name: 'app.db', location: 'default'});
+    console.log('12345  drills -> ');
+    dispatch(loadStart());
+    const db = (await openDatabase()) as SQLiteDatabase;
     const results = await db.executeSql(
       'SELECT id, name, configuration FROM Drills',
     );
-    let drills = [];
+    let drills: Drill[] = [];
     let rows = results[0].rows;
     for (let i = 0; i < rows.length; i++) {
       drills.push(rows.item(i));
     }
-    return drills;
+    console.log('12345  drills -> ' + drills);
+    dispatch(loadSuccess(drills));
   } catch (error) {
-    console.error('Failed to fetch drills:', error);
-    return []; // Return an empty array in case of error
+    dispatch(loadFailure('Failed to load drills'));
+    console.log('12345 Failed to load drills:', error);
   }
 };
 
-const fetchDrillById = async (drillId: number): Promise<any> => {
-  try {
-    const db = await SQLite.openDatabase({name: 'app.db', location: 'default'});
-    const results = await db.executeSql(
-      'SELECT id, name, configuration FROM Drills WHERE id = ?',
-      [drillId],
-    );
-    if (results[0].rows.length > 0) {
-      return results[0].rows.item(0); // Return the first (and should be only) row
-    } else {
-      console.log('No drill found with the given ID:', drillId);
-      return null; // Return null if no drill is found
+export const loadDrillById =
+  (drillId: number): AppThunk =>
+  async dispatch => {
+    try {
+      dispatch(loadStart());
+      const db = (await openDatabase()) as SQLiteDatabase;
+      const results = await db.executeSql(
+        'SELECT id, name, configuration FROM Drills WHERE id = ?',
+        [drillId],
+      );
+      if (results[0].rows.length > 0) {
+        dispatch(loadSuccess([results[0].rows.item(0)])); // Dispatch as an array for consistency
+      } else {
+        dispatch(loadFailure('No drill found with the given ID'));
+      }
+    } catch (error) {
+      dispatch(loadFailure('Failed to load drill'));
+      console.error('Failed to load drill:', error);
     }
-  } catch (error) {
-    console.error('Failed to fetch drill:', error);
-    return null; // Return null in case of error
-  }
-};
+  };
 
 export const fetchDrill =
   (drillId: string): AppThunk =>
