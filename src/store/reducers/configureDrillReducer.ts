@@ -77,8 +77,14 @@ export const configureDrillSlice = createSlice({
     setKeys: (state, action: PayloadAction<Key[]>) => {
       state.keys = action.payload;
     },
-    writeDrillSuccess(state, action: PayloadAction<ConfigureDrillState>) {
-      if (action.payload === state) state.isSaved = true
+    writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
+      if (action.payload === state) state.isSaved = true;
+    },
+    loadDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
+      Object.assign(state, action.payload);
+    },
+    loadDrillFailure: (state, action: PayloadAction<string>) => {
+      state = initialState;
     },
   },
 });
@@ -101,4 +107,6 @@ export const {
   setModes,
   setKeys,
   writeDrillSuccess,
+  loadDrillSuccess,
+  loadDrillFailure,
 } = configureDrillSlice.actions;

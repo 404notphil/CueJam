@@ -1,5 +1,10 @@
 import SQLite, {SQLiteDatabase} from 'react-native-sqlite-storage';
-import {writeDrillSuccess} from '../store/reducers/configureDrillReducer';
+import {
+  ConfigureDrillState,
+  loadDrillFailure,
+  loadDrillSuccess,
+  writeDrillSuccess,
+} from '../store/reducers/configureDrillReducer';
 import {AppThunk} from '../store/store';
 import {
   Drill,
@@ -50,7 +55,10 @@ export const saveDrill = (): AppThunk => async (dispatch, getState) => {
     const db = (await openDatabase()) as SQLiteDatabase;
     const result = await db.executeSql(
       'INSERT INTO Drills (name, configuration) VALUES (?, ?)',
-      [getState().drillConfiguration.drillName, JSON.stringify(getState())],
+      [
+        getState().drillConfiguration.drillName,
+        JSON.stringify(getState().drillConfiguration),
+      ],
     );
     if (result[0].rowsAffected > 0) {
       dispatch(writeDrillSuccess(getState().drillConfiguration)); // Dispatching on success
@@ -85,20 +93,27 @@ export const loadDrillByName =
   (drillName: string): AppThunk =>
   async dispatch => {
     try {
-      dispatch(loadStart());
       const db = (await openDatabase()) as SQLiteDatabase;
       const results = await db.executeSql(
         'SELECT name, configuration FROM Drills WHERE name = ?',
         [drillName],
       );
       if (results[0].rows.length > 0) {
-        dispatch(loadSuccess([results[0].rows.item(0)])); // Dispatch as an array for consistency
+        const storeData = results[0].rows.item(0);
+        const drill: ConfigureDrillState = JSON.parse(storeData.configuration);
+        console.log(
+          '12345 drill read from db = ' + storeData.configuration.toString(),
+        );
+        console.log('12345 and ' + JSON.stringify(drill));
+        dispatch(loadDrillSuccess(drill));
+        console.log('12345 -> success');
       } else {
-        dispatch(loadFailure('No drill found with the given ID'));
+        console.log('12345 -> failure 1');
+        dispatch(loadDrillFailure('No drill found with the given name'));
       }
     } catch (error) {
-      dispatch(loadFailure('Failed to load drill'));
-      console.error('Failed to load drill:', error);
+      console.log('12345 -> failure 2');
+      dispatch(loadDrillFailure('Failed to load drill'));
     }
   };
 

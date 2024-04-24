@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Themes} from '../ui/theme/Theme';
 import {globalStyles} from '../ui/theme/styles';
 
@@ -7,14 +7,18 @@ interface DrillCardProps {
   drill: {
     name: string;
   };
+  onPress: () => void;
 }
 
-const DrillCard: React.FC<DrillCardProps> = ({drill}) => {
+const DrillCard: React.FC<DrillCardProps> = props => {
+  const drill = props.drill;
   return (
-    <View style={styles.card}>
-      <Text style={globalStyles.fieldHeader}>{drill.name}</Text>
-      <Text style={globalStyles.smallText}>Details here</Text>
-    </View>
+    <TouchableOpacity onPress={props.onPress}>
+      <View style={styles.card}>
+        <Text style={globalStyles.fieldHeader}>{drill.name}</Text>
+        <Text style={globalStyles.validationErrorText}>Details here</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 

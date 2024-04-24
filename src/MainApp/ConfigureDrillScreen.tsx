@@ -100,6 +100,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const animatedOpacity = useSharedValue(0);
 
   useEffect(() => {
+    console.log('12345 drill is ' + drill.drillName);
     setDrillIsSaved(drill === lastSavedDrill);
   }, [drill]);
 

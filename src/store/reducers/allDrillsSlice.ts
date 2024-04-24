@@ -4,7 +4,6 @@ import {ConfigureDrillState} from './configureDrillReducer';
 import {RootState} from '../store';
 
 export interface Drill {
-  id: number;
   name: string;
   configuration: ConfigureDrillState;
 }
