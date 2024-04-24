@@ -1,18 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../auth/AuthProvider';
 import {
   View,
   Text,
   TouchableOpacity,
   Image,
-  Animated,
   LayoutAnimation,
   UIManager,
   Platform,
 } from 'react-native';
 import {globalStyles} from './theme/styles';
-import {ScreenName} from './App';
+import {ScreenName, useAppNavigation} from './App';
 
 if (
   Platform.OS === 'android' &&
@@ -95,7 +93,7 @@ const AppHeaderTitle: React.FC<AppHeaderTitleProps> = props => {
 };
 
 const ShortcutButton: React.FC<AppHeaderProps> = props => {
-  const navigation = useNavigation();
+  const navigation = useAppNavigation();
   const {token, setToken} = useAuth();
   return (
     <TouchableOpacity

@@ -8,10 +8,8 @@ import {
   hasErrors,
 } from '../../reducers/SignupUiState';
 import {globalStyles} from '../../../ui/theme/styles';
-import {RootStackParamList} from '../../../navigation/RootStackParamList';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useNavigation} from '@react-navigation/native';
 import {signUpUser} from '../../../services/AuthService';
+import {useAppNavigation} from '../../../ui/App';
 
 export function SignupButton(
   dispatch: React.Dispatch<
@@ -19,8 +17,7 @@ export function SignupButton(
   >,
   uiState: SignupUiState,
 ) {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useAppNavigation();
 
   const {setToken} = useAuth();
 

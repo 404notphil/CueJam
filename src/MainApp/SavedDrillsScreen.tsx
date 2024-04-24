@@ -5,12 +5,12 @@ import {selectAllDrills} from '../store/reducers/allDrillsSlice';
 import {useEffect} from 'react';
 import {loadAllDrills, loadDrillByName} from '../services/AppDatabase';
 import DrillCard from './DrillCard';
-import {useNavigation} from '@react-navigation/native';
+import {useAppNavigation} from '../ui/App';
 
 export function SavedDrillsScreen(): React.JSX.Element {
   const drillsState = useAppSelector(selectAllDrills);
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
+  const navigation = useAppNavigation();
 
   useEffect(() => {
     dispatch(loadAllDrills());

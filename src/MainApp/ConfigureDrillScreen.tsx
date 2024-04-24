@@ -42,14 +42,13 @@ import {SetScalesModal} from './SetScalesModal';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import {useNavigation} from '@react-navigation/native';
 import {SetModesModal} from './SetModesModal';
 import {SetKeysModal} from './SetKeysModal';
 import {ExpandableText} from '../onboarding/ui/ExpandableText';
 import {saveDrill} from '../services/AppDatabase';
+import {useAppNavigation} from '../ui/App';
 
 interface SettingProps {
   title: string;
@@ -76,7 +75,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const drill = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
 
-  const navigation = useNavigation();
+  const navigation = useAppNavigation();
 
   const [drillIsSaved, setDrillIsSaved] = useState(false);
 

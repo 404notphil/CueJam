@@ -1,24 +1,18 @@
 import {StyleSheet, Text, TouchableOpacity, View, Platform} from 'react-native';
-import {useAuth} from '../auth/AuthProvider';
 import {globalStyles} from './theme/styles';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../navigation/RootStackParamList';
 import {Image} from 'react-native';
 import Animated, {
   Easing,
   ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
   withTiming,
 } from 'react-native-reanimated';
 import {useEffect} from 'react';
+import {useAppNavigation} from './App';
 
 export function HomeScreen(): React.JSX.Element {
-  const {token, setToken} = useAuth();
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useAppNavigation();
   const animatedOpacity = useSharedValue(0);
   const animatedFlex = useSharedValue(0);
   useEffect(() => {

@@ -4,8 +4,8 @@ import {LoginScreen} from '../onboarding/ui/LoginScreen';
 import {LandingScreen} from '../onboarding/ui/LandingScreen';
 import {SignupScreen} from '../onboarding/ui/Signup/SignupScreen';
 import {AuthProvider} from '../auth/AuthProvider';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp, createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useAuth} from '../auth/AuthProvider';
 import {Animated, View} from 'react-native';
 import {Themes} from './theme/Theme';
@@ -16,6 +16,7 @@ import {MainAppHeader} from './MainAppHeader';
 import {Provider} from 'react-redux';
 import {store} from '../store/store';
 import {PaperProvider} from 'react-native-paper';
+import { RootStackParamList } from '../navigation/RootStackParamList';
 
 export type ScreenName = 'Home' | 'ConfigureDrill' | 'SavedDrills' | 'Drill';
 
@@ -77,6 +78,8 @@ function AuthorizedStack(): React.JSX.Element {
     </Stack.Navigator>
   );
 }
+
+export const useAppNavigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>
 
 const App = () => {
   return (
