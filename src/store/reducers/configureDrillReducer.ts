@@ -26,6 +26,7 @@ export interface ConfigureDrillState {
   scales: Scale[];
   modes: Mode[];
   keys: Key[];
+  isSaved: boolean;
 }
 
 const initialState: ConfigureDrillState = {
@@ -39,6 +40,7 @@ const initialState: ConfigureDrillState = {
   scales: AllScales,
   modes: AllModes,
   keys: AllKeys,
+  isSaved: false,
 };
 
 export const configureDrillSlice = createSlice({
@@ -75,6 +77,9 @@ export const configureDrillSlice = createSlice({
     setKeys: (state, action: PayloadAction<Key[]>) => {
       state.keys = action.payload;
     },
+    writeDrillSuccess(state, action: PayloadAction<ConfigureDrillState>) {
+      if (action.payload === state) state.isSaved = true
+    },
   },
 });
 
@@ -91,8 +96,9 @@ export const {
   setNoteNames,
   setPromptOrder,
   setTonalContext,
-  setChordQualities: setChordQualities,
-  setScales: setScales,
-  setKeys: setModes,
-  setKeys: setKeys,
+  setChordQualities,
+  setScales,
+  setModes,
+  setKeys,
+  writeDrillSuccess,
 } = configureDrillSlice.actions;
