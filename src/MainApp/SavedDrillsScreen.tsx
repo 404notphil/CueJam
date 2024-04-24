@@ -1,9 +1,10 @@
-import {Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {Themes} from '../ui/theme/Theme';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {selectAllDrills} from '../store/reducers/allDrillsSlice';
 import {useEffect} from 'react';
 import {loadAllDrills} from '../services/AppDatabase';
+import DrillCard from './DrillCard';
 
 export function SavedDrillsScreen(): React.JSX.Element {
   const drillsState = useAppSelector(selectAllDrills);
@@ -11,18 +12,22 @@ export function SavedDrillsScreen(): React.JSX.Element {
 
   useEffect(() => {
     dispatch(loadAllDrills());
-    console.log('12345 loading drills');
   }, []);
 
-  useEffect(() => {
-    drillsState.drills.forEach(item => {
-      console.log('12345 name = ' + item.name);
-    });
-  }, [drillsState]);
-
   return (
-    <View style={{flex: 1, backgroundColor: Themes.dark.background}}>
-      <Text>Saved Drills</Text>
+    <View style={styles.container}>
+      <FlatList
+        data={drillsState.drills}
+        keyExtractor={item => item.name.toString()}
+        renderItem={({item}) => <DrillCard drill={item} />}
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Themes.dark.background,
+  },
+});

@@ -1,8 +1,5 @@
 // src/features/drills/drillsSlice.ts
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {AppThunk} from '../../app/store'; // Adjust the import path as needed
-import {SQLiteDatabase} from 'react-native-sqlite-storage';
-import getDb from '../../app/db'; // Adjust based on where your getDb function is
 import {ConfigureDrillState} from './configureDrillReducer';
 import {RootState} from '../store';
 

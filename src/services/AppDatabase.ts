@@ -1,8 +1,5 @@
 import SQLite, {SQLiteDatabase} from 'react-native-sqlite-storage';
-import {
-  ConfigureDrillState,
-  writeDrillSuccess,
-} from '../store/reducers/configureDrillReducer';
+import {writeDrillSuccess} from '../store/reducers/configureDrillReducer';
 import {AppThunk} from '../store/store';
 import {
   Drill,
@@ -20,7 +17,7 @@ const openDatabase = async (): Promise<SQLite.SQLiteDatabase | undefined> => {
       location: 'default',
     })) as SQLiteDatabase;
     await db.executeSql(
-      'CREATE TABLE IF NOT EXISTS Drills(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, configuration TEXT)',
+      'CREATE TABLE IF NOT EXISTS Drills(name TEXT PRIMARY KEY, configuration TEXT)',
     );
     await db.executeSql(
       'CREATE TABLE IF NOT EXISTS Sessions(id INTEGER PRIMARY KEY AUTOINCREMENT, drillId INTEGER, timestamp DATETIME, data TEXT, FOREIGN KEY(drillId) REFERENCES Drills(id))',
@@ -29,21 +26,6 @@ const openDatabase = async (): Promise<SQLite.SQLiteDatabase | undefined> => {
   } catch (error) {
     console.error(error);
     return undefined;
-  }
-};
-
-export const addDrill = async (
-  db: SQLiteDatabase,
-  name: string,
-  configuration: string,
-) => {
-  try {
-    await db.executeSql(
-      'INSERT INTO Drills (name, configuration) VALUES (?, ?)',
-      [name, configuration],
-    );
-  } catch (error) {
-    console.error(error);
   }
 };
 
@@ -81,11 +63,10 @@ export const saveDrill = (): AppThunk => async (dispatch, getState) => {
 
 export const loadAllDrills = (): AppThunk => async dispatch => {
   try {
-    console.log('12345  drills -> ');
     dispatch(loadStart());
     const db = (await openDatabase()) as SQLiteDatabase;
     const results = await db.executeSql(
-      'SELECT id, name, configuration FROM Drills',
+      'SELECT name, configuration FROM Drills',
     );
     let drills: Drill[] = [];
     let rows = results[0].rows;
@@ -100,15 +81,15 @@ export const loadAllDrills = (): AppThunk => async dispatch => {
   }
 };
 
-export const loadDrillById =
-  (drillId: number): AppThunk =>
+export const loadDrillByName =
+  (drillName: string): AppThunk =>
   async dispatch => {
     try {
       dispatch(loadStart());
       const db = (await openDatabase()) as SQLiteDatabase;
       const results = await db.executeSql(
-        'SELECT id, name, configuration FROM Drills WHERE id = ?',
-        [drillId],
+        'SELECT name, configuration FROM Drills WHERE name = ?',
+        [drillName],
       );
       if (results[0].rows.length > 0) {
         dispatch(loadSuccess([results[0].rows.item(0)])); // Dispatch as an array for consistency
