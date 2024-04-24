@@ -49,6 +49,7 @@ import {useNavigation} from '@react-navigation/native';
 import {SetModesModal} from './SetModesModal';
 import {SetKeysModal} from './SetKeysModal';
 import {ExpandableText} from '../onboarding/ui/ExpandableText';
+import { addDrill } from '../services/AppDatabase';
 
 interface SettingProps {
   title: string;
@@ -84,6 +85,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const [error, setError] = useState<string | undefined>();
 
   const handleSaveDrill = () => {
+    addDrill()
     lastSavedDrill = drill;
     if (drill.drillName === null || drill.drillName.length === 0) {
       setError('You must choose a name!');

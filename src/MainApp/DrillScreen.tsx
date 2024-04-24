@@ -30,6 +30,7 @@ import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withTiming,
 } from 'react-native-reanimated';
 
@@ -62,7 +63,7 @@ export function DrillScreen(): React.JSX.Element {
   const pauseButton = require('../assets/pause_button.png');
   const playButton = require('../assets/play_button.png');
   const imageSource = isPlaying ? pauseButton : playButton;
-  const [currentBeat, setCurrentBeat] = useState(0);
+  const [currentBeat, setCurrentBeat] = useState(1);
   const [totalBeatsElapsed, setTotalBeatsElapsed] = useState(0);
   const [totalPromptsElapsed, setTotalPromptsElapsed] = useState(0);
 
