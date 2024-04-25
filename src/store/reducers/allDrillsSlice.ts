@@ -37,10 +37,22 @@ const drillsSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+    deleteDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
+      Object.assign(state, action.payload);
+    },
+    deleteDrillFailure: (state, action: PayloadAction<string>) => {
+      state = initialState;
+    },
   },
 });
 
-export const {loadStart, loadSuccess, loadFailure} = drillsSlice.actions;
+export const {
+  loadStart,
+  loadSuccess,
+  loadFailure,
+  deleteDrillSuccess,
+  deleteDrillFailure,
+} = drillsSlice.actions;
 
 export default drillsSlice.reducer;
 

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Themes} from '../ui/theme/Theme';
 import {globalStyles} from '../ui/theme/styles';
+import CheckBox from '@react-native-community/checkbox';
 
 interface DrillCardProps {
   drill: {
@@ -12,13 +13,29 @@ interface DrillCardProps {
 
 const DrillCard: React.FC<DrillCardProps> = props => {
   const drill = props.drill;
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
   return (
-    <TouchableOpacity onPress={props.onPress}>
-      <View style={styles.card}>
-        <Text style={globalStyles.fieldHeader}>{drill.name}</Text>
-        <Text style={globalStyles.validationErrorText}>Details here</Text>
-      </View>
-    </TouchableOpacity>
+    <View
+      style={[
+        styles.card,
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+        },
+      ]}>
+      <TouchableOpacity style={{flex: 1}} onPress={props.onPress}>
+        <View>
+          <Text style={globalStyles.fieldHeader}>{drill.name}</Text>
+          <Text style={globalStyles.validationErrorText}>Details here</Text>
+        </View>
+      </TouchableOpacity>
+      <CheckBox
+        style={{margin: 16}}
+        disabled={false}
+        value={toggleCheckBox}
+        onValueChange={newValue => setToggleCheckBox(newValue)}
+      />
+    </View>
   );
 };
 

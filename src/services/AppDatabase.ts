@@ -8,6 +8,8 @@ import {
 import {AppThunk} from '../store/store';
 import {
   Drill,
+  deleteDrillFailure,
+  deleteDrillSuccess,
   loadFailure,
   loadStart,
   loadSuccess,
@@ -70,11 +72,16 @@ export const saveDrill = (): AppThunk => async (dispatch, getState) => {
       sql = 'INSERT INTO Drills (name, configuration) VALUES (?, ?)';
       params = [name, configuration];
     }
-    await db.executeSql(sql, params);
-    dispatch(writeDrillSuccess(getState().drillConfiguration)); // Dispatching on success
-    dispatch(loadAllDrills());
+    const result = await db.executeSql(sql, params);
+
+    if (result[0].rows.length > 0) {
+      dispatch(writeDrillSuccess(getState().drillConfiguration)); // Dispatching on success
+      dispatch(loadAllDrills());
+    } else {
+      dispatch(loadDrillFailure('Failed to save drill'));
+    }
   } catch (error) {
-    console.error('Failed to save drill:', error);
+    dispatch(loadDrillFailure('Failed to save drill'));
   }
 };
 
@@ -93,7 +100,6 @@ export const loadAllDrills = (): AppThunk => async dispatch => {
     dispatch(loadSuccess(drills));
   } catch (error) {
     dispatch(loadFailure('Failed to load drills'));
-    console.log('Failed to load drills:', error);
   }
 };
 
@@ -116,6 +122,28 @@ export const loadDrillById =
       }
     } catch (error) {
       dispatch(loadDrillFailure('Failed to load drill'));
+    }
+  };
+
+export const deleteDrillById =
+  (drillId: number): AppThunk =>
+  async dispatch => {
+    try {
+      const db = (await openDatabase()) as SQLiteDatabase;
+      const results = await db.executeSql(
+        'DELETE FROM Drills WHERE drillId = ?',
+        [drillId],
+      );
+      if (results[0].rows.length > 0) {
+        const storeData = results[0].rows.item(0);
+        const drill: ConfigureDrillState = JSON.parse(storeData.configuration);
+        drill.drillId = storeData.drillId;
+        dispatch(deleteDrillSuccess(drill));
+      } else {
+        dispatch(deleteDrillFailure('Failed to delete drill'));
+      }
+    } catch (error) {
+      dispatch(deleteDrillFailure('Failed to delete drill'));
     }
   };
 
