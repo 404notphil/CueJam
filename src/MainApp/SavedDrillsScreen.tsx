@@ -3,7 +3,7 @@ import {Themes} from '../ui/theme/Theme';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {selectAllDrills} from '../store/reducers/allDrillsSlice';
 import {useEffect} from 'react';
-import {loadAllDrills, loadDrillByName} from '../services/AppDatabase';
+import {loadAllDrills, loadDrillById} from '../services/AppDatabase';
 import DrillCard from './DrillCard';
 import {useAppNavigation} from '../ui/App';
 
@@ -25,7 +25,7 @@ export function SavedDrillsScreen(): React.JSX.Element {
           <DrillCard
             drill={item}
             onPress={() => {
-              dispatch(loadDrillByName(item.name));
+              dispatch(loadDrillById(item.drillId));
               navigation.navigate('ConfigureDrill');
             }}
           />

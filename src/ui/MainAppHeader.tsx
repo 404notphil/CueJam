@@ -48,21 +48,21 @@ interface AppHeaderTitleProps {
 }
 
 const AppHeaderTitle: React.FC<AppHeaderTitleProps> = props => {
-  let screenTitle: 'Configure Drill' | 'NotePrompter' | 'Saved Drills';
+  let screenTitle: string;
 
   const [largeText, setLargeText] = useState(true);
 
   switch (props.screenName) {
     case 'ConfigureDrill': {
-      screenTitle = 'Configure Drill';
+      screenTitle = 'configure drill';
       break;
     }
     case 'SavedDrills': {
-      screenTitle = 'Saved Drills';
+      screenTitle = 'saved drills';
       break;
     }
     default: {
-      screenTitle = 'NotePrompter';
+      screenTitle = 'noteprompter';
       break;
     }
   }

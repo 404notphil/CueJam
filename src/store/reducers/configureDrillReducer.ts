@@ -16,6 +16,7 @@ import {
 } from './ConfigureDrillTypes';
 
 export interface ConfigureDrillState {
+  drillId?: number;
   drillName: string;
   tempo: number;
   beatsPerPrompt: number;
@@ -78,13 +79,17 @@ export const configureDrillSlice = createSlice({
       state.keys = action.payload;
     },
     writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
-      if (action.payload === state) state.isSaved = true;
+      if (action.payload.drillId === state.drillId)
+        Object.assign(state, action.payload);
     },
     loadDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
       Object.assign(state, action.payload);
     },
     loadDrillFailure: (state, action: PayloadAction<string>) => {
       state = initialState;
+    },
+    clearDrill: state => {
+      Object.assign(state, initialState);
     },
   },
 });
@@ -109,4 +114,5 @@ export const {
   writeDrillSuccess,
   loadDrillSuccess,
   loadDrillFailure,
+  clearDrill,
 } = configureDrillSlice.actions;

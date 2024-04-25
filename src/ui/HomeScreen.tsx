@@ -10,9 +10,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useEffect} from 'react';
 import {useAppNavigation} from './App';
+import {useAppDispatch} from '../store/hooks';
+import {clearDrill} from '../store/reducers/configureDrillReducer';
 
 export function HomeScreen(): React.JSX.Element {
   const navigation = useAppNavigation();
+  const dispatch = useAppDispatch();
   const animatedOpacity = useSharedValue(0);
   const animatedFlex = useSharedValue(0);
   useEffect(() => {
@@ -40,11 +43,12 @@ export function HomeScreen(): React.JSX.Element {
     <Animated.View style={[globalStyles.screenContainer, animatedOpacityStyle]}>
       <TouchableOpacity
         onPress={() => {
+          dispatch(clearDrill());
           navigation.navigate('ConfigureDrill');
         }}
         style={styles.largeButton}>
         <Text style={[globalStyles.fieldHeader, styles.fieldHeader]}>
-          New drill
+          new drill
         </Text>
         <Image
           style={styles.largeButtonIcon}
@@ -57,7 +61,7 @@ export function HomeScreen(): React.JSX.Element {
           navigation.navigate('SavedDrills');
         }}
         style={styles.largeButton}>
-        <Text style={globalStyles.fieldHeader}>Saved Drills</Text>
+        <Text style={globalStyles.fieldHeader}>saved drills</Text>
 
         <Image
           style={styles.largeButtonIcon}

@@ -22,7 +22,7 @@ const openDatabase = async (): Promise<SQLite.SQLiteDatabase | undefined> => {
       location: 'default',
     })) as SQLiteDatabase;
     await db.executeSql(
-      'CREATE TABLE IF NOT EXISTS Drills(name TEXT PRIMARY KEY, configuration TEXT)',
+      'CREATE TABLE IF NOT EXISTS Drills(drillId INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, configuration TEXT)',
     );
     await db.executeSql(
       'CREATE TABLE IF NOT EXISTS Sessions(id INTEGER PRIMARY KEY AUTOINCREMENT, drillId INTEGER, timestamp DATETIME, data TEXT, FOREIGN KEY(drillId) REFERENCES Drills(id))',
@@ -42,7 +42,7 @@ const addSession = async (
   try {
     const timestamp = new Date().toISOString();
     await db.executeSql(
-      'INSERT INTO Sessions (drillId, timestamp, data) VALUES (?, ?, ?)',
+      'INSERT INTO Sessions (id, timestamp, data) VALUES (?, ?, ?)',
       [drillId, timestamp, data],
     );
   } catch (error) {
@@ -53,19 +53,28 @@ const addSession = async (
 export const saveDrill = (): AppThunk => async (dispatch, getState) => {
   try {
     const db = (await openDatabase()) as SQLiteDatabase;
-    const result = await db.executeSql(
-      'INSERT INTO Drills (name, configuration) VALUES (?, ?)',
-      [
-        getState().drillConfiguration.drillName,
-        JSON.stringify(getState().drillConfiguration),
-      ],
-    );
-    if (result[0].rowsAffected > 0) {
-      dispatch(writeDrillSuccess(getState().drillConfiguration)); // Dispatching on success
-      console.log('12345 succeeded in writing drill');
+    const drillIdToWrite = getState().drillConfiguration.drillId;
+    const name = getState().drillConfiguration.drillName;
+    const configuration = JSON.stringify(getState().drillConfiguration);
+
+    let sql = '';
+    let params = [];
+
+    if (typeof drillIdToWrite === 'number') {
+      // If drillIdToWrite is defined and a number, include it in the query
+      sql =
+        'REPLACE INTO Drills (drillId, name, configuration) VALUES (?, ?, ?)';
+      params = [drillIdToWrite, name, configuration];
+    } else {
+      // If drillIdToWrite is undefined, omit it from the query to trigger auto-increment
+      sql = 'INSERT INTO Drills (name, configuration) VALUES (?, ?)';
+      params = [name, configuration];
     }
+    await db.executeSql(sql, params);
+    dispatch(writeDrillSuccess(getState().drillConfiguration)); // Dispatching on success
+    dispatch(loadAllDrills());
   } catch (error) {
-    console.error('12345 Failed to save drill:', error);
+    console.error('Failed to save drill:', error);
   }
 };
 
@@ -74,45 +83,38 @@ export const loadAllDrills = (): AppThunk => async dispatch => {
     dispatch(loadStart());
     const db = (await openDatabase()) as SQLiteDatabase;
     const results = await db.executeSql(
-      'SELECT name, configuration FROM Drills',
+      'SELECT drillId, name, configuration FROM Drills',
     );
     let drills: Drill[] = [];
     let rows = results[0].rows;
     for (let i = 0; i < rows.length; i++) {
       drills.push(rows.item(i));
     }
-    console.log('12345  drills -> ' + drills);
     dispatch(loadSuccess(drills));
   } catch (error) {
     dispatch(loadFailure('Failed to load drills'));
-    console.log('12345 Failed to load drills:', error);
+    console.log('Failed to load drills:', error);
   }
 };
 
-export const loadDrillByName =
-  (drillName: string): AppThunk =>
+export const loadDrillById =
+  (drillId: number): AppThunk =>
   async dispatch => {
     try {
       const db = (await openDatabase()) as SQLiteDatabase;
       const results = await db.executeSql(
-        'SELECT name, configuration FROM Drills WHERE name = ?',
-        [drillName],
+        'SELECT drillId, name, configuration FROM Drills WHERE drillId = ?',
+        [drillId],
       );
       if (results[0].rows.length > 0) {
         const storeData = results[0].rows.item(0);
         const drill: ConfigureDrillState = JSON.parse(storeData.configuration);
-        console.log(
-          '12345 drill read from db = ' + storeData.configuration.toString(),
-        );
-        console.log('12345 and ' + JSON.stringify(drill));
+        drill.drillId = storeData.drillId;
         dispatch(loadDrillSuccess(drill));
-        console.log('12345 -> success');
       } else {
-        console.log('12345 -> failure 1');
         dispatch(loadDrillFailure('No drill found with the given name'));
       }
     } catch (error) {
-      console.log('12345 -> failure 2');
       dispatch(loadDrillFailure('Failed to load drill'));
     }
   };
