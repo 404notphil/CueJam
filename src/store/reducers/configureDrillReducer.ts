@@ -83,13 +83,13 @@ export const configureDrillSlice = createSlice({
         Object.assign(state, action.payload);
     },
     loadDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
-      Object.assign(state, action.payload);
+      Object.assign(state, {...initialState, ...action.payload});
     },
     loadDrillFailure: (state, action: PayloadAction<string>) => {
       state = initialState;
     },
     clearDrill: state => {
-      Object.assign(state, initialState);
+      Object.assign(state, {...initialState, drillId: undefined});
     },
   },
 });
@@ -115,4 +115,5 @@ export const {
   loadDrillSuccess,
   loadDrillFailure,
   clearDrill,
+  onDrillEdit,
 } = configureDrillSlice.actions;

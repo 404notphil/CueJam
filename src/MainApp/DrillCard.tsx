@@ -10,7 +10,7 @@ interface DrillCardProps {
     id: number;
   };
   onPress: () => void;
-  onSelect: (drillId: number) => void;
+  onToggleSelected: (drillId: number, isSelected: boolean) => void;
 }
 
 const DrillCard: React.FC<DrillCardProps> = props => {
@@ -37,7 +37,7 @@ const DrillCard: React.FC<DrillCardProps> = props => {
         value={toggleCheckBox}
         onValueChange={newValue => {
           setToggleCheckBox(newValue);
-          props.onSelect(drill.id);
+          props.onToggleSelected(drill.id, newValue);
         }}
       />
     </View>

@@ -1,6 +1,6 @@
 import {
   FlatList,
-  Pressable,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -30,22 +30,34 @@ export function SavedDrillsScreen(): React.JSX.Element {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {padding: 16}]}>
       {/* Row of action buttons */}
-      <View style={{flexDirection: 'row', height: 100}}>
-        <TouchableOpacity
-          style={globalStyles.button}
-          onPress={() => {
-            listOfSelectedIds.forEach(idToDelete => {
-              dispatch(deleteDrillById(idToDelete));
-              dispatch(loadAllDrills());
-            });
-          }}>
-          <Text style={globalStyles.buttonText}>
-            Delete {listOfSelectedIds.length} drlls
-          </Text>
-        </TouchableOpacity>
+      <View
+        style={{flexDirection: 'row', height: 40, justifyContent: 'center'}}>
+        {listOfSelectedIds.length !== 0 && (
+          <TouchableOpacity
+            style={{flexDirection: 'row', alignItems: 'center'}}
+            onPress={() => {
+              listOfSelectedIds.forEach(idToDelete => {
+                dispatch(deleteDrillById(idToDelete));
+                dispatch(loadAllDrills());
+              });
+            }}>
+            <Text style={globalStyles.buttonText}>
+              Delete {listOfSelectedIds.length} drll
+              {listOfSelectedIds.length > 1 ? 's' : ''}
+            </Text>
+
+            <Image
+              style={{height: 20, width: 20, marginStart: 10}}
+              source={require('../assets/delete_icon.png')}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        )}
       </View>
+
+      {/* List of drills */}
       <FlatList
         data={drillsState.drills}
         keyExtractor={item => item.drillId.toString()}
@@ -56,8 +68,12 @@ export function SavedDrillsScreen(): React.JSX.Element {
               dispatch(loadDrillById(item.drillId));
               navigation.navigate('ConfigureDrill');
             }}
-            onSelect={drillId => {
-              setListofSelectedIds([...listOfSelectedIds, drillId]);
+            onToggleSelected={(drillId, isSelected) => {
+              setListofSelectedIds(
+                isSelected
+                  ? [...listOfSelectedIds, drillId]
+                  : listOfSelectedIds.filter(id => id !== drillId),
+              );
             }}
           />
         )}

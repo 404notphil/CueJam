@@ -75,7 +75,7 @@ export const saveDrill = (): AppThunk => async (dispatch, getState) => {
     const result = await db.executeSql(sql, params);
 
     if (result[0].rows.length > 0) {
-      dispatch(writeDrillSuccess(getState().drillConfiguration)); // Dispatching on success
+      dispatch(writeDrillSuccess(getState().drillConfiguration));
       dispatch(loadAllDrills());
     } else {
       dispatch(loadDrillFailure('Failed to save drill'));
