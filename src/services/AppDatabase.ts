@@ -55,8 +55,8 @@ const addSession = async (
 export const saveDrill = (): AppThunk => async (dispatch, getState) => {
   try {
     const db = (await openDatabase()) as SQLiteDatabase;
-    const drillIdToWrite = getState().drillConfiguration.drillId;
-    const name = getState().drillConfiguration.drillName;
+    const drillIdToWrite = getState().drillConfiguration.configuration.drillId;
+    const name = getState().drillConfiguration.configuration.drillName;
     const configuration = JSON.stringify(getState().drillConfiguration);
 
     let sql = '';
@@ -74,14 +74,18 @@ export const saveDrill = (): AppThunk => async (dispatch, getState) => {
     }
     const result = await db.executeSql(sql, params);
 
-    if (result[0].rows.length > 0) {
+    console.log('12345 result = ' + JSON.stringify(result));
+    if (result[0].rowsAffected > 0) {
       dispatch(writeDrillSuccess(getState().drillConfiguration));
       dispatch(loadAllDrills());
+      console.log('12345 saved');
     } else {
       dispatch(loadDrillFailure('Failed to save drill'));
+      console.log('12345 failed');
     }
   } catch (error) {
     dispatch(loadDrillFailure('Failed to save drill'));
+    console.log('12345 failed');
   }
 };
 
@@ -115,7 +119,7 @@ export const loadDrillById =
       if (results[0].rows.length > 0) {
         const storeData = results[0].rows.item(0);
         const drill: ConfigureDrillState = JSON.parse(storeData.configuration);
-        drill.drillId = storeData.drillId;
+        drill.configuration.drillId = storeData.drillId;
         dispatch(loadDrillSuccess(drill));
       } else {
         dispatch(loadDrillFailure('No drill found with the given name'));
@@ -136,9 +140,9 @@ export const deleteDrillById =
       );
       if (results[0].rows.length > 0) {
         const storeData = results[0].rows.item(0);
-        const drill: ConfigureDrillState = JSON.parse(storeData.configuration);
-        drill.drillId = storeData.drillId;
-        dispatch(deleteDrillSuccess(drill));
+        const state: ConfigureDrillState = JSON.parse(storeData.configuration);
+        state.configuration.drillId = storeData.drillId;
+        dispatch(deleteDrillSuccess(state));
       } else {
         dispatch(deleteDrillFailure('Failed to delete drill'));
       }

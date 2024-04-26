@@ -16,31 +16,35 @@ import {
 } from './ConfigureDrillTypes';
 
 export interface ConfigureDrillState {
-  drillId?: number;
-  drillName: string;
-  tempo: number;
-  beatsPerPrompt: number;
-  noteNames: NoteName[];
-  promptOrder: PromptOrder;
-  tonalContext: TonalContext;
-  chordQualities: ChordQuality[];
-  scales: Scale[];
-  modes: Mode[];
-  keys: Key[];
+  configuration: {
+    drillId?: number;
+    drillName: string;
+    tempo: number;
+    beatsPerPrompt: number;
+    noteNames: NoteName[];
+    promptOrder: PromptOrder;
+    tonalContext: TonalContext;
+    chordQualities: ChordQuality[];
+    scales: Scale[];
+    modes: Mode[];
+    keys: Key[];
+  };
   isSaved: boolean;
 }
 
 const initialState: ConfigureDrillState = {
-  drillName: '',
-  tempo: 150,
-  beatsPerPrompt: 4,
-  noteNames: AllNoteNames,
-  promptOrder: 'random',
-  tonalContext: 'chord quality',
-  chordQualities: AllChordQualities,
-  scales: AllScales,
-  modes: AllModes,
-  keys: AllKeys,
+  configuration: {
+    drillName: '',
+    tempo: 150,
+    beatsPerPrompt: 4,
+    noteNames: AllNoteNames,
+    promptOrder: 'random',
+    tonalContext: 'chord quality',
+    chordQualities: AllChordQualities,
+    scales: AllScales,
+    modes: AllModes,
+    keys: AllKeys,
+  },
   isSaved: false,
 };
 
@@ -49,37 +53,37 @@ export const configureDrillSlice = createSlice({
   initialState: initialState,
   reducers: {
     setDrillName: (state, action: PayloadAction<string>) => {
-      state.drillName = action.payload;
+      state.configuration.drillName = action.payload;
     },
     setTempo: (state, action: PayloadAction<number>) => {
-      state.tempo = action.payload;
+      state.configuration.tempo = action.payload;
     },
     setBeatsPerChord: (state, action: PayloadAction<number>) => {
-      state.beatsPerPrompt = action.payload;
+      state.configuration.beatsPerPrompt = action.payload;
     },
     setNoteNames: (state, action: PayloadAction<NoteName[]>) => {
-      state.noteNames = action.payload;
+      state.configuration.noteNames = action.payload;
     },
     setPromptOrder: (state, action: PayloadAction<PromptOrder>) => {
-      state.promptOrder = action.payload;
+      state.configuration.promptOrder = action.payload;
     },
     setTonalContext: (state, action: PayloadAction<TonalContext>) => {
-      state.tonalContext = action.payload;
+      state.configuration.tonalContext = action.payload;
     },
     setChordQualities: (state, action: PayloadAction<ChordQuality[]>) => {
-      state.chordQualities = action.payload;
+      state.configuration.chordQualities = action.payload;
     },
     setScales: (state, action: PayloadAction<Scale[]>) => {
-      state.scales = action.payload;
+      state.configuration.scales = action.payload;
     },
     setModes: (state, action: PayloadAction<Mode[]>) => {
-      state.modes = action.payload;
+      state.configuration.modes = action.payload;
     },
     setKeys: (state, action: PayloadAction<Key[]>) => {
-      state.keys = action.payload;
+      state.configuration.keys = action.payload;
     },
     writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
-      if (action.payload.drillId === state.drillId)
+      if (action.payload.configuration.drillId === state.configuration.drillId)
         Object.assign(state, {...action.payload, isSaved: true});
     },
     loadDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
