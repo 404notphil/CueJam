@@ -7,8 +7,10 @@ import CheckBox from '@react-native-community/checkbox';
 interface DrillCardProps {
   drill: {
     name: string;
+    id: number;
   };
   onPress: () => void;
+  onSelect: (drillId: number) => void;
 }
 
 const DrillCard: React.FC<DrillCardProps> = props => {
@@ -33,7 +35,10 @@ const DrillCard: React.FC<DrillCardProps> = props => {
         style={{margin: 16}}
         disabled={false}
         value={toggleCheckBox}
-        onValueChange={newValue => setToggleCheckBox(newValue)}
+        onValueChange={newValue => {
+          setToggleCheckBox(newValue);
+          props.onSelect(drill.id);
+        }}
       />
     </View>
   );
