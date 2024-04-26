@@ -19,6 +19,7 @@ import DrillCard from './DrillCard';
 import {useAppNavigation} from '../ui/App';
 import {globalStyles} from '../ui/theme/styles';
 import {createDraftSafeSelectorCreator} from '@reduxjs/toolkit';
+import {clearDrill} from '../store/reducers/configureDrillReducer';
 
 export function SavedDrillsScreen(): React.JSX.Element {
   const drillsState = useAppSelector(selectAllDrills);
@@ -31,10 +32,10 @@ export function SavedDrillsScreen(): React.JSX.Element {
   }, []);
 
   return (
-    <View style={[styles.container, {padding: 16}]}>
+    <View style={styles.container}>
       {/* Row of action buttons */}
       <View
-        style={{flexDirection: 'row', height: 40, justifyContent: 'center'}}>
+        style={{flexDirection: 'row', height: 30, justifyContent: 'center'}}>
         {listOfSelectedIds.length !== 0 && (
           <TouchableOpacity
             style={{flexDirection: 'row', alignItems: 'center'}}

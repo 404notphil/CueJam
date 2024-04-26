@@ -30,6 +30,7 @@ export interface ConfigureDrillState {
     keys: Key[];
   };
   isSaved: boolean;
+  isLoading: boolean;
 }
 
 const initialState: ConfigureDrillState = {
@@ -45,7 +46,8 @@ const initialState: ConfigureDrillState = {
     modes: AllModes,
     keys: AllKeys,
   },
-  isSaved: false,
+  isSaved: true,
+  isLoading: true,
 };
 
 export const configureDrillSlice = createSlice({
@@ -85,18 +87,28 @@ export const configureDrillSlice = createSlice({
     writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
       if (action.payload.configuration.drillId === state.configuration.drillId)
         Object.assign(state, {...action.payload, isSaved: true});
+      console.log('12345 writeDrillSuccess');
+    },
+    startLoading: state => {
+      state.isLoading = true;
     },
     loadDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
-      Object.assign(state, {...initialState, ...action.payload});
+      Object.assign(state, {
+        ...initialState,
+        ...action.payload,
+        isLoading: false,
+      });
     },
     loadDrillFailure: (state, action: PayloadAction<string>) => {
       state = initialState;
+      state.isLoading = false;
     },
     clearDrill: state => {
       Object.assign(state, {...initialState, drillId: undefined});
     },
     onDrillEdit: state => {
       state.isSaved = false;
+      console.log('12345 onDrillEdit');
     },
   },
 });
@@ -119,6 +131,7 @@ export const {
   setModes,
   setKeys,
   writeDrillSuccess,
+  startLoading,
   loadDrillSuccess,
   loadDrillFailure,
   clearDrill,

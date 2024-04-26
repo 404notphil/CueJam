@@ -11,6 +11,7 @@ import {Image} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
   ConfigureDrillState,
+  clearDrill,
   onDrillEdit,
   selectConfigureDrill,
   setBeatsPerChord,
@@ -75,14 +76,15 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   const state = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
-  
+
   const drill = state.configuration;
 
   const navigation = useAppNavigation();
 
-  let lastSavedDrill: ConfigureDrillState | undefined = undefined;
+  const [lastSavedDrill, setLastSavedDrill] = useState(state.configuration);
 
   const [error, setError] = useState<string | undefined>();
+  const _ = require('lodash');
 
   const handleSaveDrill = () => {
     if (drill.drillName === null || drill.drillName.length === 0) {
@@ -98,12 +100,24 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const animatedOpacity = useSharedValue(0);
 
   useEffect(() => {
-    dispatch(onDrillEdit());
+    return () => {
+      dispatch(clearDrill());
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log('12345 lodash result 1 = ' + !_.isEqual(drill, lastSavedDrill));
+    
+    if (!_.isEqual(drill, lastSavedDrill)) {
+      dispatch(onDrillEdit());
+      console.log('12345 ' + JSON.stringify(drill));
+      console.log('12345 ' + JSON.stringify(lastSavedDrill));
+    }
   }, [drill]);
 
   useEffect(() => {
     if (state.isSaved) {
-      lastSavedDrill = state;
+      setLastSavedDrill(drill);
       animatedHeight.value = 0;
       animatedOpacity.value = 0;
       animatedHeight.value = withTiming(120);

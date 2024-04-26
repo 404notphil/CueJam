@@ -35,8 +35,10 @@ import Animated, {
 } from 'react-native-reanimated';
 
 export function DrillScreen(): React.JSX.Element {
-  const drill = useAppSelector(selectConfigureDrill);
+  const state = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
+
+  const drill = state.configuration;
 
   const getRandomTonalContextValue = () => {
     switch (drill.tonalContext) {
