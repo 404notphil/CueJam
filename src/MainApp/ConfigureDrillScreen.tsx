@@ -75,6 +75,8 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   const state = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
+  
+  const drill = state.configuration;
 
   const navigation = useAppNavigation();
 
@@ -83,10 +85,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const [error, setError] = useState<string | undefined>();
 
   const handleSaveDrill = () => {
-    if (
-      state.configuration.drillName === null ||
-      state.configuration.drillName.length === 0
-    ) {
+    if (drill.drillName === null || drill.drillName.length === 0) {
       setError('You must choose a name!');
     } else {
       dispatch(saveDrill());
@@ -100,7 +99,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   useEffect(() => {
     dispatch(onDrillEdit());
-  }, [state.configuration]);
+  }, [drill]);
 
   useEffect(() => {
     if (state.isSaved) {
@@ -118,10 +117,10 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   }, [state.isSaved]);
 
   useEffect(() => {
-    if (state.configuration.noteNames.length !== 12) {
+    if (drill.noteNames.length !== 12) {
       dispatch(setPromptOrder('random'));
     }
-  }, [state.configuration.noteNames.length]);
+  }, [drill.noteNames.length]);
 
   const animatedHeightStyle = useAnimatedStyle(() => {
     return {
@@ -145,7 +144,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           style={[globalStyles.textInputArea, {flex: 1, marginEnd: 16}]}
           onChangeText={newText => dispatch(setDrillName(newText))}
           placeholder="Type drill name here">
-          {state.configuration.drillName}
+          {drill.drillName}
         </TextInput>
 
         <TouchableOpacity
@@ -190,7 +189,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
       <SettingRow
         {...{
           title: 'tempo',
-          buttonText: state.configuration.tempo + ' bpm',
+          buttonText: drill.tempo + ' bpm',
           enabled: true,
           onPress: () => {
             setTempoDialogVisible(true);
@@ -201,7 +200,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
       <SettingRow
         {...{
           title: 'beats per prompt',
-          buttonText: state.configuration.beatsPerPrompt.toString(),
+          buttonText: drill.beatsPerPrompt.toString(),
           enabled: true,
           onPress: () => setBeatsPerPromptDialogVisible(true),
         }}
@@ -210,7 +209,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
       <SettingRow
         {...{
           title: 'note names',
-          buttonText: state.configuration.noteNames.length.toString(),
+          buttonText: drill.noteNames.length.toString(),
           enabled: true,
           onPress: () => setNoteNamesDialogVisible(true),
         }}
@@ -219,10 +218,10 @@ export function ConfigureDrillScreen(): React.JSX.Element {
       <SettingRow
         {...{
           title: 'prompt order',
-          buttonText: state.configuration.promptOrder,
-          enabled: state.configuration.noteNames.length === 12,
+          buttonText: drill.promptOrder,
+          enabled: drill.noteNames.length === 12,
           onPress: () => {
-            if (state.configuration.noteNames.length === 12)
+            if (drill.noteNames.length === 12)
               setPromptOrderDialogVisible(true);
           },
         }}
@@ -231,50 +230,50 @@ export function ConfigureDrillScreen(): React.JSX.Element {
       <SettingRow
         {...{
           title: 'tonal context',
-          buttonText: state.configuration.tonalContext,
+          buttonText: drill.tonalContext,
           enabled: true,
           onPress: () => setTonalContextDialogVisible(true),
         }}
       />
 
-      {state.configuration.tonalContext === 'chord quality' && (
+      {drill.tonalContext === 'chord quality' && (
         <SettingRow
           {...{
             title: 'chord qualities',
-            buttonText: state.configuration.chordQualities.length.toString(),
+            buttonText: drill.chordQualities.length.toString(),
             enabled: true,
             onPress: () => setChordQualitiesDialogVisible(true),
           }}
         />
       )}
 
-      {state.configuration.tonalContext === 'scale' && (
+      {drill.tonalContext === 'scale' && (
         <SettingRow
           {...{
             title: 'scales',
-            buttonText: state.configuration.scales.length.toString(),
+            buttonText: drill.scales.length.toString(),
             enabled: true,
             onPress: () => setScalesDialogVisible(true),
           }}
         />
       )}
 
-      {state.configuration.tonalContext === 'mode' && (
+      {drill.tonalContext === 'mode' && (
         <SettingRow
           {...{
             title: 'modes',
-            buttonText: state.configuration.modes.length.toString(),
+            buttonText: drill.modes.length.toString(),
             enabled: true,
             onPress: () => setModesDialogVisible(true),
           }}
         />
       )}
 
-      {state.configuration.tonalContext === 'key' && (
+      {drill.tonalContext === 'key' && (
         <SettingRow
           {...{
             title: 'keys',
-            buttonText: state.configuration.keys.length.toString(),
+            buttonText: drill.keys.length.toString(),
             enabled: true,
             onPress: () => setKeysDialogVisible(true),
           }}
@@ -283,14 +282,14 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
       <SetTempoModal
         modalIsVisible={tempoDialogVisible}
-        tempo={state.configuration.tempo}
+        tempo={drill.tempo}
         onSetTempo={(tempo: number) => dispatch(setTempo(tempo))}
         onDismiss={() => setTempoDialogVisible(false)}
       />
 
       <SetBeatsPerPromptModal
         modalIsVisible={beatsPerChordDialogVisible}
-        beatsPerPrompt={state.configuration.beatsPerPrompt}
+        beatsPerPrompt={drill.beatsPerPrompt}
         onSetBeatsPerPrompt={(beatsPerChord: number) =>
           dispatch(setBeatsPerChord(beatsPerChord))
         }
@@ -299,7 +298,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
       <SetNoteNamesModal
         modalIsVisible={noteNamesDialogVisible}
-        noteNames={state.configuration.noteNames}
+        noteNames={drill.noteNames}
         onSetNoteNames={(noteNames: NoteName[]) =>
           dispatch(setNoteNames(noteNames))
         }
@@ -308,7 +307,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
       <SetPromptOrderModal
         modalIsVisible={promptOrderDialogVisible}
-        promptOrder={state.configuration.promptOrder}
+        promptOrder={drill.promptOrder}
         onSetPromptOrder={(promptOrder: PromptOrder) =>
           dispatch(setPromptOrder(promptOrder))
         }
@@ -317,7 +316,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
       <SetTonalContextModal
         modalIsVisible={tonalContextDialogVisible}
-        tonalContext={state.configuration.tonalContext}
+        tonalContext={drill.tonalContext}
         onSetTonalContext={(tonalContext: TonalContext) =>
           dispatch(setTonalContext(tonalContext))
         }
@@ -326,7 +325,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
       <SetChordQualitiesModal
         modalIsVisible={chordQualitiesDialogVisible}
-        chordQualities={state.configuration.chordQualities}
+        chordQualities={drill.chordQualities}
         onSetChordQualities={(chordQualities: ChordQuality[]) =>
           dispatch(setChordQualities(chordQualities))
         }
@@ -335,21 +334,21 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
       <SetScalesModal
         modalIsVisible={scalesDialogVisible}
-        scales={state.configuration.scales}
+        scales={drill.scales}
         onSetScales={(scales: Scale[]) => dispatch(setScales(scales))}
         onDismiss={() => setScalesDialogVisible(false)}
       />
 
       <SetModesModal
         modalIsVisible={modesDialogVisible}
-        modes={state.configuration.modes}
+        modes={drill.modes}
         onSetModes={(modes: Mode[]) => dispatch(setModes(modes))}
         onDismiss={() => setModesDialogVisible(false)}
       />
 
       <SetKeysModal
         modalIsVisible={keysDialogVisible}
-        keys={state.configuration.keys}
+        keys={drill.keys}
         onSetKeys={(keys: Key[]) => dispatch(setKeys(keys))}
         onDismiss={() => setKeysDialogVisible(false)}
       />
