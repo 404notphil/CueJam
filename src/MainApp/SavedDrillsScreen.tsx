@@ -18,6 +18,7 @@ import {
 import DrillCard from './DrillCard';
 import {useAppNavigation} from '../ui/App';
 import {globalStyles} from '../ui/theme/styles';
+import {createDraftSafeSelectorCreator} from '@reduxjs/toolkit';
 
 export function SavedDrillsScreen(): React.JSX.Element {
   const drillsState = useAppSelector(selectAllDrills);
@@ -41,6 +42,7 @@ export function SavedDrillsScreen(): React.JSX.Element {
               listOfSelectedIds.forEach(idToDelete => {
                 dispatch(deleteDrillById(idToDelete));
                 dispatch(loadAllDrills());
+                setListofSelectedIds([]);
               });
             }}>
             <Text style={globalStyles.buttonText}>
