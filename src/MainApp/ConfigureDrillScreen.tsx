@@ -100,19 +100,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const animatedOpacity = useSharedValue(0);
 
   useEffect(() => {
-    return () => {
-      dispatch(clearDrill());
-    };
-  }, []);
-
-  useEffect(() => {
-    console.log('12345 lodash result 1 = ' + !_.isEqual(drill, lastSavedDrill));
-    
-    if (!_.isEqual(drill, lastSavedDrill)) {
-      dispatch(onDrillEdit());
-      console.log('12345 ' + JSON.stringify(drill));
-      console.log('12345 ' + JSON.stringify(lastSavedDrill));
-    }
+      dispatch(onDrillEdit(state));
   }, [drill]);
 
   useEffect(() => {

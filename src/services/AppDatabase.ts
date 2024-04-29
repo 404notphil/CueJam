@@ -1,6 +1,9 @@
 import SQLite, {SQLiteDatabase} from 'react-native-sqlite-storage';
 import {
   ConfigureDrillState,
+  DrillConfiguration,
+  areDrillsSimilar,
+  initialState,
   loadDrillFailure,
   loadDrillSuccess,
   startLoading,
@@ -58,11 +61,10 @@ export const saveDrill = (): AppThunk => async (dispatch, getState) => {
     const db = (await openDatabase()) as SQLiteDatabase;
     const drillIdToWrite = getState().drillConfiguration.configuration.drillId;
     const name = getState().drillConfiguration.configuration.drillName;
-    const configuration = JSON.stringify(
-      getState().drillConfiguration.configuration,
-    );
+    const configurationObject = getState().drillConfiguration.configuration;
+    const configurationJson = JSON.stringify(configurationObject);
     console.log(
-      '12345 configuration to save = ' + JSON.stringify(configuration),
+      '12345 configuration to save = ' + JSON.stringify(configurationJson),
     );
 
     let sql = '';
@@ -72,18 +74,18 @@ export const saveDrill = (): AppThunk => async (dispatch, getState) => {
       // If drillIdToWrite is defined and a number, include it in the query
       sql =
         'REPLACE INTO Drills (drillId, name, configuration) VALUES (?, ?, ?)';
-      params = [drillIdToWrite, name, configuration];
+      params = [drillIdToWrite, name, configurationJson];
     } else {
       // If drillIdToWrite is undefined, omit it from the query to trigger auto-increment
       sql = 'INSERT INTO Drills (name, configuration) VALUES (?, ?)';
-      params = [name, configuration];
+      params = [name, configurationJson];
     }
     const result = await db.executeSql(sql, params);
 
     console.log('12345 result = ' + JSON.stringify(result));
     // if (result[0].rowsAffected > 0) {
     dispatch(writeDrillSuccess(getState().drillConfiguration));
-    dispatch(loadAllDrills());
+    dispatch(loadAllDrills(configurationObject));
     console.log('12345 saved');
     // } else {
     // dispatch(loadDrillFailure('Failed to save drill'));
@@ -95,23 +97,29 @@ export const saveDrill = (): AppThunk => async (dispatch, getState) => {
   }
 };
 
-export const loadAllDrills = (): AppThunk => async dispatch => {
-  try {
-    dispatch(loadStart());
-    const db = (await openDatabase()) as SQLiteDatabase;
-    const results = await db.executeSql(
-      'SELECT drillId, name, configuration FROM Drills',
-    );
-    let drills: Drill[] = [];
-    let rows = results[0].rows;
-    for (let i = 0; i < rows.length; i++) {
-      drills.push(rows.item(i));
+export const loadAllDrills =
+  (drill: DrillConfiguration | undefined): AppThunk =>
+  async dispatch => {
+    try {
+      dispatch(loadStart());
+      const db = (await openDatabase()) as SQLiteDatabase;
+      const results = await db.executeSql(
+        'SELECT drillId, name, configuration FROM Drills',
+      );
+      let drills: Drill[] = [];
+      let rows = results[0].rows;
+      for (let i = 0; i < rows.length; i++) {
+        drills.push(rows.item(i));
+      }
+      dispatch(loadSuccess(drills));
+      drill &&
+        drills.forEach(item => {
+          areDrillsSimilar(drill, item.configuration.configuration);
+        });
+    } catch (error) {
+      dispatch(loadFailure('Failed to load drills'));
     }
-    dispatch(loadSuccess(drills));
-  } catch (error) {
-    dispatch(loadFailure('Failed to load drills'));
-  }
-};
+  };
 
 export const loadDrillById =
   (drillId: number): AppThunk =>
@@ -130,6 +138,7 @@ export const loadDrillById =
         );
         const configuration = JSON.parse(storeData.configuration);
         const drillState: ConfigureDrillState = {
+          ...initialState,
           configuration: {...configuration, drillId: drillId},
           isSaved: true,
           isLoading: false,

@@ -15,25 +15,72 @@ import {
   TonalContext,
 } from './ConfigureDrillTypes';
 
-export interface ConfigureDrillState {
-  configuration: {
-    drillId?: number;
-    drillName: string;
-    tempo: number;
-    beatsPerPrompt: number;
-    noteNames: NoteName[];
-    promptOrder: PromptOrder;
-    tonalContext: TonalContext;
-    chordQualities: ChordQuality[];
-    scales: Scale[];
-    modes: Mode[];
-    keys: Key[];
-  };
-  isSaved: boolean;
-  isLoading: boolean;
+export type DrillConfiguration = {
+  drillId?: number;
+  drillName: string;
+  tempo: number;
+  beatsPerPrompt: number;
+  noteNames: NoteName[];
+  promptOrder: PromptOrder;
+  tonalContext: TonalContext;
+  chordQualities: ChordQuality[];
+  scales: Scale[];
+  modes: Mode[];
+  keys: Key[];
+};
+
+export function areDrillsSimilar(
+  first: DrillConfiguration,
+  second: DrillConfiguration,
+) {
+  return (
+    first.promptOrder === second.promptOrder &&
+    first.tonalContext === second.tonalContext
+  );
 }
 
-const initialState: ConfigureDrillState = {
+export interface ConfigureDrillState {
+  configuration: DrillConfiguration;
+  isSaved: boolean;
+  hasBeenSavedOnceOrMore: boolean;
+  isLoading: boolean;
+  saveDrillButtonState: SaveDrillButtonState;
+  copyDrillButtonVisible: boolean;
+  foundSimilarDrillButtonVisible: boolean;
+  deleteDrillButtonVisible: boolean;
+  titleError: 'DrillNameEmpty' | 'DrillNameNotUnique' | null;
+}
+
+interface SaveDrillButtonState {
+  text: 'save drill' | 'save changes' | 'saved' | null;
+  visible: boolean;
+  enabled: boolean | null;
+}
+
+const SaveDrillButtonStates = {
+  DrillExistsAndNoNewChanges: {
+    text: null,
+    visible: false,
+    enabled: null,
+  } as SaveDrillButtonState,
+  DrillExistsAndUnsavedChanges: {
+    text: 'save changes',
+    visible: true,
+    enabled: true,
+  } as SaveDrillButtonState,
+  FreshDrillNotSaved: {
+    text: 'save drill',
+    visible: true,
+    enabled: true,
+  } as SaveDrillButtonState,
+  DrillJustSavedNoNewChanges: {
+    text: 'saved',
+    visible: true,
+    enabled: false,
+  } as SaveDrillButtonState,
+};
+
+export const initialState: ConfigureDrillState = {
   configuration: {
     drillName: '',
     tempo: 150,
@@ -47,7 +94,13 @@ const initialState: ConfigureDrillState = {
     keys: AllKeys,
   },
   isSaved: true,
+  hasBeenSavedOnceOrMore: false,
   isLoading: true,
+  saveDrillButtonState: SaveDrillButtonStates.FreshDrillNotSaved,
+  copyDrillButtonVisible: false,
+  foundSimilarDrillButtonVisible: false,
+  deleteDrillButtonVisible: false,
+  titleError: null,
 };
 
 export const configureDrillSlice = createSlice({
@@ -85,8 +138,10 @@ export const configureDrillSlice = createSlice({
       state.configuration.keys = action.payload;
     },
     writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
-      if (action.payload.configuration.drillId === state.configuration.drillId)
-        Object.assign(state, {...action.payload, isSaved: true});
+      Object.assign(state, {...action.payload, isSaved: true});
+      state.hasBeenSavedOnceOrMore = true;
+      state.copyDrillButtonVisible = true;
+      state.deleteDrillButtonVisible = true;
       console.log('12345 writeDrillSuccess');
     },
     startLoading: state => {
@@ -97,7 +152,15 @@ export const configureDrillSlice = createSlice({
         ...initialState,
         ...action.payload,
         isLoading: false,
+        saveDrillButtonState: action.payload.configuration
+          .drillId /* In other words, is it from the DB?*/
+          ? SaveDrillButtonStates.DrillExistsAndNoNewChanges
+          : SaveDrillButtonStates.FreshDrillNotSaved,
       });
+      if (typeof action.payload.configuration.drillId === 'number') {
+        state.copyDrillButtonVisible = true;
+        state.deleteDrillButtonVisible = true;
+      }
     },
     loadDrillFailure: (state, action: PayloadAction<string>) => {
       state = initialState;
@@ -106,9 +169,33 @@ export const configureDrillSlice = createSlice({
     clearDrill: state => {
       Object.assign(state, {...initialState, drillId: undefined});
     },
-    onDrillEdit: state => {
+    onDrillEdit: (state, action: PayloadAction<ConfigureDrillState>) => {
       state.isSaved = false;
       console.log('12345 onDrillEdit');
+      if (state.configuration.drillId) {
+        // If there's an id, then this drill exists in the db
+        if (state === action.payload) {
+          // If they're the same, then the user changed the drill, then reverted to how it was.
+          if (state.hasBeenSavedOnceOrMore) {
+            // If the user has already saved at least once during this viewing of the drill...
+            state.saveDrillButtonState =
+              SaveDrillButtonStates.DrillJustSavedNoNewChanges;
+          } else {
+            state.saveDrillButtonState =
+              SaveDrillButtonStates.DrillExistsAndNoNewChanges;
+          }
+        } else {
+          // If they're not the same, then the user just made an edit
+          state.saveDrillButtonState =
+            SaveDrillButtonStates.DrillExistsAndUnsavedChanges;
+        }
+      } else {
+        // No id on this drill means it has never been saved to db before.
+        state.saveDrillButtonState = SaveDrillButtonStates.FreshDrillNotSaved;
+      }
+    },
+    checkedForSimilarDrills: (state, action: PayloadAction<boolean>) => {
+      state.foundSimilarDrillButtonVisible = action.payload;
     },
   },
 });
@@ -136,4 +223,5 @@ export const {
   loadDrillFailure,
   clearDrill,
   onDrillEdit,
+  checkedForSimilarDrills,
 } = configureDrillSlice.actions;
