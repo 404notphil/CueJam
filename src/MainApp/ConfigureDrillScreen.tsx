@@ -54,6 +54,7 @@ import {SetKeysModal} from './SetKeysModal';
 import {ExpandableText} from '../onboarding/ui/ExpandableText';
 import {deleteDrillById, saveDrill} from '../services/AppDatabase';
 import {useAppNavigation} from '../ui/App';
+import PlayIcon from '../assets/PlayIcon';
 
 interface SettingProps {
   title: string;
@@ -113,6 +114,18 @@ export function ConfigureDrillScreen(): React.JSX.Element {
     <ScrollView
       keyboardShouldPersistTaps="handled"
       style={globalStyles.screenContainer}>
+      <TouchableOpacity
+        style={{
+          marginBottom: 16,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <PlayIcon />
+        <View style={{width: 16}} />
+        <Text style={styles.playButtonText}>{state.playButtonText}</Text>
+      </TouchableOpacity>
+
       <TextInput
         style={[globalStyles.textInputArea, {flex: 1, marginEnd: 16}]}
         onChangeText={newText => dispatch(setDrillName(newText))}
@@ -538,5 +551,11 @@ const styles = StyleSheet.create({
   dividerStyle: {
     backgroundColor: '#CCFF00',
     height: 1,
+  },
+  playButtonText: {
+    color: '#CCFF00',
+    fontSize: 25,
+    fontWeight: '600',
+    fontFamily: 'arciform',
   },
 });

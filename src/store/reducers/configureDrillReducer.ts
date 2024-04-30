@@ -50,6 +50,7 @@ export interface ConfigureDrillState {
   foundSimilarDrillButtonVisible: boolean;
   deleteDrillButtonVisible: boolean;
   titleError: 'You must choose a name!' | 'That name already exists!' | null;
+  playButtonText: 'play' | 'play without saving';
 }
 
 interface SaveDrillButtonState {
@@ -103,6 +104,7 @@ export const initialState: ConfigureDrillState = {
   foundSimilarDrillButtonVisible: false,
   deleteDrillButtonVisible: false,
   titleError: null,
+  playButtonText: 'play',
 };
 
 export const configureDrillSlice = createSlice({
@@ -192,14 +194,17 @@ export const configureDrillSlice = createSlice({
             state.saveDrillButtonState =
               SaveDrillButtonStates.DrillExistsAndNoNewChanges;
           }
+          state.playButtonText = 'play';
         } else {
           // If they're not the same, then the user just made an edit
           state.saveDrillButtonState =
             SaveDrillButtonStates.DrillExistsAndUnsavedChanges;
+          state.playButtonText = 'play without saving';
         }
       } else {
         // No id on this drill means it has never been saved to db before.
         state.saveDrillButtonState = SaveDrillButtonStates.FreshDrillNotSaved;
+        state.playButtonText = 'play without saving';
       }
 
       if (state.configuration.drillName.length > 0) state.titleError = null;
