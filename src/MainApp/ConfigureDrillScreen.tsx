@@ -58,6 +58,7 @@ import PlayIcon from '../assets/PlayIcon';
 import SaveIcon from '../assets/SaveIcon';
 import DeleteIcon from '../assets/DeleteIcon';
 import AlertIcon from '../assets/AlertIcon';
+import {Themes} from '../ui/theme/Theme';
 
 interface SettingProps {
   title: string;
@@ -135,12 +136,20 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         <Text style={styles.playButtonText}>{state.playButtonText}</Text>
       </TouchableOpacity>
 
-      <TextInput
-        style={[globalStyles.textInputArea, {flex: 1, marginEnd: 16}]}
-        onChangeText={newText => dispatch(setDrillName(newText))}
-        placeholder="Type drill name here">
-        {drill.drillName}
-      </TextInput>
+      {/* Drill title */}
+      <View
+        style={{
+          flexDirection: 'row',
+        }}>
+        <View style={{flex: 1}} />
+        <TextInput
+          style={[styles.textInputArea, {paddingHorizontal: 16}]}
+          onChangeText={newText => dispatch(setDrillName(newText))}
+          placeholder="(drill name)">
+          {drill.drillName}
+        </TextInput>
+        <View style={{flex: 1}} />
+      </View>
 
       <ExpandableText
         error={state.titleError ?? ''}
@@ -585,5 +594,15 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '600',
     fontFamily: 'arciform',
+  },
+  textInputArea: {
+    fontSize: 16,
+    fontWeight: '400',
+    fontFamily: 'arciform',
+    height: 40,
+    marginTop: 8,
+    borderColor: 'gray',
+    borderWidth: 1,
+    color: Themes.dark.actionText,
   },
 });
