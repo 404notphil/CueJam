@@ -396,7 +396,7 @@ const ExpandableCompositeActionButton: React.FC<
       <ExpandingActionButton
         {...{
           visible: saveButtonVisible,
-          enabled: true,
+          enabled: props.saveDrillButtonState.enabled ?? true,
           text: saveButtonText,
           onPress: () => {
             if (props.configuration.drillName.length === 0) {

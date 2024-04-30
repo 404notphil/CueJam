@@ -41,6 +41,7 @@ export function areDrillsSimilar(
 
 export interface ConfigureDrillState {
   configuration: DrillConfiguration;
+  lastSavedConfiguration: DrillConfiguration | null;
   isSaved: boolean;
   hasBeenSavedOnceOrMore: boolean;
   isLoading: boolean;
@@ -92,7 +93,8 @@ export const initialState: ConfigureDrillState = {
     scales: AllScales,
     modes: AllModes,
     keys: AllKeys,
-  },
+  } as DrillConfiguration,
+  lastSavedConfiguration: null,
   isSaved: true,
   hasBeenSavedOnceOrMore: false,
   isLoading: true,
@@ -139,6 +141,7 @@ export const configureDrillSlice = createSlice({
     },
     writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
       Object.assign(state, {...action.payload, isSaved: true});
+      state.lastSavedConfiguration = action.payload.configuration;
       state.hasBeenSavedOnceOrMore = true;
       state.copyDrillButtonVisible = true;
       state.deleteDrillButtonVisible = true;
@@ -147,7 +150,6 @@ export const configureDrillSlice = createSlice({
       state.isLoading = true;
     },
     loadDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
-      console.log('12345 action payload = ' + JSON.stringify(action.payload));
       Object.assign(state, {
         ...initialState,
         ...action.payload,
@@ -158,6 +160,7 @@ export const configureDrillSlice = createSlice({
           : SaveDrillButtonStates.FreshDrillNotSaved,
       });
       if (typeof action.payload.configuration.drillId === 'number') {
+        state.lastSavedConfiguration = action.payload.configuration;
         state.copyDrillButtonVisible = true;
         state.deleteDrillButtonVisible = true;
       }
@@ -171,7 +174,10 @@ export const configureDrillSlice = createSlice({
     },
     onDrillEdit: (state, action: PayloadAction<ConfigureDrillState>) => {
       const _ = require('lodash');
-      const drillsAreEqual = _.isEqual(state, action.payload);
+      const drillsAreEqual = _.isEqual(
+        state.lastSavedConfiguration,
+        action.payload.configuration,
+      );
 
       state.isSaved = false;
       if (state.configuration.drillId) {
