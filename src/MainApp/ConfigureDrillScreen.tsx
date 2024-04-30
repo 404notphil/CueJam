@@ -389,7 +389,6 @@ const ExpandableCompositeActionButton: React.FC<
     props.foundSimilarDrillButtonVisible,
   ]);
 
-  const state = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
   const navigation = useAppNavigation();
 
@@ -520,13 +519,19 @@ const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
         style={[
           animatedHeightStyle,
           {
-            alignItems: 'flex-start',
-            justifyContent: 'center',
+            flexDirection: 'row',
+            alignItems: 'center',
           },
         ]}>
-        <Animated.View style={animatedOpacityStyle}>
+        <Animated.View style={[animatedOpacityStyle, {flexDirection: 'row'}]}>
           {props.visible && (
-            <TouchableOpacity onPress={props.onPress}>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                flex: 1,
+                alignItems: 'center',
+              }}
+              onPress={props.onPress}>
               <Text
                 style={[
                   globalStyles.buttonText,
