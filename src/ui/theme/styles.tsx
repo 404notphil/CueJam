@@ -101,8 +101,7 @@ export const globalStyles = StyleSheet.create({
     fontSize: 16,
   },
   actionButtonText: {
-    color: Themes.dark.errorYellowText,
-    textAlign: 'center',
+    color: Themes.dark.actionText,
     fontFamily: 'arciform',
     fontSize: 16,
   },

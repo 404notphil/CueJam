@@ -28,7 +28,7 @@ const DrillCard: React.FC<DrillCardProps> = props => {
       <TouchableOpacity style={{flex: 1}} onPress={props.onPress}>
         <View>
           <Text style={globalStyles.fieldHeader}>{drill.name}</Text>
-          <Text style={globalStyles.validationErrorText}>Details here</Text>
+          <Text style={globalStyles.actionButtonText}>Details here</Text>
         </View>
       </TouchableOpacity>
       <CheckBox
