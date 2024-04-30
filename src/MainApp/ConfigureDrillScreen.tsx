@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  StyleSheet,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {globalStyles} from '../ui/theme/styles';
@@ -49,7 +50,7 @@ import Animated, {
 import {SetModesModal} from './SetModesModal';
 import {SetKeysModal} from './SetKeysModal';
 import {ExpandableText} from '../onboarding/ui/ExpandableText';
-import {saveDrill} from '../services/AppDatabase';
+import {deleteDrillById, saveDrill} from '../services/AppDatabase';
 import {useAppNavigation} from '../ui/App';
 
 interface SettingProps {
@@ -100,7 +101,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const animatedOpacity = useSharedValue(0);
 
   useEffect(() => {
-      dispatch(onDrillEdit(state));
+    dispatch(onDrillEdit(state));
   }, [drill]);
 
   useEffect(() => {
@@ -162,9 +163,11 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         </TouchableOpacity>
       </View>
 
+      <ExpandableCompositeActionButton {...state} />
+
       <ExpandableText error={error} isCurrent={error != undefined} />
 
-      <View>
+      {/* <View>
         <Animated.View style={animatedHeightStyle}>
           <Animated.View style={animatedOpacityStyle}>
             {state.isSaved && (
@@ -187,7 +190,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
             )}
           </Animated.View>
         </Animated.View>
-      </View>
+      </View> */}
       <SettingRow
         {...{
           title: 'tempo',
@@ -358,7 +361,6 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   );
 }
 
-// const ShortcutButton: React.FC<AppHeaderProps> = props => {
 const SettingRow: React.FC<SettingProps> = props => {
   return (
     <View
@@ -399,3 +401,167 @@ const SettingRow: React.FC<SettingProps> = props => {
     </View>
   );
 };
+
+const ExpandableCompositeActionButton: React.FC<
+  ConfigureDrillState
+> = props => {
+  const [saveButtonVisible, setSaveButtonVisible] = useState(false);
+  const [saveButtonEnabled, setSaveButtonEnabled] = useState(false);
+  const [saveButtonText, setSaveButtonText] = useState('');
+  const [hasBeenSavedOnceOrMore, setHasBeenSavedOnceOrMore] = useState(false);
+  const [deleteDrillButtonVisible, setDeleteDrillButtonVisible] =
+    useState(false);
+  const [copyDrillButtonVisible, setCopyDrillButtonVisible] = useState(false);
+  const [foundSimilarDrillButtonVisible, setFoundSimilarDrillButtonVisible] =
+    useState(false);
+  useEffect(() => {
+    setSaveButtonVisible(props.saveDrillButtonState.visible);
+    props.saveDrillButtonState.enabled &&
+      setSaveButtonEnabled(props.saveDrillButtonState.enabled);
+    props.saveDrillButtonState.text &&
+      setSaveButtonText(props.saveDrillButtonState.text);
+    setHasBeenSavedOnceOrMore(props.hasBeenSavedOnceOrMore);
+    setDeleteDrillButtonVisible(props.deleteDrillButtonVisible);
+    setCopyDrillButtonVisible(props.copyDrillButtonVisible);
+    setFoundSimilarDrillButtonVisible(props.foundSimilarDrillButtonVisible);
+  }, [
+    props.saveDrillButtonState,
+    props.hasBeenSavedOnceOrMore,
+    props.deleteDrillButtonVisible,
+    props.copyDrillButtonVisible,
+    props.foundSimilarDrillButtonVisible,
+  ]);
+
+  const state = useAppSelector(selectConfigureDrill);
+  const dispatch = useAppDispatch();
+
+  return (
+    <View style={[globalStyles.button, {paddingHorizontal: 30}]}>
+      <ExpandingActionButton
+        {...{
+          visible: saveButtonVisible,
+          enabled: true,
+          text: saveButtonText,
+          onPress: () => {
+            dispatch(saveDrill());
+          },
+        }}
+      />
+      <View style={{height: 1, backgroundColor: 'yellow'}} />
+
+      <ExpandingActionButton
+        {...{
+          visible: copyDrillButtonVisible,
+          enabled: true,
+          text: 'save copy of drill',
+          onPress: () => {
+            // dispatch()
+          },
+        }}
+      />
+
+      <View style={{height: 1, backgroundColor: 'yellow'}} />
+
+      <ExpandingActionButton
+        {...{
+          visible: deleteDrillButtonVisible,
+          enabled: true,
+          text: 'delete drill',
+          onPress: () => {
+            props.configuration.drillId &&
+              dispatch(deleteDrillById(props.configuration.drillId));
+          },
+        }}
+      />
+
+      {foundSimilarDrillButtonVisible && (
+        <View style={{height: 1, backgroundColor: 'yellow'}} />
+      )}
+
+      <ExpandingActionButton
+        {...{
+          visible: foundSimilarDrillButtonVisible,
+          enabled: true,
+          text: 'found 1 similar drill',
+          textColor: '#00D1FF',
+          onPress: () => {
+            // openFoundSimilarDrillDialog
+          },
+        }}
+      />
+    </View>
+  );
+};
+
+interface ActionButtonProps {
+  visible: boolean;
+  enabled: boolean;
+  text: string;
+  textColor?: string;
+  onPress: () => void;
+}
+
+const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
+  const animatedHeight = useSharedValue(0);
+  const animatedOpacity = useSharedValue(0);
+
+  const animatedHeightStyle = useAnimatedStyle(() => {
+    return {
+      height: animatedHeight.value,
+    };
+  });
+
+  const animatedOpacityStyle = useAnimatedStyle(() => {
+    return {
+      opacity: animatedOpacity.value,
+    };
+  });
+
+  useEffect(() => {
+    if (props.visible) {
+      animatedHeight.value = 0;
+      animatedOpacity.value = 0;
+      animatedHeight.value = withTiming(30);
+      animatedOpacity.value = withTiming(1);
+    } else {
+      animatedHeight.value = 30;
+      animatedOpacity.value = 1;
+      animatedHeight.value = withTiming(0);
+      animatedOpacity.value = withTiming(0);
+    }
+  }, [props.visible]);
+
+  return (
+    <View style={{flex: 1}}>
+      <Animated.View style={[animatedHeightStyle, {alignItems: 'flex-start'}]}>
+        <Animated.View style={animatedOpacityStyle}>
+          {props.visible && (
+            <TouchableOpacity onPress={props.onPress}>
+              <Text
+                style={[
+                  globalStyles.buttonText,
+                  // text color
+                  props.textColor
+                    ? {color: props.textColor}
+                    : props.enabled
+                    ? styles.actionButtonText
+                    : styles.actionButtonDisabledText,
+                ]}>
+                {props.text}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </Animated.View>
+      </Animated.View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  actionButtonText: {
+    color: '#CCFF00',
+  },
+  actionButtonDisabledText: {
+    color: '#9CC200',
+  },
+});
