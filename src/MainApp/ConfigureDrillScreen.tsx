@@ -5,6 +5,7 @@ import {
   TextInput,
   ScrollView,
   StyleSheet,
+  Keyboard,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {globalStyles} from '../ui/theme/styles';
@@ -140,56 +141,20 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   });
 
   return (
-    <ScrollView style={globalStyles.screenContainer}>
-      <View style={{flexDirection: 'row'}}>
-        <TextInput
-          style={[globalStyles.textInputArea, {flex: 1, marginEnd: 16}]}
-          onChangeText={newText => dispatch(setDrillName(newText))}
-          placeholder="Type drill name here">
-          {drill.drillName}
-        </TextInput>
-
-        <TouchableOpacity
-          style={[globalStyles.button, {marginBottom: 8, width: 100}]}
-          onPress={() => handleSaveDrill()}>
-          <Text
-            style={[
-              globalStyles.buttonText,
-              state.isSaved ? {color: 'grey'} : {color: 'white'},
-            ]}>
-            {state.isSaved ? 'Saved' : 'Save'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+    <ScrollView
+      keyboardShouldPersistTaps="handled"
+      style={globalStyles.screenContainer}>
+      <TextInput
+        style={[globalStyles.textInputArea, {flex: 1, marginEnd: 16}]}
+        onChangeText={newText => dispatch(setDrillName(newText))}
+        placeholder="Type drill name here">
+        {drill.drillName}
+      </TextInput>
 
       <ExpandableCompositeActionButton {...state} />
 
       <ExpandableText error={error} isCurrent={error != undefined} />
 
-      {/* <View>
-        <Animated.View style={animatedHeightStyle}>
-          <Animated.View style={animatedOpacityStyle}>
-            {state.isSaved && (
-              <TouchableOpacity
-                style={[globalStyles.button, {marginBottom: 8}]}
-                onPress={() => {
-                  navigation.navigate('Drill');
-                }}>
-                <Text style={globalStyles.buttonText}>Play</Text>
-              </TouchableOpacity>
-            )}
-            {state.isSaved && (
-              <TouchableOpacity
-                style={[globalStyles.button, {marginBottom: 8}]}
-                onPress={() => {
-                  navigation.goBack();
-                }}>
-                <Text style={globalStyles.buttonText}>Close</Text>
-              </TouchableOpacity>
-            )}
-          </Animated.View>
-        </Animated.View>
-      </View> */}
       <SettingRow
         {...{
           title: 'tempo',
@@ -461,14 +426,13 @@ const ExpandableCompositeActionButton: React.FC<
           text: saveButtonText,
           onPress: () => {
             dispatch(saveDrill());
+            Keyboard.dismiss();
           },
         }}
       />
-
       {saveButtonVisible && copyDrillButtonVisible && (
         <Animated.View style={[animatedOpacityStyle, styles.dividerStyle]} />
       )}
-
       <ExpandingActionButton
         {...{
           visible: copyDrillButtonVisible,
@@ -476,14 +440,13 @@ const ExpandableCompositeActionButton: React.FC<
           text: 'save copy of drill',
           onPress: () => {
             // dispatch()
+            Keyboard.dismiss();
           },
         }}
       />
-
       {copyDrillButtonVisible && (
         <Animated.View style={[animatedOpacityStyle, styles.dividerStyle]} />
       )}
-
       <ExpandingActionButton
         {...{
           visible: deleteDrillButtonVisible,
@@ -493,6 +456,7 @@ const ExpandableCompositeActionButton: React.FC<
             if (props.configuration.drillId) {
               dispatch(deleteDrillById(props.configuration.drillId));
               navigation.navigate('Home');
+              Keyboard.dismiss();
             }
           },
         }}
@@ -510,6 +474,7 @@ const ExpandableCompositeActionButton: React.FC<
           textColor: '#00D1FF',
           onPress: () => {
             // openFoundSimilarDrillDialog
+            Keyboard.dismiss();
           },
         }}
       />
