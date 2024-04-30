@@ -13,7 +13,7 @@ import {Image} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
   ConfigureDrillState,
-  clearDrill,
+  drillNameEmptyError,
   onDrillEdit,
   selectConfigureDrill,
   setBeatsPerChord,
@@ -82,23 +82,6 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   const drill = state.configuration;
 
-  const navigation = useAppNavigation();
-
-  const [lastSavedDrill, setLastSavedDrill] = useState(state.configuration);
-
-  const [error, setError] = useState<string | undefined>();
-  const _ = require('lodash');
-
-  const handleSaveDrill = () => {
-    if (drill.drillName === null || drill.drillName.length === 0) {
-      setError('You must choose a name!');
-    } else {
-      dispatch(saveDrill());
-      setError(undefined);
-    }
-    /* todo: save drill*/
-  };
-
   const animatedHeight = useSharedValue(0);
   const animatedOpacity = useSharedValue(0);
 
@@ -108,7 +91,6 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   useEffect(() => {
     if (state.isSaved) {
-      setLastSavedDrill(drill);
       animatedHeight.value = 0;
       animatedOpacity.value = 0;
       animatedHeight.value = withTiming(120);
@@ -127,19 +109,6 @@ export function ConfigureDrillScreen(): React.JSX.Element {
     }
   }, [drill.noteNames.length]);
 
-  const animatedHeightStyle = useAnimatedStyle(() => {
-    return {
-      height: animatedHeight.value,
-    };
-  });
-
-  const animatedOpacityStyle = useAnimatedStyle(() => {
-    return {
-      height: animatedHeight.value,
-      opacity: animatedOpacity.value,
-    };
-  });
-
   return (
     <ScrollView
       keyboardShouldPersistTaps="handled"
@@ -151,9 +120,14 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         {drill.drillName}
       </TextInput>
 
-      <ExpandableCompositeActionButton {...state} />
+      <ExpandableText
+        error={state.titleError ?? ''}
+        isCurrent={typeof state.titleError === 'string'}
+      />
 
-      <ExpandableText error={error} isCurrent={error != undefined} />
+      <View style={{height: 16}} />
+
+      <ExpandableCompositeActionButton {...state} />
 
       <SettingRow
         {...{
@@ -425,8 +399,12 @@ const ExpandableCompositeActionButton: React.FC<
           enabled: true,
           text: saveButtonText,
           onPress: () => {
-            dispatch(saveDrill());
-            Keyboard.dismiss();
+            if (props.configuration.drillName.length === 0) {
+              dispatch(drillNameEmptyError());
+            } else {
+              dispatch(saveDrill());
+              Keyboard.dismiss();
+            }
           },
         }}
       />

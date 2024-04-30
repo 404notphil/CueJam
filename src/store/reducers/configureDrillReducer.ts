@@ -48,7 +48,7 @@ export interface ConfigureDrillState {
   copyDrillButtonVisible: boolean;
   foundSimilarDrillButtonVisible: boolean;
   deleteDrillButtonVisible: boolean;
-  titleError: 'DrillNameEmpty' | 'DrillNameNotUnique' | null;
+  titleError: 'You must choose a name!' | 'That name already exists!' | null;
 }
 
 interface SaveDrillButtonState {
@@ -170,10 +170,13 @@ export const configureDrillSlice = createSlice({
       Object.assign(state, {...initialState, drillId: undefined});
     },
     onDrillEdit: (state, action: PayloadAction<ConfigureDrillState>) => {
+      const _ = require('lodash');
+      const drillsAreEqual = _.isEqual(state, action.payload);
+
       state.isSaved = false;
       if (state.configuration.drillId) {
         // If there's an id, then this drill exists in the db
-        if (state === action.payload) {
+        if (drillsAreEqual) {
           // If they're the same, then the user changed the drill, then reverted to how it was.
           if (state.hasBeenSavedOnceOrMore) {
             // If the user has already saved at least once during this viewing of the drill...
@@ -192,9 +195,17 @@ export const configureDrillSlice = createSlice({
         // No id on this drill means it has never been saved to db before.
         state.saveDrillButtonState = SaveDrillButtonStates.FreshDrillNotSaved;
       }
+
+      if (state.configuration.drillName.length > 0) state.titleError = null;
     },
     checkedForSimilarDrills: (state, action: PayloadAction<boolean>) => {
       state.foundSimilarDrillButtonVisible = action.payload;
+    },
+    drillNameEmptyError: state => {
+      state.titleError = 'You must choose a name!';
+    },
+    drillNameNotUniqueError: state => {
+      state.titleError = 'That name already exists!';
     },
   },
 });
@@ -223,4 +234,6 @@ export const {
   clearDrill,
   onDrillEdit,
   checkedForSimilarDrills,
+  drillNameEmptyError,
+  drillNameNotUniqueError,
 } = configureDrillSlice.actions;
