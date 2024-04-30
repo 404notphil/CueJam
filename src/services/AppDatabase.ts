@@ -79,6 +79,8 @@ export const saveDrill = (): AppThunk => async (dispatch, getState) => {
     }
     const result = await db.executeSql(sql, params);
     const newId = result[0].insertId
+      ? result[0].insertId
+      : getState().drillConfiguration.configuration.drillId;
     const drillWithNewId: DrillConfiguration = {...getState().drillConfiguration.configuration, drillId: newId}
     const stateWithId: ConfigureDrillState = {...getState().drillConfiguration, configuration: drillWithNewId}
     dispatch(writeDrillSuccess(stateWithId));
