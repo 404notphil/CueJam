@@ -425,6 +425,14 @@ const ExpandableCompositeActionButton: React.FC<
               Keyboard.dismiss();
             }
           },
+          icon: (
+            <SaveIcon
+              size={20}
+              strokeColor={
+                props.saveDrillButtonState.enabled ? '#CCFF00' : '#9CC200'
+              }
+            />
+          ),
         }}
       />
       {saveButtonVisible && copyDrillButtonVisible && (
@@ -439,6 +447,14 @@ const ExpandableCompositeActionButton: React.FC<
             // dispatch()
             Keyboard.dismiss();
           },
+          icon: (
+            <SaveIcon
+              size={20}
+              strokeColor={
+                props.saveDrillButtonState.enabled ? '#CCFF00' : '#9CC200'
+              }
+            />
+          ),
         }}
       />
       {copyDrillButtonVisible && (
@@ -456,6 +472,14 @@ const ExpandableCompositeActionButton: React.FC<
               Keyboard.dismiss();
             }
           },
+          icon: (
+            <SaveIcon
+              size={20}
+              strokeColor={
+                props.saveDrillButtonState.enabled ? '#CCFF00' : '#9CC200'
+              }
+            />
+          ),
         }}
       />
 
@@ -473,6 +497,14 @@ const ExpandableCompositeActionButton: React.FC<
             // openFoundSimilarDrillDialog
             Keyboard.dismiss();
           },
+          icon: (
+            <SaveIcon
+              size={20}
+              strokeColor={
+                props.saveDrillButtonState.enabled ? '#CCFF00' : '#9CC200'
+              }
+            />
+          ),
         }}
       />
     </View>
@@ -485,6 +517,7 @@ interface ActionButtonProps {
   text: string;
   textColor?: string;
   onPress: () => void;
+  icon: React.ReactNode;
 }
 
 const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
@@ -533,10 +566,7 @@ const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
                 alignItems: 'center',
               }}
               onPress={props.onPress}>
-              <SaveIcon
-                size={20}
-                strokeColor={props.enabled ? '#CCFF00' : '#9CC200'}
-              />
+              {props.icon}
               <View style={{width: 16}} />
               <Text
                 style={[
