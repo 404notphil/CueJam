@@ -81,6 +81,8 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const state = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
 
+  const navigation = useAppNavigation();
+
   const drill = state.configuration;
 
   const animatedHeight = useSharedValue(0);
@@ -114,12 +116,16 @@ export function ConfigureDrillScreen(): React.JSX.Element {
     <ScrollView
       keyboardShouldPersistTaps="handled"
       style={globalStyles.screenContainer}>
+      {/* Play button */}
       <TouchableOpacity
         style={{
           marginBottom: 16,
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
+        }}
+        onPress={() => {
+          navigation.navigate('Drill');
         }}>
         <PlayIcon />
         <View style={{width: 16}} />
