@@ -56,6 +56,8 @@ import {deleteDrillById, saveDrill} from '../services/AppDatabase';
 import {useAppNavigation} from '../ui/App';
 import PlayIcon from '../assets/PlayIcon';
 import SaveIcon from '../assets/SaveIcon';
+import DeleteIcon from '../assets/DeleteIcon';
+import AlertIcon from '../assets/AlertIcon';
 
 interface SettingProps {
   title: string;
@@ -447,14 +449,7 @@ const ExpandableCompositeActionButton: React.FC<
             // dispatch()
             Keyboard.dismiss();
           },
-          icon: (
-            <SaveIcon
-              size={20}
-              strokeColor={
-                props.saveDrillButtonState.enabled ? '#CCFF00' : '#9CC200'
-              }
-            />
-          ),
+          icon: <SaveIcon size={20} strokeColor={'#CCFF00'} />,
         }}
       />
       {copyDrillButtonVisible && (
@@ -472,14 +467,7 @@ const ExpandableCompositeActionButton: React.FC<
               Keyboard.dismiss();
             }
           },
-          icon: (
-            <SaveIcon
-              size={20}
-              strokeColor={
-                props.saveDrillButtonState.enabled ? '#CCFF00' : '#9CC200'
-              }
-            />
-          ),
+          icon: <DeleteIcon width={20} height={22} strokeColor={'#CCFF00'} />,
         }}
       />
 
@@ -489,7 +477,7 @@ const ExpandableCompositeActionButton: React.FC<
 
       <ExpandingActionButton
         {...{
-          visible: foundSimilarDrillButtonVisible,
+          visible: props.foundSimilarDrillButtonVisible,
           enabled: true,
           text: 'found 1 similar drill',
           textColor: '#00D1FF',
@@ -497,14 +485,7 @@ const ExpandableCompositeActionButton: React.FC<
             // openFoundSimilarDrillDialog
             Keyboard.dismiss();
           },
-          icon: (
-            <SaveIcon
-              size={20}
-              strokeColor={
-                props.saveDrillButtonState.enabled ? '#CCFF00' : '#9CC200'
-              }
-            />
-          ),
+          icon: <AlertIcon size={20} strokeColor={'#00D1FF'} />,
         }}
       />
     </View>
