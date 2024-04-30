@@ -55,6 +55,7 @@ import {ExpandableText} from '../onboarding/ui/ExpandableText';
 import {deleteDrillById, saveDrill} from '../services/AppDatabase';
 import {useAppNavigation} from '../ui/App';
 import PlayIcon from '../assets/PlayIcon';
+import SaveIcon from '../assets/SaveIcon';
 
 interface SettingProps {
   title: string;
@@ -532,6 +533,11 @@ const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
                 alignItems: 'center',
               }}
               onPress={props.onPress}>
+              <SaveIcon
+                size={20}
+                strokeColor={props.enabled ? '#CCFF00' : '#9CC200'}
+              />
+              <View style={{width: 16}} />
               <Text
                 style={[
                   globalStyles.buttonText,
