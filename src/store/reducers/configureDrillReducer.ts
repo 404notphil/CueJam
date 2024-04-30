@@ -142,12 +142,12 @@ export const configureDrillSlice = createSlice({
       state.hasBeenSavedOnceOrMore = true;
       state.copyDrillButtonVisible = true;
       state.deleteDrillButtonVisible = true;
-      console.log('12345 writeDrillSuccess');
     },
     startLoading: state => {
       state.isLoading = true;
     },
     loadDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
+      console.log('12345 action payload = ' + JSON.stringify(action.payload));
       Object.assign(state, {
         ...initialState,
         ...action.payload,
@@ -171,7 +171,6 @@ export const configureDrillSlice = createSlice({
     },
     onDrillEdit: (state, action: PayloadAction<ConfigureDrillState>) => {
       state.isSaved = false;
-      console.log('12345 onDrillEdit');
       if (state.configuration.drillId) {
         // If there's an id, then this drill exists in the db
         if (state === action.payload) {

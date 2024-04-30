@@ -139,8 +139,6 @@ export function ConfigureDrillScreen(): React.JSX.Element {
     };
   });
 
-  console.log('12345 drill.isSaved = ' + state.isSaved.toString());
-
   return (
     <ScrollView style={globalStyles.screenContainer}>
       <View style={{flexDirection: 'row'}}>
@@ -435,6 +433,7 @@ const ExpandableCompositeActionButton: React.FC<
 
   const state = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
+  const navigation = useAppNavigation();
 
   const animatedOpactiy = useSharedValue(0);
   const animatedOpacityStyle = useAnimatedStyle(() => {
@@ -446,7 +445,12 @@ const ExpandableCompositeActionButton: React.FC<
   useEffect(() => {
     animatedOpactiy.value = 0;
     animatedOpactiy.value = withSequence(withTiming(0.01), withTiming(1));
-  }, [props]);
+  }, [
+    props.copyDrillButtonVisible,
+    props.deleteDrillButtonVisible,
+    props.foundSimilarDrillButtonVisible,
+    props.saveDrillButtonState,
+  ]);
 
   return (
     <View style={[globalStyles.button, {paddingHorizontal: 30}]}>
@@ -486,8 +490,10 @@ const ExpandableCompositeActionButton: React.FC<
           enabled: true,
           text: 'delete drill',
           onPress: () => {
-            props.configuration.drillId &&
+            if (props.configuration.drillId) {
               dispatch(deleteDrillById(props.configuration.drillId));
+              navigation.navigate('Home');
+            }
           },
         }}
       />
@@ -537,14 +543,14 @@ const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
   useEffect(() => {
     if (props.visible) {
       animatedHeight.value = 0;
-      animatedHeight.value = withTiming(30);
+      animatedHeight.value = withTiming(40);
     } else {
-      animatedHeight.value = 30;
+      animatedHeight.value = 40;
       animatedHeight.value = withTiming(0);
     }
     animatedOpacity.value = 0;
     animatedOpacity.value = withSequence(withTiming(0.01), withTiming(1));
-  }, [props, props.visible]);
+  }, [props.visible]);
 
   return (
     <View>

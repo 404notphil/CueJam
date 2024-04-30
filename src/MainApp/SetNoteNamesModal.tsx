@@ -33,7 +33,6 @@ export const SetNoteNamesModal: React.FC<SetNoteNamesModalProps> = props => {
         return item[1];
       })
       .map(item => item[0] as NoteName);
-    console.log('12345 result = ' + result.length);
     return result;
   };
 
