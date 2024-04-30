@@ -65,7 +65,7 @@ export const globalStyles = StyleSheet.create({
     marginTop: 20,
   },
   validationErrorText: {
-    color: Themes.dark.errorYellowText,
+    color: Themes.dark.errorRed,
     fontFamily: 'arciform',
     fontSize: 16,
   },

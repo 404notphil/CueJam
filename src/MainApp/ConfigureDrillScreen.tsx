@@ -142,6 +142,13 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           flexDirection: 'row',
         }}>
         <View style={{flex: 1}} />
+        {state.titleError && (
+          <AlertIcon
+            size={30}
+            strokeColor={Themes.dark.errorRed}
+            style={{alignSelf: 'center', marginEnd: 16}}
+          />
+        )}
         <TextInput
           style={[styles.textInputArea, {paddingHorizontal: 16}]}
           onChangeText={newText => dispatch(setDrillName(newText))}
@@ -154,6 +161,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
       <ExpandableText
         error={state.titleError ?? ''}
         isCurrent={typeof state.titleError === 'string'}
+        style={{alignSelf: 'center'}}
       />
 
       <View style={{height: 16}} />
@@ -600,7 +608,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontFamily: 'arciform',
     height: 40,
-    marginTop: 8,
     borderColor: 'gray',
     borderWidth: 1,
     color: Themes.dark.actionText,

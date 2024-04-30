@@ -1,13 +1,26 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, Animated, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Animated,
+  StyleSheet,
+  TouchableOpacity,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import {globalStyles} from '../../ui/theme/styles';
 
 interface ExpandableTextProps {
   error: string | undefined;
   isCurrent: boolean;
+  style?: StyleProp<ViewStyle>; // Optional style prop for external styling
 }
 
-export const ExpandableText = ({error, isCurrent}: ExpandableTextProps) => {
+export const ExpandableText = ({
+  error,
+  isCurrent,
+  style,
+}: ExpandableTextProps) => {
   const animationHeight = useRef(new Animated.Value(isCurrent ? 0 : 1));
 
   useEffect(() => {
@@ -26,7 +39,7 @@ export const ExpandableText = ({error, isCurrent}: ExpandableTextProps) => {
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.expandableView, {height: maxHeight}]}>
-        <Text style={globalStyles.validationErrorText}>
+        <Text style={[globalStyles.validationErrorText, style]}>
           {isCurrent ? error : ''}
         </Text>
       </Animated.View>
