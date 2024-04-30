@@ -98,7 +98,7 @@ export const saveDrill = (): AppThunk => async (dispatch, getState) => {
 };
 
 export const loadAllDrills =
-  (drill: DrillConfiguration | undefined): AppThunk =>
+  (drill?: DrillConfiguration): AppThunk =>
   async dispatch => {
     try {
       dispatch(loadStart());

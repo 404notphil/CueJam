@@ -45,6 +45,7 @@ import {SetScalesModal} from './SetScalesModal';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withTiming,
 } from 'react-native-reanimated';
 import {SetModesModal} from './SetModesModal';
@@ -435,6 +436,18 @@ const ExpandableCompositeActionButton: React.FC<
   const state = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
 
+  const animatedOpactiy = useSharedValue(0);
+  const animatedOpacityStyle = useAnimatedStyle(() => {
+    return {
+      opacity: animatedOpactiy.value,
+    };
+  });
+
+  useEffect(() => {
+    animatedOpactiy.value = 0;
+    animatedOpactiy.value = withSequence(withTiming(0.01), withTiming(1));
+  }, [props]);
+
   return (
     <View style={[globalStyles.button, {paddingHorizontal: 30}]}>
       <ExpandingActionButton
@@ -447,7 +460,10 @@ const ExpandableCompositeActionButton: React.FC<
           },
         }}
       />
-      <View style={{height: 1, backgroundColor: 'yellow'}} />
+
+      {saveButtonVisible && copyDrillButtonVisible && (
+        <Animated.View style={[animatedOpacityStyle, styles.dividerStyle]} />
+      )}
 
       <ExpandingActionButton
         {...{
@@ -460,7 +476,9 @@ const ExpandableCompositeActionButton: React.FC<
         }}
       />
 
-      <View style={{height: 1, backgroundColor: 'yellow'}} />
+      {copyDrillButtonVisible && (
+        <Animated.View style={[animatedOpacityStyle, styles.dividerStyle]} />
+      )}
 
       <ExpandingActionButton
         {...{
@@ -475,7 +493,7 @@ const ExpandableCompositeActionButton: React.FC<
       />
 
       {foundSimilarDrillButtonVisible && (
-        <View style={{height: 1, backgroundColor: 'yellow'}} />
+        <Animated.View style={[animatedOpacityStyle, styles.dividerStyle]} />
       )}
 
       <ExpandingActionButton
@@ -510,7 +528,6 @@ const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
       height: animatedHeight.value,
     };
   });
-
   const animatedOpacityStyle = useAnimatedStyle(() => {
     return {
       opacity: animatedOpacity.value,
@@ -520,20 +537,25 @@ const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
   useEffect(() => {
     if (props.visible) {
       animatedHeight.value = 0;
-      animatedOpacity.value = 0;
       animatedHeight.value = withTiming(30);
-      animatedOpacity.value = withTiming(1);
     } else {
       animatedHeight.value = 30;
-      animatedOpacity.value = 1;
       animatedHeight.value = withTiming(0);
-      animatedOpacity.value = withTiming(0);
     }
-  }, [props.visible]);
+    animatedOpacity.value = 0;
+    animatedOpacity.value = withSequence(withTiming(0.01), withTiming(1));
+  }, [props, props.visible]);
 
   return (
-    <View style={{flex: 1}}>
-      <Animated.View style={[animatedHeightStyle, {alignItems: 'flex-start'}]}>
+    <View>
+      <Animated.View
+        style={[
+          animatedHeightStyle,
+          {
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+          },
+        ]}>
         <Animated.View style={animatedOpacityStyle}>
           {props.visible && (
             <TouchableOpacity onPress={props.onPress}>
@@ -563,5 +585,9 @@ const styles = StyleSheet.create({
   },
   actionButtonDisabledText: {
     color: '#9CC200',
+  },
+  dividerStyle: {
+    backgroundColor: '#CCFF00',
+    height: 1,
   },
 });
