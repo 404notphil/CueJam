@@ -612,7 +612,8 @@ const styles = StyleSheet.create({
     fontFamily: 'arciform',
     height: 40,
     borderColor: 'gray',
-    borderWidth: 1,
+    borderWidth: 0, // Set general border width to 0
+    borderBottomWidth: 1, // Apply border only to the bottom
     color: Themes.dark.actionText,
   },
 });
