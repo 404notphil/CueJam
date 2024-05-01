@@ -18,8 +18,7 @@ import {
 import DrillCard from './DrillCard';
 import {useAppNavigation} from '../ui/App';
 import {globalStyles} from '../ui/theme/styles';
-import {createDraftSafeSelectorCreator} from '@reduxjs/toolkit';
-import {clearDrill} from '../store/reducers/configureDrillReducer';
+import FadeInView from './FadeInView';
 
 export function SavedDrillsScreen(): React.JSX.Element {
   const drillsState = useAppSelector(selectAllDrills);
@@ -60,6 +59,8 @@ export function SavedDrillsScreen(): React.JSX.Element {
         )}
       </View>
 
+      {drillsState.drills.length === 0 && <SavedDrillEmptyState />}
+
       {/* List of drills */}
       <FlatList
         data={drillsState.drills}
@@ -84,6 +85,20 @@ export function SavedDrillsScreen(): React.JSX.Element {
     </View>
   );
 }
+
+const SavedDrillEmptyState = () => {
+  return (
+    <FadeInView
+      duration={1000}
+      style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+      <View style={{flex: 1, alignSelf: 'center'}}>
+        <View style={{flex: 1}} />
+        <Text style={globalStyles.title}>You have no drills</Text>
+        <View style={{flex: 1}} />
+      </View>
+    </FadeInView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
