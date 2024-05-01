@@ -207,6 +207,28 @@ export const checkForSimilarDrills =
       console.log('12345 -> ' + item);
     });
   };
+
+  export const saveAndLoadCopy = (): AppThunk => async (dispatch, getState) => {
+    const db = (await openDatabase()) as SQLiteDatabase;
+    const currentDrill = getState().drillConfigurationState.configuration;
+    const newDrill: DrillConfiguration = {
+      ...currentDrill,
+      drillId: undefined,
+      drillName: currentDrill.drillName + ' copy',
+    };
+    const configurationJson = JSON.stringify(newDrill);
+
+    const result = await db.executeSql(
+      'INSERT INTO Drills (name, configuration) VALUES (?, ?)',
+      [newDrill.drillName, configurationJson],
+    );
+    const newId = result[0].insertId
+      ? result[0].insertId
+      : getState().drillConfigurationState.configuration.drillId;
+    newId && dispatch(loadDrillById(newId));
+    dispatch(loadAllDrills());
+  };
+  
 export const fetchDrill =
   (drillId: string): AppThunk =>
   async (dispatch, getState) => {};

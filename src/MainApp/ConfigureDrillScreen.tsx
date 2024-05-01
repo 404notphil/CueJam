@@ -13,6 +13,8 @@ import {Image} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
   ConfigureDrillState,
+  DrillConfiguration,
+  clearDrill,
   drillNameEmptyError,
   onDrillEdit,
   selectConfigureDrill,
@@ -55,6 +57,8 @@ import {ExpandableText} from '../onboarding/ui/ExpandableText';
 import {
   checkForSimilarDrills,
   deleteDrillById,
+  loadDrillById,
+  saveAndLoadCopy,
   saveDrill,
 } from '../services/AppDatabase';
 import {useAppNavigation} from '../ui/App';
@@ -390,9 +394,7 @@ const ExpandableCompositeActionButton: React.FC<
   ConfigureDrillState
 > = props => {
   const [saveButtonVisible, setSaveButtonVisible] = useState(false);
-  const [saveButtonEnabled, setSaveButtonEnabled] = useState(false);
   const [saveButtonText, setSaveButtonText] = useState('');
-  const [hasBeenSavedOnceOrMore, setHasBeenSavedOnceOrMore] = useState(false);
   const [deleteDrillButtonVisible, setDeleteDrillButtonVisible] =
     useState(false);
   const [copyDrillButtonVisible, setCopyDrillButtonVisible] = useState(false);
@@ -400,11 +402,8 @@ const ExpandableCompositeActionButton: React.FC<
     useState(false);
   useEffect(() => {
     setSaveButtonVisible(props.saveDrillButtonState.visible);
-    props.saveDrillButtonState.enabled &&
-      setSaveButtonEnabled(props.saveDrillButtonState.enabled);
     props.saveDrillButtonState.text &&
       setSaveButtonText(props.saveDrillButtonState.text);
-    setHasBeenSavedOnceOrMore(props.hasBeenSavedOnceOrMore);
     setDeleteDrillButtonVisible(props.deleteDrillButtonVisible);
     setCopyDrillButtonVisible(props.copyDrillButtonVisible);
     setFoundSimilarDrillButtonVisible(props.foundSimilarDrillButtonVisible);
@@ -420,11 +419,6 @@ const ExpandableCompositeActionButton: React.FC<
   const navigation = useAppNavigation();
 
   const animatedOpactiy = useSharedValue(0);
-  const animatedOpacityStyle = useAnimatedStyle(() => {
-    return {
-      opacity: animatedOpactiy.value,
-    };
-  });
 
   useEffect(() => {
     animatedOpactiy.value = 0;
@@ -472,7 +466,8 @@ const ExpandableCompositeActionButton: React.FC<
           enabled: true,
           text: 'save copy of drill',
           onPress: () => {
-            // dispatch()
+            dispatch(saveAndLoadCopy());
+            navigation.navigate('ConfigureDrill');
             Keyboard.dismiss();
           },
           icon: <CopyIcon size={20} strokeColor={'#CCFF00'} />,
