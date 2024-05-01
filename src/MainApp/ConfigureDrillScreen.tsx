@@ -52,7 +52,11 @@ import Animated, {
 import {SetModesModal} from './SetModesModal';
 import {SetKeysModal} from './SetKeysModal';
 import {ExpandableText} from '../onboarding/ui/ExpandableText';
-import {deleteDrillById, saveDrill} from '../services/AppDatabase';
+import {
+  checkForSimilarDrills,
+  deleteDrillById,
+  saveDrill,
+} from '../services/AppDatabase';
 import {useAppNavigation} from '../ui/App';
 import PlayIcon from '../assets/PlayIcon';
 import SaveIcon from '../assets/SaveIcon';
@@ -95,6 +99,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   useEffect(() => {
     dispatch(onDrillEdit(state));
+    dispatch(checkForSimilarDrills(drill));
   }, [drill]);
 
   useEffect(() => {

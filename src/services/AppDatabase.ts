@@ -3,6 +3,7 @@ import {
   ConfigureDrillState,
   DrillConfiguration,
   areDrillsSimilar,
+  checkedForSimilarDrills,
   initialState,
   loadDrillFailure,
   loadDrillSuccess,
@@ -59,9 +60,11 @@ const addSession = async (
 export const saveDrill = (): AppThunk => async (dispatch, getState) => {
   try {
     const db = (await openDatabase()) as SQLiteDatabase;
-    const drillIdToWrite = getState().drillConfiguration.configuration.drillId;
-    const name = getState().drillConfiguration.configuration.drillName;
-    const configurationObject = getState().drillConfiguration.configuration;
+    const drillIdToWrite =
+      getState().drillConfigurationState.configuration.drillId;
+    const name = getState().drillConfigurationState.configuration.drillName;
+    const configurationObject =
+      getState().drillConfigurationState.configuration;
     const configurationJson = JSON.stringify(configurationObject);
 
     let sql = '';
@@ -80,9 +83,15 @@ export const saveDrill = (): AppThunk => async (dispatch, getState) => {
     const result = await db.executeSql(sql, params);
     const newId = result[0].insertId
       ? result[0].insertId
-      : getState().drillConfiguration.configuration.drillId;
-    const drillWithNewId: DrillConfiguration = {...getState().drillConfiguration.configuration, drillId: newId}
-    const stateWithId: ConfigureDrillState = {...getState().drillConfiguration, configuration: drillWithNewId}
+      : getState().drillConfigurationState.configuration.drillId;
+    const drillWithNewId: DrillConfiguration = {
+      ...getState().drillConfigurationState.configuration,
+      drillId: newId,
+    };
+    const stateWithId: ConfigureDrillState = {
+      ...getState().drillConfigurationState,
+      configuration: drillWithNewId,
+    };
     dispatch(writeDrillSuccess(stateWithId));
     dispatch(loadAllDrills(configurationObject));
   } catch (error) {
@@ -102,13 +111,20 @@ export const loadAllDrills =
       let drills: Drill[] = [];
       let rows = results[0].rows;
       for (let i = 0; i < rows.length; i++) {
-        drills.push(rows.item(i));
+        console.log('123456 from db' + JSON.stringify(rows.item(i)));
+        const drillConfig: DrillConfiguration = JSON.parse(
+          rows.item(i).configuration,
+        );
+
+        console.log('123456 drillConfig' + JSON.stringify(drillConfig));
+        rows.item(i).drillId &&
+          drills.push({
+            drillId: rows.item(i).drillId,
+            name: rows.item(i).name,
+            configuration: drillConfig,
+          } as Drill);
       }
       dispatch(loadSuccess(drills));
-      drill &&
-        drills.forEach(item => {
-          areDrillsSimilar(drill, item.configuration.configuration);
-        });
     } catch (error) {
       dispatch(loadFailure('Failed to load drills'));
     }
@@ -164,6 +180,31 @@ export const deleteDrillById =
     }
   };
 
+export const checkForSimilarDrills =
+  (drill: DrillConfiguration): AppThunk =>
+  async (dispatch, getState) => {
+    console.log('12345 checking for similar drills');
+    const allDrills = getState().allDrillsReducer.drills;
+    console.log('12345 all drills:');
+    allDrills.forEach(item => {
+      console.log(
+        '12345 drill from db-> ' + JSON.stringify(item.configuration),
+      );
+    });
+    const similarDrillIds: number[] = [];
+    console.log('12345 drill to compare-> ' + JSON.stringify(drill));
+    allDrills.forEach(item => {
+      if (areDrillsSimilar(drill, item.configuration)) {
+        similarDrillIds.push(item.drillId);
+        dispatch(checkedForSimilarDrills(similarDrillIds));
+      }
+    });
+    dispatch(checkedForSimilarDrills(similarDrillIds));
+    console.log('12345 found items:');
+    similarDrillIds.forEach(item => {
+      console.log('12345 -> ' + item);
+    });
+  };
 export const fetchDrill =
   (drillId: string): AppThunk =>
   async (dispatch, getState) => {};

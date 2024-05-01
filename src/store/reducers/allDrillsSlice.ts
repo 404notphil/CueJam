@@ -1,12 +1,12 @@
 // src/features/drills/drillsSlice.ts
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {ConfigureDrillState} from './configureDrillReducer';
+import {ConfigureDrillState, DrillConfiguration} from './configureDrillReducer';
 import {RootState} from '../store';
 
 export interface Drill {
   drillId: number;
   name: string;
-  configuration: ConfigureDrillState;
+  configuration: DrillConfiguration;
 }
 
 export interface DrillsState {

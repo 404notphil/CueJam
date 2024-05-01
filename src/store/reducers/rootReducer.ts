@@ -8,7 +8,7 @@ import allDrillsReducer, {DrillsState} from './allDrillsSlice';
 
 const rootReducer = combineReducers({
   counter: counterReducer,
-  drillConfiguration: configureDrillReducer,
+  drillConfigurationState: configureDrillReducer,
   featureFlags: featureFlagReducer,
   allDrillsReducer: allDrillsReducer,
 });

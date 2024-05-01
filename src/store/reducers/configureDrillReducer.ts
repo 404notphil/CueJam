@@ -33,6 +33,14 @@ export function areDrillsSimilar(
   first: DrillConfiguration,
   second: DrillConfiguration,
 ) {
+  console.log('12345 first = ' + first);
+  console.log('12345 second = ' + second);
+  console.log('12345 first.promptOrder = ' + first.promptOrder);
+  console.log('12345 second.promptOrder = ' + second.promptOrder);
+  console.log(
+    '12345 first.promptOrder === second.promptOrder?' + first.promptOrder ===
+      second.promptOrder,
+  );
   return (
     first.promptOrder === second.promptOrder &&
     first.tonalContext === second.tonalContext
@@ -209,8 +217,8 @@ export const configureDrillSlice = createSlice({
 
       if (state.configuration.drillName.length > 0) state.titleError = null;
     },
-    checkedForSimilarDrills: (state, action: PayloadAction<boolean>) => {
-      state.foundSimilarDrillButtonVisible = action.payload;
+    checkedForSimilarDrills: (state, action: PayloadAction<number[]>) => {
+      state.foundSimilarDrillButtonVisible = action.payload.length > 0;
     },
     drillNameEmptyError: state => {
       state.titleError = 'You must choose a name!';
@@ -223,9 +231,8 @@ export const configureDrillSlice = createSlice({
 
 export default configureDrillSlice.reducer;
 
-export const selectConfigureDrill: (
-  state: RootState,
-) => ConfigureDrillState = state => state.drillConfiguration;
+export const selectConfigureDrill: (state: RootState) => ConfigureDrillState = state =>
+  state.drillConfigurationState;
 
 export const {
   setDrillName,
