@@ -59,6 +59,7 @@ import SaveIcon from '../assets/SaveIcon';
 import DeleteIcon from '../assets/DeleteIcon';
 import AlertIcon from '../assets/AlertIcon';
 import {Themes} from '../ui/theme/Theme';
+import CopyIcon from '../assets/CopyIcon';
 
 interface SettingProps {
   title: string;
@@ -466,7 +467,7 @@ const ExpandableCompositeActionButton: React.FC<
             // dispatch()
             Keyboard.dismiss();
           },
-          icon: <SaveIcon size={20} strokeColor={'#CCFF00'} />,
+          icon: <CopyIcon size={20} strokeColor={'#CCFF00'} />,
         }}
       />
       {copyDrillButtonVisible && (
