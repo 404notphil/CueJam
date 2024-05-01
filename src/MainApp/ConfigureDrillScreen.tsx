@@ -64,6 +64,7 @@ import DeleteIcon from '../assets/DeleteIcon';
 import AlertIcon from '../assets/AlertIcon';
 import {Themes} from '../ui/theme/Theme';
 import CopyIcon from '../assets/CopyIcon';
+import AnimatedDivider from './AnimatedDivider';
 
 interface SettingProps {
   title: string;
@@ -460,9 +461,11 @@ const ExpandableCompositeActionButton: React.FC<
           ),
         }}
       />
-      {saveButtonVisible && copyDrillButtonVisible && (
-        <Animated.View style={[animatedOpacityStyle, styles.dividerStyle]} />
-      )}
+
+      <AnimatedDivider
+        isVisible={saveButtonVisible && copyDrillButtonVisible}
+      />
+
       <ExpandingActionButton
         {...{
           visible: copyDrillButtonVisible,
@@ -475,9 +478,9 @@ const ExpandableCompositeActionButton: React.FC<
           icon: <CopyIcon size={20} strokeColor={'#CCFF00'} />,
         }}
       />
-      {copyDrillButtonVisible && (
-        <Animated.View style={[animatedOpacityStyle, styles.dividerStyle]} />
-      )}
+
+      <AnimatedDivider isVisible={copyDrillButtonVisible} />
+
       <ExpandingActionButton
         {...{
           visible: deleteDrillButtonVisible,
@@ -494,9 +497,7 @@ const ExpandableCompositeActionButton: React.FC<
         }}
       />
 
-      {foundSimilarDrillButtonVisible && (
-        <Animated.View style={[animatedOpacityStyle, styles.dividerStyle]} />
-      )}
+      <AnimatedDivider isVisible={foundSimilarDrillButtonVisible} />
 
       <ExpandingActionButton
         {...{
@@ -598,10 +599,6 @@ const styles = StyleSheet.create({
   },
   actionButtonDisabledText: {
     color: '#9CC200',
-  },
-  dividerStyle: {
-    backgroundColor: '#CCFF00',
-    height: 1,
   },
   playButtonText: {
     color: '#CCFF00',
