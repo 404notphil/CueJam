@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
     backgroundColor: Themes.dark.buttonSurface,
     padding: 16,
     marginVertical: 8,
-    marginHorizontal: 16,
     borderRadius: 8,
     elevation: 3,
     shadowOffset: {width: 1, height: 1},

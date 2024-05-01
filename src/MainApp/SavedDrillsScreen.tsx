@@ -19,6 +19,8 @@ import DrillCard from './DrillCard';
 import {useAppNavigation} from '../ui/App';
 import {globalStyles} from '../ui/theme/styles';
 import FadeInView from './FadeInView';
+import {clearDrill} from '../store/reducers/configureDrillReducer';
+import DeleteIcon from '../assets/DeleteIcon';
 
 export function SavedDrillsScreen(): React.JSX.Element {
   const drillsState = useAppSelector(selectAllDrills);
@@ -31,32 +33,43 @@ export function SavedDrillsScreen(): React.JSX.Element {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {padding: 20}]}>
       {/* Row of action buttons */}
       <View
-        style={{flexDirection: 'row', height: 30, justifyContent: 'center'}}>
+        style={{
+          flexDirection: 'row',
+          height: 40,
+          paddingBottom: 10,
+          justifyContent: 'space-between',
+        }}>
         {listOfSelectedIds.length !== 0 && (
-          <TouchableOpacity
-            style={{flexDirection: 'row', alignItems: 'center'}}
-            onPress={() => {
-              listOfSelectedIds.forEach(idToDelete => {
-                dispatch(deleteDrillById(idToDelete));
-                dispatch(loadAllDrills());
-                setListofSelectedIds([]);
-              });
-            }}>
-            <Text style={globalStyles.buttonText}>
-              Delete {listOfSelectedIds.length} drll
-              {listOfSelectedIds.length > 1 ? 's' : ''}
-            </Text>
-
-            <Image
-              style={{height: 20, width: 20, marginStart: 10}}
-              source={require('../assets/delete_icon.png')}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
+          <FadeInView>
+            <TouchableOpacity
+              style={{flexDirection: 'row', alignItems: 'center'}}
+              onPress={() => {
+                listOfSelectedIds.forEach(idToDelete => {
+                  dispatch(deleteDrillById(idToDelete));
+                  dispatch(loadAllDrills());
+                  setListofSelectedIds([]);
+                });
+              }}>
+              <DeleteIcon strokeColor={'white'} style={{marginEnd: 10}} />
+              <Text style={globalStyles.buttonText}>
+                Delete {listOfSelectedIds.length} drill
+                {listOfSelectedIds.length > 1 ? 's' : ''}
+              </Text>
+            </TouchableOpacity>
+          </FadeInView>
         )}
+        <View />
+        <TouchableOpacity
+          style={{flexDirection: 'row', alignItems: 'center'}}
+          onPress={() => {
+            dispatch(clearDrill());
+            navigation.navigate('ConfigureDrill');
+          }}>
+          <Text style={globalStyles.buttonText}>+ Add new</Text>
+        </TouchableOpacity>
       </View>
 
       {drillsState.drills.length === 0 && <SavedDrillEmptyState />}
