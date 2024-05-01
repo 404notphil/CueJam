@@ -38,8 +38,8 @@ export function areDrillsSimilar(
   console.log('12345 first.promptOrder = ' + first.promptOrder);
   console.log('12345 second.promptOrder = ' + second.promptOrder);
   console.log(
-    '12345 first.promptOrder === second.promptOrder?' + first.promptOrder ===
-      second.promptOrder,
+    '12345 first.promptOrder === second.promptOrder?' +
+      (first.promptOrder === second.promptOrder),
   );
   return (
     first.promptOrder === second.promptOrder &&

@@ -193,12 +193,14 @@ export const checkForSimilarDrills =
     });
     const similarDrillIds: number[] = [];
     console.log('12345 drill to compare-> ' + JSON.stringify(drill));
-    allDrills.forEach(item => {
-      if (areDrillsSimilar(drill, item.configuration)) {
-        similarDrillIds.push(item.drillId);
-        dispatch(checkedForSimilarDrills(similarDrillIds));
-      }
-    });
+    allDrills
+      .filter(item => item.drillId !== drill.drillId)
+      .forEach(item => {
+        if (areDrillsSimilar(drill, item.configuration)) {
+          similarDrillIds.push(item.drillId);
+          dispatch(checkedForSimilarDrills(similarDrillIds));
+        }
+      });
     dispatch(checkedForSimilarDrills(similarDrillIds));
     console.log('12345 found items:');
     similarDrillIds.forEach(item => {
