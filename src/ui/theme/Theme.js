@@ -1,13 +1,13 @@
 export const Themes = {
   light: {
-    background: '#4B6496',
+    background: '#003F58',
     lightText: 'white',
     errorYellowText: '#FFFF00',
     errorRed: '#BE3F3F',
     actionText: '#CCFF00',
     disabledActionText: '#9CC200',
     infoText: '#00D1FF',
-    buttonSurface: '#5FA9FF',
+    buttonSurface: '#005F88',
     scrimColor: 'rgba(0, 0, 0, 0.5)',
     borderColor: 'white',
     borderWidth: 0.3,

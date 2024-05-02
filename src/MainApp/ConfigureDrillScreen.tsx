@@ -424,7 +424,11 @@ const ExpandableCompositeActionButton: React.FC<
   ]);
 
   return (
-    <View style={[globalStyles.button, {paddingHorizontal: 30}]}>
+    <View
+      style={[
+        globalStyles.button,
+        {paddingHorizontal: 30, paddingVertical: 0},
+      ]}>
       <ExpandingActionButton
         {...{
           visible: saveButtonVisible,
@@ -531,9 +535,9 @@ const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
   useEffect(() => {
     if (props.visible) {
       animatedHeight.value = 0;
-      animatedHeight.value = withTiming(40);
+      animatedHeight.value = withTiming(60);
     } else {
-      animatedHeight.value = 40;
+      animatedHeight.value = 60;
       animatedHeight.value = withTiming(0);
     }
     animatedOpacity.value = 0;
@@ -542,41 +546,44 @@ const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
 
   return (
     <View>
-      <Animated.View
-        style={[
-          animatedHeightStyle,
-          {
-            flexDirection: 'row',
-            alignItems: 'center',
-          },
-        ]}>
-        <Animated.View style={[animatedOpacityStyle, {flexDirection: 'row'}]}>
-          {props.visible && (
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                flex: 1,
-                alignItems: 'center',
-              }}
-              onPress={props.onPress}>
-              {props.icon}
-              <View style={{width: 16}} />
-              <Text
-                style={[
-                  globalStyles.buttonText,
-                  // text color
-                  props.textColor
-                    ? {color: props.textColor}
-                    : props.enabled
-                    ? styles.actionButtonText
-                    : styles.actionButtonDisabledText,
-                ]}>
-                {props.text}
-              </Text>
-            </TouchableOpacity>
-          )}
+      <TouchableOpacity
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+          alignItems: 'center',
+        }}
+        onPress={props.onPress}>
+        <Animated.View
+          style={[
+            animatedHeightStyle,
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+            },
+          ]}>
+          <Animated.View style={[animatedOpacityStyle]}>
+            {props.visible && (
+              <View style={{flexDirection: 'row'}}>
+                {props.icon}
+                <View style={{width: 16}} />
+
+                <Text
+                  style={[
+                    globalStyles.buttonText,
+                    // text color
+                    props.textColor
+                      ? {color: props.textColor}
+                      : props.enabled
+                      ? styles.actionButtonText
+                      : styles.actionButtonDisabledText,
+                  ]}>
+                  {props.text}
+                </Text>
+              </View>
+            )}
+          </Animated.View>
         </Animated.View>
-      </Animated.View>
+      </TouchableOpacity>
     </View>
   );
 };
