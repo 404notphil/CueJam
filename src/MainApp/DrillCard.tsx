@@ -4,6 +4,10 @@ import {Themes} from '../ui/theme/Theme';
 import {globalStyles} from '../ui/theme/styles';
 import CheckBox from '@react-native-community/checkbox';
 import EditIcon from '../assets/EditIcon';
+import PlayIcon from '../assets/PlayIcon';
+import {useAppDispatch} from '../store/hooks';
+import {loadDrillById} from '../services/AppDatabase';
+import {useAppNavigation} from '../ui/App';
 
 interface DrillCardProps {
   drill: {
@@ -18,6 +22,10 @@ interface DrillCardProps {
 const DrillCard: React.FC<DrillCardProps> = props => {
   const drill = props.drill;
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const navigation = useAppNavigation();
+
   return (
     <View style={[styles.card]}>
       <View
@@ -49,19 +57,27 @@ const DrillCard: React.FC<DrillCardProps> = props => {
           flex: 1,
         }}>
         <TouchableOpacity
+          onPress={() => {
+            dispatch(loadDrillById(drill.id));
+            navigation.navigate('Drill');
+          }}
           style={{
             flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <EditIcon
+          <PlayIcon
             size={20}
             style={{justifyContent: 'center', marginEnd: 8}}
           />
           <Text style={styles.cardButtonText}>Practice</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() => {
+            dispatch(loadDrillById(drill.id));
+            navigation.navigate('ConfigureDrill');
+          }}
           style={{
             flex: 1,
             flexDirection: 'row',
