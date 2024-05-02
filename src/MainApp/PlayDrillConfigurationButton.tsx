@@ -16,7 +16,7 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 
 interface PlayDrillConfigurationButtonProps {
   configurationState: ConfigureDrillState;
@@ -26,7 +26,7 @@ export const PlayDrillConfigurationButton: React.FC<
   PlayDrillConfigurationButtonProps
 > = props => {
   const navigation = useAppNavigation();
-  const state = props.configurationState;
+  const [state, setState] = useState(props.configurationState);
   const animatedOpacity = useSharedValue(1);
   useEffect(() => {
     animatedOpacity.value = withRepeat(
@@ -37,7 +37,12 @@ export const PlayDrillConfigurationButton: React.FC<
   }, []);
 
   useEffect(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    const timer = setTimeout(() => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      setState(props.configurationState);
+    }, 50);
+
+    return () => clearTimeout(timer); // Clear the timeout if the component unmounts or the dependencies change
   }, [props]);
 
   const animatedOpacityStyle = useAnimatedStyle(() => {
