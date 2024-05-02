@@ -111,12 +111,10 @@ export const loadAllDrills =
       let drills: Drill[] = [];
       let rows = results[0].rows;
       for (let i = 0; i < rows.length; i++) {
-        console.log('123456 from db' + JSON.stringify(rows.item(i)));
         const drillConfig: DrillConfiguration = JSON.parse(
           rows.item(i).configuration,
         );
 
-        console.log('123456 drillConfig' + JSON.stringify(drillConfig));
         rows.item(i).drillId &&
           drills.push({
             drillId: rows.item(i).drillId,
@@ -183,16 +181,8 @@ export const deleteDrillById =
 export const checkForSimilarDrills =
   (drill: DrillConfiguration): AppThunk =>
   async (dispatch, getState) => {
-    console.log('12345 checking for similar drills');
     const allDrills = getState().allDrillsReducer.drills;
-    console.log('12345 all drills:');
-    allDrills.forEach(item => {
-      console.log(
-        '12345 drill from db-> ' + JSON.stringify(item.configuration),
-      );
-    });
     const similarDrillIds: number[] = [];
-    console.log('12345 drill to compare-> ' + JSON.stringify(drill));
     allDrills
       .filter(item => item.drillId !== drill.drillId)
       .forEach(item => {
@@ -202,10 +192,6 @@ export const checkForSimilarDrills =
         }
       });
     dispatch(checkedForSimilarDrills(similarDrillIds));
-    console.log('12345 found items:');
-    similarDrillIds.forEach(item => {
-      console.log('12345 -> ' + item);
-    });
   };
 
   export const saveAndLoadCopy = (): AppThunk => async (dispatch, getState) => {

@@ -33,14 +33,6 @@ export function areDrillsSimilar(
   first: DrillConfiguration,
   second: DrillConfiguration,
 ) {
-  console.log('12345 first = ' + first);
-  console.log('12345 second = ' + second);
-  console.log('12345 first.promptOrder = ' + first.promptOrder);
-  console.log('12345 second.promptOrder = ' + second.promptOrder);
-  console.log(
-    '12345 first.promptOrder === second.promptOrder?' +
-      (first.promptOrder === second.promptOrder),
-  );
   return (
     first.promptOrder === second.promptOrder &&
     first.tonalContext === second.tonalContext
