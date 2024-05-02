@@ -157,17 +157,16 @@ export function ConfigureDrillScreen(): React.JSX.Element {
             </TextInput>
             <View style={{flex: 1}} />
           </View>
+          <ExpandableText
+            error={state.titleError ?? ''}
+            isCurrent={typeof state.titleError === 'string'}
+            style={{alignSelf: 'center'}}
+          />
         </View>
 
         {/* Play button */}
         <PlayDrillConfigurationButton {...{configurationState: state}} />
       </View>
-
-      <ExpandableText
-        error={state.titleError ?? ''}
-        isCurrent={typeof state.titleError === 'string'}
-        style={{alignSelf: 'center'}}
-      />
 
       <View style={{height: 16}} />
 

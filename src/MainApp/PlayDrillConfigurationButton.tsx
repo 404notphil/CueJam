@@ -24,7 +24,7 @@ export const PlayDrillConfigurationButton: React.FC<
   const animatedOpacity = useSharedValue(1);
   useEffect(() => {
     animatedOpacity.value = withRepeat(
-      withTiming(0.5, {duration: 1000, easing: Easing.linear}),
+      withTiming(0.5 , {duration: 1000, easing: Easing.linear}),
       -1, // Repeat infinitely
       true, // Reverse the animation on every iteration
     );
