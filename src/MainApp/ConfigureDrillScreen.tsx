@@ -69,6 +69,7 @@ import AlertIcon from '../assets/AlertIcon';
 import {Themes} from '../ui/theme/Theme';
 import CopyIcon from '../assets/CopyIcon';
 import AnimatedDivider from './AnimatedDivider';
+import {PlayDrillConfigurationButton} from './PlayDrillConfigurationButton';
 
 interface SettingProps {
   title: string;
@@ -131,42 +132,35 @@ export function ConfigureDrillScreen(): React.JSX.Element {
     <ScrollView
       keyboardShouldPersistTaps="handled"
       style={globalStyles.screenContainer}>
-      {/* Play button */}
-      <TouchableOpacity
-        style={{
-          marginBottom: 16,
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        onPress={() => {
-          navigation.navigate('Drill');
-        }}>
-        <PlayIcon />
-        <View style={{width: 16}} />
-        <Text style={styles.playButtonText}>{state.playButtonText}</Text>
-      </TouchableOpacity>
+      <View style={{flexDirection: 'row'}}>
+        {/* Drill title */}
+        <View style={{alignItems: 'center', flex: 1}}>
+          <Text style={globalStyles.fieldHeader}>Title</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            <View style={{flex: 1}} />
+            {state.titleError && (
+              <AlertIcon
+                size={30}
+                strokeColor={Themes.dark.errorRed}
+                style={{alignSelf: 'center', marginEnd: 16}}
+              />
+            )}
+            <TextInput
+              style={[styles.textInputArea, {paddingHorizontal: 16}]}
+              multiline={true}
+              onChangeText={newText => dispatch(setDrillName(newText))}
+              placeholder="(drill name)">
+              {drill.drillName}
+            </TextInput>
+            <View style={{flex: 1}} />
+          </View>
+        </View>
 
-      {/* Drill title */}
-      <View
-        style={{
-          flexDirection: 'row',
-        }}>
-        <View style={{flex: 1}} />
-        {state.titleError && (
-          <AlertIcon
-            size={30}
-            strokeColor={Themes.dark.errorRed}
-            style={{alignSelf: 'center', marginEnd: 16}}
-          />
-        )}
-        <TextInput
-          style={[styles.textInputArea, {paddingHorizontal: 16}]}
-          onChangeText={newText => dispatch(setDrillName(newText))}
-          placeholder="(drill name)">
-          {drill.drillName}
-        </TextInput>
-        <View style={{flex: 1}} />
+        {/* Play button */}
+        <PlayDrillConfigurationButton {...{configurationState: state}} />
       </View>
 
       <ExpandableText
@@ -595,9 +589,17 @@ const styles = StyleSheet.create({
   actionButtonDisabledText: {
     color: '#9CC200',
   },
-  playButtonText: {
+  largePlayButtonText: {
     color: '#CCFF00',
+    textAlign: 'center',
     fontSize: 25,
+    fontWeight: '600',
+    fontFamily: 'arciform',
+  },
+  smallPlayButtonText: {
+    color: '#CCFF00',
+    textAlign: 'center',
+    fontSize: 19,
     fontWeight: '600',
     fontFamily: 'arciform',
   },
@@ -605,7 +607,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     fontFamily: 'arciform',
-    height: 40,
     borderColor: 'gray',
     borderWidth: 0, // Set general border width to 0
     borderBottomWidth: 1, // Apply border only to the bottom
