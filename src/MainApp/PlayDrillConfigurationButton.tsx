@@ -1,4 +1,10 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  LayoutAnimation,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useAppNavigation} from '../ui/App';
 import {ConfigureDrillState} from '../store/reducers/configureDrillReducer';
 import {Themes} from '../ui/theme/Theme';
@@ -24,11 +30,15 @@ export const PlayDrillConfigurationButton: React.FC<
   const animatedOpacity = useSharedValue(1);
   useEffect(() => {
     animatedOpacity.value = withRepeat(
-      withTiming(0.5 , {duration: 1000, easing: Easing.linear}),
+      withTiming(0.5, {duration: 1000, easing: Easing.linear}),
       -1, // Repeat infinitely
       true, // Reverse the animation on every iteration
     );
   }, []);
+
+  useEffect(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  }, [props]);
 
   const animatedOpacityStyle = useAnimatedStyle(() => {
     return {
