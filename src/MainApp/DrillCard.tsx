@@ -3,12 +3,14 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Themes} from '../ui/theme/Theme';
 import {globalStyles} from '../ui/theme/styles';
 import CheckBox from '@react-native-community/checkbox';
+import EditIcon from '../assets/EditIcon';
 
 interface DrillCardProps {
   drill: {
     name: string;
     id: number;
   };
+  details: string;
   onPress: () => void;
   onToggleSelected: (drillId: number, isSelected: boolean) => void;
 }
@@ -17,29 +19,62 @@ const DrillCard: React.FC<DrillCardProps> = props => {
   const drill = props.drill;
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   return (
-    <View
-      style={[
-        styles.card,
-        {
+    <View style={[styles.card]}>
+      <View
+        style={{
           flexDirection: 'row',
-          alignItems: 'center',
-        },
-      ]}>
-      <TouchableOpacity style={{flex: 1}} onPress={props.onPress}>
-        <View>
-          <Text style={globalStyles.fieldHeader}>{drill.name}</Text>
-          <Text style={globalStyles.actionButtonText}>Details here</Text>
-        </View>
-      </TouchableOpacity>
-      <CheckBox
-        style={{margin: 16}}
-        disabled={false}
-        value={toggleCheckBox}
-        onValueChange={newValue => {
-          setToggleCheckBox(newValue);
-          props.onToggleSelected(drill.id, newValue);
-        }}
-      />
+        }}>
+        <TouchableOpacity style={{flex: 1}} onPress={props.onPress}>
+          <View>
+            <Text style={[globalStyles.fieldHeader, {marginTop: 0}]}>
+              {drill.name}
+            </Text>
+            <Text style={globalStyles.infoText}>{props.details}</Text>
+          </View>
+        </TouchableOpacity>
+        <CheckBox
+          style={{margin: 16}}
+          disabled={false}
+          value={toggleCheckBox}
+          onValueChange={newValue => {
+            setToggleCheckBox(newValue);
+            props.onToggleSelected(drill.id, newValue);
+          }}
+        />
+      </View>
+      <View
+        style={{
+          paddingTop: 5,
+          flexDirection: 'row',
+          flex: 1,
+        }}>
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <EditIcon
+            size={20}
+            style={{justifyContent: 'center', marginEnd: 8}}
+          />
+          <Text style={styles.cardButtonText}>Practice</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <EditIcon
+            size={20}
+            style={{justifyContent: 'center', marginEnd: 8}}
+          />
+          <Text style={styles.cardButtonText}>Edit</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -47,7 +82,7 @@ const DrillCard: React.FC<DrillCardProps> = props => {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: Themes.dark.buttonSurface,
-    padding: 16,
+    padding: 20,
     marginVertical: 8,
     borderRadius: 8,
     elevation: 3,
@@ -55,6 +90,13 @@ const styles = StyleSheet.create({
     shadowColor: '#333',
     shadowOpacity: 0.3,
     shadowRadius: 2,
+  },
+  cardButtonText: {
+    fontSize: 25,
+    marginBottom: 3,
+    color: Themes.dark.actionText,
+    fontWeight: '600',
+    fontFamily: 'arciform',
   },
 });
 

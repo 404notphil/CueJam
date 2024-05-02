@@ -68,7 +68,9 @@ export function SavedDrillsScreen(): React.JSX.Element {
             dispatch(clearDrill());
             navigation.navigate('ConfigureDrill');
           }}>
-          <Text style={globalStyles.buttonText}>+ Add new</Text>
+          <Text style={[globalStyles.buttonText, {marginEnd: 5}]}>
+            + Create new
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -81,6 +83,12 @@ export function SavedDrillsScreen(): React.JSX.Element {
         renderItem={({item}) => (
           <DrillCard
             drill={{name: item.name, id: item.drillId}}
+            details={
+              'order: ' +
+              item.configuration.promptOrder +
+              ' - context: ' +
+              item.configuration.tonalContext
+            }
             onPress={() => {
               dispatch(loadDrillById(item.drillId));
               navigation.navigate('ConfigureDrill');

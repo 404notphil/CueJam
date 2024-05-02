@@ -105,6 +105,11 @@ export const globalStyles = StyleSheet.create({
     fontFamily: 'arciform',
     fontSize: 16,
   },
+  infoText: {
+    color: Themes.dark.infoText,
+    fontFamily: 'arciform',
+    fontSize: 16,
+  },
   buttonText: {
     color: Themes.dark.lightText,
     textAlign: 'center',
