@@ -40,6 +40,30 @@ export function DrillScreen(): React.JSX.Element {
 
   const drill = state.configuration;
 
+  const [isPlaying, setIsPlaying] = useState(false);
+  const pauseButton = require('../assets/pause_button.png');
+  const playButton = require('../assets/play_button.png');
+  const imageSource = isPlaying ? pauseButton : playButton;
+  const [currentBeat, setCurrentBeat] = useState(1);
+  const [totalBeatsElapsed, setTotalBeatsElapsed] = useState(0);
+  const [totalPromptsElapsed, setTotalPromptsElapsed] = useState(0);
+
+  // old prompt layers
+  const computeNextNoteName = (noteName: NoteName) => {
+    switch (drill.promptOrder) {
+      case 'random':
+        return getRandomNoteName(drill.noteNames);
+      case 'descending5ths':
+        return getNoteNameAtFifthBelow(noteName);
+      case 'ascending5ths':
+        return getNoteNameAtFifthAbove(noteName);
+    }
+  };
+  const [currentNote, setCurrentNote] = useState(
+    getRandomNoteName(drill.noteNames),
+  );
+  const [nextNote, setNextNote] = useState(computeNextNoteName(currentNote));
+
   const getRandomTonalContextValue = () => {
     switch (drill.tonalContext) {
       case 'chord quality':
@@ -60,29 +84,7 @@ export function DrillScreen(): React.JSX.Element {
   const [nextTonalContextValue, setNextTonalContextValue] = useState<
     string | null
   >(getRandomTonalContextValue());
-
-  const [isPlaying, setIsPlaying] = useState(false);
-  const pauseButton = require('../assets/pause_button.png');
-  const playButton = require('../assets/play_button.png');
-  const imageSource = isPlaying ? pauseButton : playButton;
-  const [currentBeat, setCurrentBeat] = useState(1);
-  const [totalBeatsElapsed, setTotalBeatsElapsed] = useState(0);
-  const [totalPromptsElapsed, setTotalPromptsElapsed] = useState(0);
-
-  const computeNextNoteName = (noteName: NoteName) => {
-    switch (drill.promptOrder) {
-      case 'random':
-        return getRandomNoteName(drill.noteNames);
-      case 'descending5ths':
-        return getNoteNameAtFifthBelow(noteName);
-      case 'ascending5ths':
-        return getNoteNameAtFifthAbove(noteName);
-    }
-  };
-  const [currentNote, setCurrentNote] = useState(
-    getRandomNoteName(drill.noteNames),
-  );
-  const [nextNote, setNextNote] = useState(computeNextNoteName(currentNote));
+  // end old prompt layers
 
   const {MetronomeModule} = NativeModules;
   const clickEventEmitter = new NativeEventEmitter(MetronomeModule);
