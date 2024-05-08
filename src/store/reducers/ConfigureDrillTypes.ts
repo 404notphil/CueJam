@@ -148,10 +148,12 @@ export function getRandomMode(modes: Mode[]): Mode {
 }
 
 interface OptionChildValue {}
+type LayerType = NoteName | ChordQuality | Key | Scale | Mode;
+export type LayerTypeIntersection = LayerType & OptionChildValue;
 
 export class PromptLayerOption {
   private constructor(
-    public options: OptionChildValue[],
+    public options: LayerTypeIntersection[],
     public itemDisplayName: string,
     public pluralDisplayName: string,
   ) {}
@@ -183,7 +185,7 @@ export class PromptLayerOption {
   );
 }
 
-const listOfOptions = [
+export const AllPromptLayerOptions = [
   PromptLayerOption.NoteNameOption,
   PromptLayerOption.ChordQualitiesOption,
   PromptLayerOption.KeysOption,
