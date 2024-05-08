@@ -3,18 +3,16 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  ScrollView,
   StyleSheet,
   Keyboard,
 } from 'react-native';
+
 import React, {useEffect, useState} from 'react';
 import {globalStyles} from '../ui/theme/styles';
 import {Image} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
   ConfigureDrillState,
-  DrillConfiguration,
-  clearDrill,
   drillNameEmptyError,
   onDrillEdit,
   selectConfigureDrill,
@@ -70,6 +68,8 @@ import {Themes} from '../ui/theme/Theme';
 import CopyIcon from '../assets/CopyIcon';
 import AnimatedDivider from './AnimatedDivider';
 import {PlayDrillConfigurationButton} from './PlayDrillConfigurationButton';
+import {NestableScrollContainer} from 'react-native-draggable-flatlist';
+import {PromptLayerList} from './PromptLayerList';
 
 interface SettingProps {
   title: string;
@@ -95,8 +95,6 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   const state = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
-
-  const navigation = useAppNavigation();
 
   const drill = state.configuration;
 
@@ -129,7 +127,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   }, [drill.noteNames.length]);
 
   return (
-    <ScrollView
+    <NestableScrollContainer
       keyboardShouldPersistTaps="handled"
       style={globalStyles.screenContainer}>
       <View style={{flexDirection: 'row'}}>
@@ -187,6 +185,8 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           See preview
         </Text>
       </View>
+
+      <PromptLayerList />
 
       <SettingRow
         {...{
@@ -354,7 +354,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         onSetKeys={(keys: Key[]) => dispatch(setKeys(keys))}
         onDismiss={() => setKeysDialogVisible(false)}
       />
-    </ScrollView>
+    </NestableScrollContainer>
   );
 }
 
