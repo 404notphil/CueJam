@@ -34,8 +34,6 @@ export const SetPromptLayerModal: React.FC<
   const [listOfOptions, setListOfOptions] = useState(AllPromptLayerOptions);
 
   useEffect(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-
     if (currentSelectedOption) {
       setListOfOptions([currentSelectedOption]);
     } else {
