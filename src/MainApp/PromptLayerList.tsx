@@ -1,16 +1,19 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import DraggableFlatList, {
-  NestableScrollContainer,
-  OpacityDecorator,
-  RenderItemParams,
-} from 'react-native-draggable-flatlist';
+import React, {useEffect, useState} from 'react';
+import {
+  FlatList,
+  LayoutAnimation,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import DragIcon from '../assets/DragIcon';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
+import {DownIcon, UpIcon} from '../assets/UpIcon';
 
 export function PromptLayerList(): React.JSX.Element {
-  type Item = {
+  type PromptLayer = {
     key: string;
     label: string;
     isExplanatory: boolean;
@@ -20,44 +23,79 @@ export function PromptLayerList(): React.JSX.Element {
     {key: '2', label: 'two', isExplanatory: false},
     {key: '3', label: 'three', isExplanatory: false},
   ]);
-  const [isDragging, setIsDragging] = useState(false);
-  const animationConfig = {
-    stiffness: 1500,
-    damping: 100,
-    overshootClamping: true,
-  };
-  const renderItem = ({item, drag, isActive}: RenderItemParams<Item>) => {
+
+  const renderItem = (props: PromptLayer) => {
     return (
-      <OpacityDecorator>
-        <View>
-          <Text style={globalStyles.smallText}>...show me a</Text>
+      <View>
+        <Text style={globalStyles.smallText}>...show me a</Text>
+        <View
+          style={[
+            {
+              flexDirection: 'row',
+              backgroundColor: '#242C3B',
+              height: 100,
+              borderRadius: 5,
+              marginVertical: 15,
+            },
+          ]}>
+          <View style={{flex: 6}}>
+            <Text style={styles.actionButtonText}>{props.label}</Text>
+          </View>
           <View
-            style={[
-              {
-                flexDirection: 'row',
-                backgroundColor: '#242C3B',
-                height: 100,
-                borderRadius: 5,
-                marginVertical: 15,
-              },
-            ]}>
-            <View style={{flex: 6}}>
-              <Text style={styles.actionButtonText}>{item.label}</Text>
-            </View>
+            style={{flex: 1, justifyContent: 'center', marginHorizontal: 15}}>
             <TouchableOpacity
-              onPressIn={() => {
-                setIsDragging(true);
-                drag();
+              onPress={() => {
+                const newArray = [...data];
+                const oldIndex = data.indexOf(props);
+                const [element] = newArray.splice(oldIndex, 1);
+                newArray.splice(oldIndex ? oldIndex - 1 : 0, 0, element);
+                setData(newArray);
               }}
-              disabled={isActive}
               style={{
                 flex: 1,
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <DragIcon
-                height={26}
-                width={13}
+              <UpIcon
+                size={25}
+                strokeColor={Themes.dark.actionText}
+                style={{
+                  margin: 10,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              />
+            </TouchableOpacity>
+
+            <View
+              style={{
+                height: 0.1,
+                opacity: 0.5,
+                backgroundColor: Themes.dark.actionText,
+              }}
+            />
+
+            <TouchableOpacity
+              onPress={() => {
+                const newArray = [...data];
+                const oldIndex = data.indexOf(props);
+                const arraySize = data.length;
+                const [element] = newArray.splice(oldIndex, 1);
+                newArray.splice(
+                  oldIndex === arraySize ? oldIndex : oldIndex + 1,
+                  0,
+                  element,
+                );
+                setData(newArray);
+              }}
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <DownIcon
+                size={25}
+                strokeColor={Themes.dark.actionText}
                 style={{
                   margin: 10,
                   alignItems: 'center',
@@ -67,21 +105,16 @@ export function PromptLayerList(): React.JSX.Element {
             </TouchableOpacity>
           </View>
         </View>
-      </OpacityDecorator>
+      </View>
     );
   };
 
   return (
     <View>
-      <DraggableFlatList
+      <FlatList
         data={data}
-        onDragEnd={({data}) => {
-          setData(data);
-          setIsDragging(false);
-        }}
         keyExtractor={item => item.key}
-        renderItem={renderItem}
-        animationConfig={animationConfig}
+        renderItem={item => renderItem(item.item)}
       />
     </View>
   );
