@@ -35,6 +35,7 @@ import {
   Key,
   Mode,
   NoteName,
+  PromptLayerOption,
   PromptOrder,
   Scale,
   TonalContext,
@@ -70,6 +71,7 @@ import AnimatedDivider from './AnimatedDivider';
 import {PlayDrillConfigurationButton} from './PlayDrillConfigurationButton';
 import {NestableScrollContainer} from 'react-native-draggable-flatlist';
 import {PromptLayerList} from './PromptLayerList';
+import {SetPromptLayerModal} from './PromptLayerModal';
 
 interface SettingProps {
   title: string;
@@ -92,6 +94,8 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const [noteNamesDialogVisible, setNoteNamesDialogVisible] = useState(false);
   const [promptOrderDialogVisible, setPromptOrderDialogVisible] =
     useState(false);
+  const [promptLayerDialogVisible, setPromptLayerDialogVisible] =
+    useState(true);
 
   const state = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
@@ -187,6 +191,13 @@ export function ConfigureDrillScreen(): React.JSX.Element {
       </View>
 
       <PromptLayerList />
+
+      <SetPromptLayerModal
+        modalIsVisible={promptLayerDialogVisible}
+        promptLayer={PromptLayerOption.NoteNameOption}
+        onSetPromptLayer={promptLayer => {}}
+        onDismiss={() => setPromptLayerDialogVisible(false)}
+      />
 
       <SettingRow
         {...{

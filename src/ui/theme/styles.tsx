@@ -26,7 +26,6 @@ export const globalStyles = StyleSheet.create({
     padding: 16,
     backgroundColor: Themes.dark.background,
     borderRadius: 15,
-    alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
   },
