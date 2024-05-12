@@ -37,6 +37,7 @@
     "android:p-apk": "yarn setProduction &&  yarn android:clean && yarn android:bundle:assets && cd android && ./gradlew assembleRelease && killall -9 java",
     "open-apk": "open ./android/app/build/outputs/apk/",
     "open-bundle": "open ./android/app/build/outputs/bundle/productionRelease",
+    "android:build-install-prod-apk": "yarn android:p-apk && adb install ./android/app/build/outputs/apk/release/app-release.apk",
     "android:dev-apk": "yarn android:d-apk && yarn open-apk",
     "android:dev:release-apk": "yarn android:p-apk && yarn open-apk",
     "android:staging-apk": "yarn android:SD-apk && yarn open-apk",
