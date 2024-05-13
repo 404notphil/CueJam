@@ -35,8 +35,46 @@ test('perfect fifth above is computed properly', () => {
   expect(getNoteNameAtFifthAbove('G#')).toBe('Eb');
 });
 
-test('circle of fifths is computed properly', () => {
-  const circleOfAscending5ths = getCircleOf5ths();
-  console.log('12345 -> ' + JSON.stringify(circleOfAscending5ths));
-  expect(circleOfAscending5ths.length === 12);
+describe('circle of fifths computations', () => {
+  test('ascending circle of fifths starting from A', () => {
+    const expectedAscending5ths = [
+      'E',
+      'B',
+      'F#',
+      'C#',
+      'G#',
+      'Eb',
+      'Bb',
+      'F',
+      'C',
+      'G',
+      'D',
+      'A',
+    ];
+    const circleOfAscending5ths = getCircleOf5ths('A');
+    expectedAscending5ths.forEach((note, index) => {
+      expect(circleOfAscending5ths[index]).toBe(note);
+    });
+  });
+
+  test('descending circle of fifths starting from A', () => {
+    const expectedDescending5ths = [
+      'D',
+      'G',
+      'C',
+      'F',
+      'Bb',
+      'Eb',
+      'G#',
+      'C#',
+      'F#',
+      'B',
+      'E',
+      'A',
+    ];
+    const circleOfAscending5ths = getCircleOf5ths('A', false);
+    expectedDescending5ths.forEach((note, index) => {
+      expect(circleOfAscending5ths[index]).toBe(note);
+    });
+  });
 });

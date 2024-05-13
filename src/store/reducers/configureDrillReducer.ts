@@ -16,7 +16,12 @@ import {
   Scale,
   TonalContext,
 } from './ConfigureDrillTypes';
-import {BufferedNoteNameLayer, PromptLayer} from '../../MainApp/PromptLayer';
+import {
+  BufferedChordQualityLayer,
+  BufferedNoteNameLayer,
+  BufferedScaleLayer,
+  PromptLayer,
+} from '../../MainApp/PromptLayer';
 
 export type DrillConfiguration = {
   drillId?: number;
@@ -146,8 +151,14 @@ export const configureDrillSlice = createSlice({
     setKeys: (state, action: PayloadAction<Key[]>) => {
       state.configuration.keys = action.payload;
     },
-    setLayers: (state, action: PayloadAction<PromptLayer<LayerTypeIntersection>[]>) => {
-      state.promptLayers = action.payload
+    setPromptLayers: (
+      state,
+      action: PayloadAction<PromptLayer<LayerTypeIntersection>[]>,
+    ) => {
+      state.promptLayers = action.payload;
+    },
+    advanceToNextPrompt: state => {
+      state.promptLayers.forEach(layer => layer.advanceToNextPrompt());
     },
     writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
       Object.assign(state, {...action.payload, isSaved: true});
@@ -231,8 +242,9 @@ export const configureDrillSlice = createSlice({
 
 export default configureDrillSlice.reducer;
 
-export const selectConfigureDrill: (state: RootState) => ConfigureDrillState = state =>
-  state.drillConfigurationState;
+export const selectConfigureDrill: (
+  state: RootState,
+) => ConfigureDrillState = state => state.drillConfigurationState;
 
 export const {
   setDrillName,
@@ -245,6 +257,8 @@ export const {
   setScales,
   setModes,
   setKeys,
+  setPromptLayers,
+  advanceToNextPrompt,
   writeDrillSuccess,
   startLoading,
   loadDrillSuccess,

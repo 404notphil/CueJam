@@ -18,7 +18,8 @@ export interface PromptLayer<T extends LayerTypeIntersection> {
   optionType: PromptLayerOption;
   childrenChosen: Array<T>;
   promptOrder: PromptOrder;
-  advanceToNextPrompt(order: PromptOrder): T;
+  currentPrompt: T;
+  advanceToNextPrompt(): T;
 }
 
 abstract class BufferedLayerBase<T extends LayerTypeIntersection>
@@ -28,6 +29,7 @@ abstract class BufferedLayerBase<T extends LayerTypeIntersection>
   childrenChosen: Array<T>;
   promptCue: Array<T> = [];
   promptOrder: PromptOrder;
+  currentPrompt: T;
   randomizeFunction: () => T;
 
   constructor(
@@ -42,9 +44,10 @@ abstract class BufferedLayerBase<T extends LayerTypeIntersection>
     randomizeFunction
       ? (this.randomizeFunction = randomizeFunction)
       : (this.randomizeFunction = this.defaultRandomizeFunction);
+    this.currentPrompt = this.randomizeFunction();
   }
 
-  abstract advanceToNextPrompt(order: PromptOrder): T;
+  abstract advanceToNextPrompt(): T;
 
   protected refillPromptCue(): void {
     if (this.promptCue.length === 0) {
@@ -60,7 +63,8 @@ abstract class BufferedLayerBase<T extends LayerTypeIntersection>
     if (this.promptCue.length === 0) {
       this.refillPromptCue();
     }
-    return this.promptCue.shift()!;
+    this.currentPrompt = this.promptCue.shift()!;
+    return this.currentPrompt;
   }
 
   protected defaultRandomizeFunction() {
@@ -84,21 +88,25 @@ export class BufferedNoteNameLayer extends BufferedLayerBase<NoteName> {
     );
   }
 
-  advanceToNextPrompt(order: PromptOrder): NoteName {
-    this.getNextPromptFromCue();
-
+  advanceToNextPrompt(): NoteName {
     // Process according to the order
-    if (order === 'random') {
+    if (this.promptOrder === 'random') {
+      console.log("12345 if (this.promptOrder === 'random'");
       return this.getNextPromptFromCue();
-    } else if (order === 'ascending5ths') {
-      const note = getNoteNameAtFifthAbove(this.promptCue[0]);
-      this.promptCue[0] = note; // Update the current note in cue to the new value
+    } else if (this.promptOrder === 'ascending5ths') {
+      console.log('12345 previous note = ' + this.currentPrompt);
+      console.log("12345 if (this.promptOrder === 'ascending 5ths'");
+      const note = getNoteNameAtFifthAbove(this.currentPrompt);
+      console.log('12345 new note = ' + note);
+      this.currentPrompt = note; // Update the current note in cue to the new value
       return note;
-    } else if (order === 'descending5ths') {
-      const note = getNoteNameAtFifthBelow(this.promptCue[0]);
-      this.promptCue[0] = note; // Update the current note in cue to the new value
+    } else if (this.promptOrder === 'descending5ths') {
+      console.log("12345 if (this.promptOrder === 'descending5ths 5ths'");
+      const note = getNoteNameAtFifthBelow(this.currentPrompt);
+      this.currentPrompt = note; // Update the current note in cue to the new value
       return note;
     }
+    console.log("12345 if (this.promptOrder === 'other'");
 
     // Fallback for any unsupported order types
     throw new Error('Unsupported order type');
@@ -109,7 +117,7 @@ export class BufferedChordQualityLayer extends BufferedLayerBase<ChordQuality> {
   constructor(childrenChosen: Array<ChordQuality> = AllChordQualities) {
     super(PromptLayerOption.ChordQualitiesOption, childrenChosen, 'random');
   }
-  advanceToNextPrompt(order: PromptOrder): ChordQuality {
+  advanceToNextPrompt(): ChordQuality {
     return this.getNextPromptFromCue()!;
   }
 }
@@ -119,7 +127,7 @@ export class BufferedScaleLayer extends BufferedLayerBase<Scale> {
     super(PromptLayerOption.ScalesOption, childrenChosen, 'random');
   }
 
-  advanceToNextPrompt(order: PromptOrder): Scale {
+  advanceToNextPrompt(): Scale {
     return this.getNextPromptFromCue()!;
   }
 }
@@ -128,7 +136,7 @@ export class BufferedModeLayer extends BufferedLayerBase<Mode> {
   constructor(childrenChosen: Array<Mode> = AllModes) {
     super(PromptLayerOption.ScalesOption, childrenChosen, 'random');
   }
-  advanceToNextPrompt(order: PromptOrder): Mode {
+  advanceToNextPrompt(): Mode {
     return this.getNextPromptFromCue()!;
   }
 }
@@ -140,6 +148,7 @@ function getRandomPrompt(layer: PromptLayer<any>): string {
 }
 
 function shuffleArray(array: any[]): any[] {
+  console.log('12345 shuffled');
   let currentIndex = array.length,
     randomIndex;
 

@@ -66,14 +66,20 @@ export function getRandomNoteName(noteNameFilter: NoteName[] = AllNoteNames): No
   return noteNameFilter[Math.floor(Math.random() * noteNameFilter.length)]
 }
 
-export function getCircleOf5ths(ascending: boolean = true): NoteName[] {
-  const sortedNotes = [] as NoteName[]
-  const seedNote = getRandomNoteName()
-  let currentNote = seedNote // The seed note will never actually be seen by the user.
+export function getCircleOf5ths(
+  seedNote?: NoteName,
+  ascending: boolean = true,
+): NoteName[] {
+  const sortedNotes = [] as NoteName[];
+  let currentNote = seedNote ?? getRandomNoteName(); // The seed note will never actually be seen by the user.
   for (let i = 0; i < 12; i++) {
-    sortedNotes.push(ascending ? getNoteNameAtFifthAbove(currentNote) : getNoteNameAtFifthBelow(currentNote))
+    const newNote = ascending
+      ? getNoteNameAtFifthAbove(currentNote)
+      : getNoteNameAtFifthBelow(currentNote);
+    sortedNotes.push(newNote);
+    currentNote = newNote;
   }
-  return sortedNotes
+  return sortedNotes;
 }
 
 const ChordQualityDefinitions = [
