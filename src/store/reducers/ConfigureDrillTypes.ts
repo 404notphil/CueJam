@@ -114,7 +114,7 @@ const ScaleDefinitions = [
   'whole tone',
   'chromatic',
   'altered',
-];
+] as const;
 
 export type Scale = (typeof ScaleDefinitions)[number];
 export const AllScales = [...ScaleDefinitions] as Scale[];
@@ -138,7 +138,7 @@ const ModeDefinitions = [
   'mixolydian',
   'aeolian',
   'locrian',
-];
+] as const;
 
 export type Mode = (typeof ModeDefinitions)[number];
 export const AllModes = [...ModeDefinitions] as Mode[];
@@ -146,3 +146,49 @@ export const AllModes = [...ModeDefinitions] as Mode[];
 export function getRandomMode(modes: Mode[]): Mode {
   return modes[Math.floor(Math.random() * modes.length)];
 }
+
+interface OptionChildValue {}
+type LayerType = NoteName | ChordQuality | Key | Scale | Mode;
+export type LayerTypeIntersection = LayerType & OptionChildValue;
+
+export class PromptLayerOption {
+  private constructor(
+    public options: LayerTypeIntersection[],
+    public itemDisplayName: string,
+    public pluralDisplayName: string,
+  ) {}
+
+  static readonly NoteNameOption = new PromptLayerOption(
+    AllNoteNames,
+    'note name',
+    'note names',
+  );
+
+  static readonly ChordQualitiesOption = new PromptLayerOption(
+    AllChordQualities,
+    'chord quality',
+    'chord qualities',
+  );
+
+  static readonly KeysOption = new PromptLayerOption(AllKeys, 'key', 'keys');
+
+  static readonly ScalesOption = new PromptLayerOption(
+    AllScales,
+    'scale',
+    'scales',
+  );
+
+  static readonly ModesOption = new PromptLayerOption(
+    AllModes,
+    'mode',
+    'modes',
+  );
+}
+
+export const AllPromptLayerOptions = [
+  PromptLayerOption.NoteNameOption,
+  PromptLayerOption.ChordQualitiesOption,
+  PromptLayerOption.KeysOption,
+  PromptLayerOption.ScalesOption,
+  PromptLayerOption.ModesOption,
+];

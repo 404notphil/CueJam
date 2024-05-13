@@ -17,6 +17,7 @@ import {Provider} from 'react-redux';
 import {store} from '../store/store';
 import {PaperProvider} from 'react-native-paper';
 import { RootStackParamList } from '../navigation/RootStackParamList';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 export type ScreenName = 'Home' | 'ConfigureDrill' | 'SavedDrills' | 'Drill';
 
@@ -83,11 +84,13 @@ export const useAppNavigation = useNavigation<NativeStackNavigationProp<RootStac
 
 const App = () => {
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <AppContent />
-      </NavigationContainer>
-    </AuthProvider>
+    <GestureHandlerRootView>
+      <AuthProvider>
+        <NavigationContainer>
+          <AppContent />
+        </NavigationContainer>
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 };
 

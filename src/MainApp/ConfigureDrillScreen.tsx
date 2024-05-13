@@ -3,18 +3,16 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  ScrollView,
   StyleSheet,
   Keyboard,
 } from 'react-native';
+
 import React, {useEffect, useState} from 'react';
 import {globalStyles} from '../ui/theme/styles';
 import {Image} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
   ConfigureDrillState,
-  DrillConfiguration,
-  clearDrill,
   drillNameEmptyError,
   onDrillEdit,
   selectConfigureDrill,
@@ -37,6 +35,7 @@ import {
   Key,
   Mode,
   NoteName,
+  PromptLayerOption,
   PromptOrder,
   Scale,
   TonalContext,
@@ -70,6 +69,9 @@ import {Themes} from '../ui/theme/Theme';
 import CopyIcon from '../assets/CopyIcon';
 import AnimatedDivider from './AnimatedDivider';
 import {PlayDrillConfigurationButton} from './PlayDrillConfigurationButton';
+import {NestableScrollContainer} from 'react-native-draggable-flatlist';
+import {PromptLayerList} from './PromptLayerList';
+import {SetPromptLayerModal} from './PromptLayerModal';
 
 interface SettingProps {
   title: string;
@@ -92,11 +94,11 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const [noteNamesDialogVisible, setNoteNamesDialogVisible] = useState(false);
   const [promptOrderDialogVisible, setPromptOrderDialogVisible] =
     useState(false);
+  const [promptLayerDialogVisible, setPromptLayerDialogVisible] =
+    useState(true);
 
   const state = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
-
-  const navigation = useAppNavigation();
 
   const drill = state.configuration;
 
@@ -129,7 +131,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   }, [drill.noteNames.length]);
 
   return (
-    <ScrollView
+    <NestableScrollContainer
       keyboardShouldPersistTaps="handled"
       style={globalStyles.screenContainer}>
       <View style={{flexDirection: 'row'}}>
@@ -171,6 +173,31 @@ export function ConfigureDrillScreen(): React.JSX.Element {
       <View style={{height: 16}} />
 
       <ExpandableCompositeActionButton {...state} />
+
+      <Text style={[globalStyles.title, {fontSize: 30, marginTop: 40}]}>
+        design your prompt
+      </Text>
+
+      <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
+        <AlertIcon size={20} strokeColor={Themes.dark.infoText} />
+        <Text
+          style={[
+            globalStyles.buttonText,
+            styles.underline,
+            {marginStart: 15, color: Themes.dark.infoText},
+          ]}>
+          See preview
+        </Text>
+      </View>
+
+      <PromptLayerList />
+
+      <SetPromptLayerModal
+        modalIsVisible={promptLayerDialogVisible}
+        promptLayer={PromptLayerOption.NoteNameOption}
+        onSetPromptLayer={promptLayer => {}}
+        onDismiss={() => setPromptLayerDialogVisible(false)}
+      />
 
       <SettingRow
         {...{
@@ -338,7 +365,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         onSetKeys={(keys: Key[]) => dispatch(setKeys(keys))}
         onDismiss={() => setKeysDialogVisible(false)}
       />
-    </ScrollView>
+    </NestableScrollContainer>
   );
 }
 
@@ -446,7 +473,9 @@ const ExpandableCompositeActionButton: React.FC<
             <SaveIcon
               size={20}
               strokeColor={
-                props.saveDrillButtonState.enabled ? '#CCFF00' : '#9CC200'
+                props.saveDrillButtonState.enabled
+                  ? Themes.dark.actionText
+                  : Themes.dark.disabledActionText
               }
             />
           ),
@@ -467,7 +496,7 @@ const ExpandableCompositeActionButton: React.FC<
             navigation.navigate('ConfigureDrill');
             Keyboard.dismiss();
           },
-          icon: <CopyIcon size={20} strokeColor={'#CCFF00'} />,
+          icon: <CopyIcon size={20} strokeColor={Themes.dark.actionText} />,
         }}
       />
 
@@ -485,7 +514,13 @@ const ExpandableCompositeActionButton: React.FC<
               Keyboard.dismiss();
             }
           },
-          icon: <DeleteIcon width={20} height={22} strokeColor={'#CCFF00'} />,
+          icon: (
+            <DeleteIcon
+              width={20}
+              height={22}
+              strokeColor={Themes.dark.actionText}
+            />
+          ),
         }}
       />
 
@@ -496,12 +531,12 @@ const ExpandableCompositeActionButton: React.FC<
           visible: props.foundSimilarDrillButtonVisible,
           enabled: true,
           text: 'found 1 similar drill',
-          textColor: '#00D1FF',
+          textColor: Themes.dark.infoText,
           onPress: () => {
             // openFoundSimilarDrillDialog
             Keyboard.dismiss();
           },
-          icon: <AlertIcon size={20} strokeColor={'#00D1FF'} />,
+          icon: <AlertIcon size={20} strokeColor={Themes.dark.infoText} />,
         }}
       />
     </View>
@@ -590,20 +625,21 @@ const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
 
 const styles = StyleSheet.create({
   actionButtonText: {
-    color: '#CCFF00',
+    color: Themes.dark.actionText,
   },
+  underline: {textDecorationLine: 'underline'},
   actionButtonDisabledText: {
-    color: '#9CC200',
+    color: Themes.dark.disabledActionText,
   },
   largePlayButtonText: {
-    color: '#CCFF00',
+    color: Themes.dark.actionText,
     textAlign: 'center',
     fontSize: 25,
     fontWeight: '600',
     fontFamily: 'arciform',
   },
   smallPlayButtonText: {
-    color: '#CCFF00',
+    color: Themes.dark.actionText,
     textAlign: 'center',
     fontSize: 19,
     fontWeight: '600',
