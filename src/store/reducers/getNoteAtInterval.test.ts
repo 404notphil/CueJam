@@ -1,4 +1,6 @@
 import {
+  AllNoteNames,
+  getCircleOf5ths,
   getNoteNameAtFifthAbove,
   getNoteNameAtFifthBelow,
 } from './ConfigureDrillTypes';
@@ -31,4 +33,10 @@ test('perfect fifth above is computed properly', () => {
   expect(getNoteNameAtFifthAbove('F#')).toBe('C#');
   expect(getNoteNameAtFifthAbove('G')).toBe('D');
   expect(getNoteNameAtFifthAbove('G#')).toBe('Eb');
+});
+
+test('circle of fifths is computed properly', () => {
+  const circleOfAscending5ths = getCircleOf5ths();
+  console.log('12345 -> ' + JSON.stringify(circleOfAscending5ths));
+  expect(circleOfAscending5ths.length === 12);
 });

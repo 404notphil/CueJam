@@ -5,6 +5,7 @@ import {
   TextInput,
   StyleSheet,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 
 import React, {useEffect, useState} from 'react';
@@ -69,7 +70,6 @@ import {Themes} from '../ui/theme/Theme';
 import CopyIcon from '../assets/CopyIcon';
 import AnimatedDivider from './AnimatedDivider';
 import {PlayDrillConfigurationButton} from './PlayDrillConfigurationButton';
-import {NestableScrollContainer} from 'react-native-draggable-flatlist';
 import {PromptLayerList} from './PromptLayerList';
 import {SetPromptLayerModal} from './PromptLayerModal';
 
@@ -131,7 +131,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   }, [drill.noteNames.length]);
 
   return (
-    <NestableScrollContainer
+    <ScrollView
       keyboardShouldPersistTaps="handled"
       style={globalStyles.screenContainer}>
       <View style={{flexDirection: 'row'}}>
@@ -365,7 +365,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         onSetKeys={(keys: Key[]) => dispatch(setKeys(keys))}
         onDismiss={() => setKeysDialogVisible(false)}
       />
-    </NestableScrollContainer>
+    </ScrollView>
   );
 }
 

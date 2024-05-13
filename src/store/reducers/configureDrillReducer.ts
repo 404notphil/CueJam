@@ -8,12 +8,15 @@ import {
   AllScales,
   ChordQuality,
   Key,
+  LayerTypeIntersection,
   Mode,
   NoteName,
+  OptionChildValue,
   PromptOrder,
   Scale,
   TonalContext,
 } from './ConfigureDrillTypes';
+import {BufferedNoteNameLayer, PromptLayer} from '../../MainApp/PromptLayer';
 
 export type DrillConfiguration = {
   drillId?: number;
@@ -51,6 +54,7 @@ export interface ConfigureDrillState {
   deleteDrillButtonVisible: boolean;
   titleError: 'You must choose a name!' | 'That name already exists!' | null;
   playButtonText: 'play' | 'play without saving';
+  promptLayers: PromptLayer<LayerTypeIntersection>[];
 }
 
 interface SaveDrillButtonState {
@@ -105,6 +109,7 @@ export const initialState: ConfigureDrillState = {
   deleteDrillButtonVisible: false,
   titleError: null,
   playButtonText: 'play',
+  promptLayers: [new BufferedNoteNameLayer()],
 };
 
 export const configureDrillSlice = createSlice({
@@ -140,6 +145,9 @@ export const configureDrillSlice = createSlice({
     },
     setKeys: (state, action: PayloadAction<Key[]>) => {
       state.configuration.keys = action.payload;
+    },
+    setLayers: (state, action: PayloadAction<PromptLayer<LayerTypeIntersection>[]>) => {
+      state.promptLayers = action.payload
     },
     writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
       Object.assign(state, {...action.payload, isSaved: true});

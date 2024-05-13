@@ -66,6 +66,16 @@ export function getRandomNoteName(noteNameFilter: NoteName[] = AllNoteNames): No
   return noteNameFilter[Math.floor(Math.random() * noteNameFilter.length)]
 }
 
+export function getCircleOf5ths(ascending: boolean = true): NoteName[] {
+  const sortedNotes = [] as NoteName[]
+  const seedNote = getRandomNoteName()
+  let currentNote = seedNote // The seed note will never actually be seen by the user.
+  for (let i = 0; i < 12; i++) {
+    sortedNotes.push(ascending ? getNoteNameAtFifthAbove(currentNote) : getNoteNameAtFifthBelow(currentNote))
+  }
+  return sortedNotes
+}
+
 const ChordQualityDefinitions = [
   'major triad',
   'minor triad',
@@ -87,8 +97,10 @@ const ChordQualityDefinitions = [
 export type ChordQuality = (typeof ChordQualityDefinitions)[number];
 export const AllChordQualities = [...ChordQualityDefinitions] as ChordQuality[];
 
-export function getRandomChordQuality(chordQualities: ChordQuality[]): ChordQuality {
-  return chordQualities[Math.floor(Math.random() * chordQualities.length)]
+export function getRandomChordQuality(
+  chordQualities: ChordQuality[],
+): ChordQuality {
+  return chordQualities[Math.floor(Math.random() * chordQualities.length)];
 }
 
 const TonalContextsDefinitions = [
@@ -147,13 +159,13 @@ export function getRandomMode(modes: Mode[]): Mode {
   return modes[Math.floor(Math.random() * modes.length)];
 }
 
-interface OptionChildValue {}
+export interface OptionChildValue {}
 type LayerType = NoteName | ChordQuality | Key | Scale | Mode;
 export type LayerTypeIntersection = LayerType & OptionChildValue;
 
 export class PromptLayerOption {
   private constructor(
-    public options: LayerTypeIntersection[],
+    public children: LayerTypeIntersection[],
     public itemDisplayName: string,
     public pluralDisplayName: string,
   ) {}
