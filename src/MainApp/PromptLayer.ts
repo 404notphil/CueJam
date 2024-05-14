@@ -4,6 +4,7 @@ import {
   AllNoteNames,
   AllScales,
   ChordQuality,
+  LayerType,
   Mode,
   NoteName,
   PromptLayerOption,
