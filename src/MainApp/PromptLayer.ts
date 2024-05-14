@@ -1,10 +1,13 @@
 import {
   AllChordQualities,
+  AllKeys,
   AllModes,
   AllNoteNames,
   AllScales,
   ChordQualitiesPromptLayerOption,
   ChordQuality,
+  Key,
+  KeysPromptLayerOption,
   LayerType,
   Mode,
   NoteName,
@@ -84,22 +87,16 @@ export class BufferedNoteNameLayer extends PromptLayer<NoteName> {
   advanceToNextPrompt(): NoteName {
     // Process according to the order
     if (this.promptOrder === 'random') {
-      console.log("12345 if (this.promptOrder === 'random'");
       return this.getNextPromptFromCue();
     } else if (this.promptOrder === 'ascending5ths') {
-      console.log('12345 previous note = ' + this.currentPrompt);
-      console.log("12345 if (this.promptOrder === 'ascending 5ths'");
       const note = getNoteNameAtFifthAbove(this.currentPrompt);
-      console.log('12345 new note = ' + note);
       this.currentPrompt = note; // Update the current note in cue to the new value
       return note;
     } else if (this.promptOrder === 'descending5ths') {
-      console.log("12345 if (this.promptOrder === 'descending5ths 5ths'");
       const note = getNoteNameAtFifthBelow(this.currentPrompt);
       this.currentPrompt = note; // Update the current note in cue to the new value
       return note;
     }
-    console.log("12345 if (this.promptOrder === 'other'");
 
     // Fallback for any unsupported order types
     throw new Error('Unsupported order type');
@@ -134,14 +131,16 @@ export class BufferedModeLayer extends PromptLayer<Mode> {
   }
 }
 
-function getRandomPrompt(layer: PromptLayer<any>): string {
-  return layer.childrenChosen[
-    Math.floor(Math.random() * layer.childrenChosen.length)
-  ];
+export class BufferKeyLayer extends PromptLayer<Key> {
+  constructor(childrenChosen: Array<Key> = AllKeys) {
+    super(KeysPromptLayerOption, childrenChosen, 'random');
+  }
+  advanceToNextPrompt(): Key {
+    return this.getNextPromptFromCue()!;
+  }
 }
 
 function shuffleArray(array: any[]): any[] {
-  console.log('12345 shuffled');
   let currentIndex = array.length,
     randomIndex;
 

@@ -6,6 +6,10 @@ import {configureStore} from '@reduxjs/toolkit';
 // Create store
 export const store = configureStore({
   reducer: rootReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 // Define AppThunk for thunks that do not return a value
