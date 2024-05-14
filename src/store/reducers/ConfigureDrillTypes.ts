@@ -165,7 +165,6 @@ export function getRandomMode(modes: Mode[]): Mode {
   return modes[Math.floor(Math.random() * modes.length)];
 }
 
-export interface OptionChildValue {}
 export type LayerType = NoteName | ChordQuality | Key | Scale | Mode;
 
 export class PromptLayerOption {
