@@ -11,7 +11,6 @@ import {
   LayerType,
   Mode,
   NoteName,
-  OptionChildValue,
   PromptOrder,
   Scale,
   TonalContext,

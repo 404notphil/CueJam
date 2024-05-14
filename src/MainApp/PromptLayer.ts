@@ -3,13 +3,16 @@ import {
   AllModes,
   AllNoteNames,
   AllScales,
+  ChordQualitiesPromptLayerOption,
   ChordQuality,
   LayerType,
   Mode,
   NoteName,
+  NoteNamePromptLayerOption,
   PromptLayerOption,
   PromptOrder,
   Scale,
+  ScalesPromptLayerOption,
   getNoteNameAtFifthAbove,
   getNoteNameAtFifthBelow,
 } from '../store/reducers/ConfigureDrillTypes';
@@ -71,7 +74,7 @@ export class BufferedNoteNameLayer extends PromptLayer<NoteName> {
     childrenChosen: Array<NoteName> = AllNoteNames,
   ) {
     super(
-      PromptLayerOption.NoteNameOption,
+      NoteNamePromptLayerOption,
       childrenChosen,
       promptOrder,
       randomizeFunction,
@@ -105,7 +108,7 @@ export class BufferedNoteNameLayer extends PromptLayer<NoteName> {
 
 export class BufferedChordQualityLayer extends PromptLayer<ChordQuality> {
   constructor(childrenChosen: Array<ChordQuality> = AllChordQualities) {
-    super(PromptLayerOption.ChordQualitiesOption, childrenChosen, 'random');
+    super(ChordQualitiesPromptLayerOption, childrenChosen, 'random');
   }
   advanceToNextPrompt(): ChordQuality {
     return this.getNextPromptFromCue()!;
@@ -114,7 +117,7 @@ export class BufferedChordQualityLayer extends PromptLayer<ChordQuality> {
 
 export class BufferedScaleLayer extends PromptLayer<Scale> {
   constructor(childrenChosen: Array<Scale> = AllScales) {
-    super(PromptLayerOption.ScalesOption, childrenChosen, 'random');
+    super(ScalesPromptLayerOption, childrenChosen, 'random');
   }
 
   advanceToNextPrompt(): Scale {
@@ -124,7 +127,7 @@ export class BufferedScaleLayer extends PromptLayer<Scale> {
 
 export class BufferedModeLayer extends PromptLayer<Mode> {
   constructor(childrenChosen: Array<Mode> = AllModes) {
-    super(PromptLayerOption.ScalesOption, childrenChosen, 'random');
+    super(ScalesPromptLayerOption, childrenChosen, 'random');
   }
   advanceToNextPrompt(): Mode {
     return this.getNextPromptFromCue()!;

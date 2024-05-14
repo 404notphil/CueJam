@@ -167,44 +167,48 @@ export function getRandomMode(modes: Mode[]): Mode {
 
 export type LayerType = NoteName | ChordQuality | Key | Scale | Mode;
 
-export class PromptLayerOption {
-  private constructor(
-    public children: LayerType[],
-    public itemDisplayName: string,
-    public pluralDisplayName: string,
-  ) {}
-
-  static readonly NoteNameOption = new PromptLayerOption(
-    AllNoteNames,
-    'note name',
-    'note names',
-  );
-
-  static readonly ChordQualitiesOption = new PromptLayerOption(
-    AllChordQualities,
-    'chord quality',
-    'chord qualities',
-  );
-
-  static readonly KeysOption = new PromptLayerOption(AllKeys, 'key', 'keys');
-
-  static readonly ScalesOption = new PromptLayerOption(
-    AllScales,
-    'scale',
-    'scales',
-  );
-
-  static readonly ModesOption = new PromptLayerOption(
-    AllModes,
-    'mode',
-    'modes',
-  );
+export interface PromptLayerOption {
+  children: LayerType[];
+  itemDisplayName: string;
+  pluralDisplayName: string;
 }
 
+// Creation of specific layer options
+export const NoteNamePromptLayerOption: PromptLayerOption = {
+  children: AllNoteNames,
+  itemDisplayName: 'note name',
+  pluralDisplayName: 'note names',
+};
+
+export const ChordQualitiesPromptLayerOption: PromptLayerOption = {
+  children: AllChordQualities,
+  itemDisplayName: 'chord quality',
+  pluralDisplayName: 'chord qualities',
+};
+
+export const KeysPromptLayerOption: PromptLayerOption = {
+  children: AllKeys,
+  itemDisplayName: 'key',
+  pluralDisplayName: 'keys',
+};
+
+export const ScalesPromptLayerOption: PromptLayerOption = {
+  children: AllScales,
+  itemDisplayName: 'scale',
+  pluralDisplayName: 'scales',
+};
+
+export const ModesPromptLayerOption: PromptLayerOption = {
+  children: AllModes,
+  itemDisplayName: 'mode',
+  pluralDisplayName: 'modes',
+};
+
+// All options collected in an array
 export const AllPromptLayerOptions = [
-  PromptLayerOption.NoteNameOption,
-  PromptLayerOption.ChordQualitiesOption,
-  PromptLayerOption.KeysOption,
-  PromptLayerOption.ScalesOption,
-  PromptLayerOption.ModesOption,
+  NoteNamePromptLayerOption,
+  ChordQualitiesPromptLayerOption,
+  KeysPromptLayerOption,
+  ScalesPromptLayerOption,
+  ModesPromptLayerOption,
 ];
