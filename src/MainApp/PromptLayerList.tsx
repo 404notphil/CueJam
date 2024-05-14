@@ -51,7 +51,20 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
   const promptLayers = props.state.configuration.promptLayers;
   const dispatch = useAppDispatch();
 
-  const renderItem = (props: PromptLayer<LayerType>) => {
+  function moveItemInList(layer: PromptLayer<LayerType>, down: boolean = true) {
+    const newArray = [...promptLayers];
+    const oldIndex = promptLayers.indexOf(layer);
+    const arraySize = promptLayers.length;
+    const [element] = newArray.splice(oldIndex, 1);
+    newArray.splice(
+      oldIndex === arraySize ? oldIndex : oldIndex + (down ? 1 : -1),
+      0,
+      element,
+    );
+    dispatch(setPromptLayers(newArray));
+  }
+
+  const renderItem = (currentLayer: PromptLayer<LayerType>) => {
     return (
       <View>
         <Text style={globalStyles.smallText}>...show me a</Text>
@@ -63,73 +76,49 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
               height: 100,
               borderRadius: 5,
               marginVertical: 15,
+              alignItems: 'center',
             },
           ]}>
           <View style={{flex: 6}}>
             <Text style={styles.actionButtonText}>
-              {props.optionType.itemDisplayName}
+              {currentLayer.optionType.itemDisplayName}
             </Text>
           </View>
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(
+                setPromptLayers(
+                  promptLayers.filter(item => item !== currentLayer),
+                ),
+              );
+            }}>
+            <DeleteIcon />
+          </TouchableOpacity>
           <View
             style={{flex: 1, justifyContent: 'center', marginHorizontal: 15}}>
             <TouchableOpacity
               onPress={() => {
-                const newArray = [...promptLayers];
-                const oldIndex = promptLayers.indexOf(props);
-                const [element] = newArray.splice(oldIndex, 1);
-                newArray.splice(oldIndex ? oldIndex - 1 : 0, 0, element);
-                dispatch(setPromptLayers(newArray));
+                moveItemInList(currentLayer, false);
               }}
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
+              style={styles.sortButton}>
               <UpIcon
                 size={25}
                 strokeColor={Themes.dark.actionText}
-                style={{
-                  margin: 10,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                style={styles.sortButtonIcon}
               />
             </TouchableOpacity>
 
-            <View
-              style={{
-                height: 0.1,
-                opacity: 0.5,
-                backgroundColor: Themes.dark.actionText,
-              }}
-            />
+            <View style={styles.sortButtonDivider} />
 
             <TouchableOpacity
               onPress={() => {
-                const newArray = [...promptLayers];
-                const oldIndex = promptLayers.indexOf(props);
-                const arraySize = promptLayers.length;
-                const [element] = newArray.splice(oldIndex, 1);
-                newArray.splice(
-                  oldIndex === arraySize ? oldIndex : oldIndex + 1,
-                  0,
-                  element,
-                );
-                dispatch(setPromptLayers(newArray));
+                moveItemInList(currentLayer);
               }}
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
+              style={styles.sortButton}>
               <DownIcon
                 size={25}
                 strokeColor={Themes.dark.actionText}
-                style={{
-                  margin: 10,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                style={styles.sortButtonIcon}
               />
             </TouchableOpacity>
           </View>
@@ -377,6 +366,21 @@ const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
 };
 
 const styles = StyleSheet.create({
+  sortButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sortButtonIcon: {
+    margin: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sortButtonDivider: {
+    height: 0.1,
+    opacity: 0.5,
+    backgroundColor: Themes.dark.actionText,
+  },
   actionButtonText: {
     color: Themes.dark.actionText,
   },
