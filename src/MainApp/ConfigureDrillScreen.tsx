@@ -13,13 +13,10 @@ import {globalStyles} from '../ui/theme/styles';
 import {Image} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
-  ConfigureDrillState,
-  drillNameEmptyError,
   onDrillEdit,
   selectConfigureDrill,
   setBeatsPerChord,
   setChordQualities,
-  setDrillName,
   setKeys,
   setModes,
   setNoteNames,
@@ -45,33 +42,12 @@ import {SetPromptOrderModal} from './SetPromptOrderModal';
 import {SetTonalContextModal} from './SetTonalContextModal';
 import {SetChordQualitiesModal} from './SetChordQualitiesModal';
 import {SetScalesModal} from './SetScalesModal';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, {useSharedValue, withTiming} from 'react-native-reanimated';
 import {SetModesModal} from './SetModesModal';
 import {SetKeysModal} from './SetKeysModal';
-import {ExpandableText} from '../onboarding/ui/ExpandableText';
-import {
-  checkForSimilarDrills,
-  deleteDrillById,
-  loadDrillById,
-  saveAndLoadCopy,
-  saveDrill,
-} from '../services/AppDatabase';
-import {useAppNavigation} from '../ui/App';
-import PlayIcon from '../assets/PlayIcon';
-import SaveIcon from '../assets/SaveIcon';
-import DeleteIcon from '../assets/DeleteIcon';
-import AlertIcon from '../assets/AlertIcon';
+import {checkForSimilarDrills} from '../services/AppDatabase';
 import {Themes} from '../ui/theme/Theme';
-import CopyIcon from '../assets/CopyIcon';
-import AnimatedDivider from './AnimatedDivider';
-import {PlayDrillConfigurationButton} from './PlayDrillConfigurationButton';
 import {PromptLayerList} from './PromptLayerList';
-import {SetPromptLayerModal} from './PromptLayerModal';
 
 interface SettingProps {
   title: string;
@@ -141,7 +117,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         onDismiss={() => setPromptLayerDialogVisible(false)}
       /> */}
 
-      <SettingRow
+      {/* <SettingRow
         {...{
           title: 'tempo',
           buttonText: drill.tempo + ' bpm',
@@ -298,7 +274,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         modalIsVisible={modesDialogVisible}
         modes={drill.modes}
         onSetModes={(modes: Mode[]) => dispatch(setModes(modes))}
-        onDismiss={() => setModesDialogVisible(false)}
+        onDismiss={() => setModesD#package.jsonialogVisible(false)}
       />
 
       <SetKeysModal
@@ -306,7 +282,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         keys={drill.keys}
         onSetKeys={(keys: Key[]) => dispatch(setKeys(keys))}
         onDismiss={() => setKeysDialogVisible(false)}
-      />
+      /> */}
     </View>
   );
 }

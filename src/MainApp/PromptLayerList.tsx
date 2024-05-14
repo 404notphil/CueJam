@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
+import uuid from 'react-native-uuid';
 import {
   FlatList,
   Keyboard,
   StyleSheet,
   Text,
+  Touchable,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -34,24 +36,19 @@ import CopyIcon from '../assets/CopyIcon';
 import DeleteIcon from '../assets/DeleteIcon';
 import AlertIcon from '../assets/AlertIcon';
 import {ConfigureDrillHeader} from './ConfigureDrillHeader';
+import {BufferedChordQualityLayer, PromptLayer} from './PromptLayer';
+import {NoteNamePromptLayerOption} from '../store/reducers/ConfigureDrillTypes';
 
 interface PromptLayerListProps {
   state: ConfigureDrillState;
 }
 
 export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
-  type PromptLayer = {
-    key: string;
-    label: string;
-    isExplanatory: boolean;
-  };
-  const [data, setData] = useState([
-    {key: '1', label: 'one', isExplanatory: false},
-    {key: '2', label: 'two', isExplanatory: false},
-    {key: '3', label: 'three', isExplanatory: false},
-  ]);
+  const [data, setData] = useState<PromptLayer<any>[]>(
+    props.state.promptLayers,
+  );
 
-  const renderItem = (props: PromptLayer) => {
+  const renderItem = (props: PromptLayer<any>) => {
     return (
       <View>
         <Text style={globalStyles.smallText}>...show me a</Text>
@@ -66,7 +63,9 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
             },
           ]}>
           <View style={{flex: 6}}>
-            <Text style={styles.actionButtonText}>{props.label}</Text>
+            <Text style={styles.actionButtonText}>
+              {props.optionType.itemDisplayName}
+            </Text>
           </View>
           <View
             style={{flex: 1, justifyContent: 'center', marginHorizontal: 15}}>
@@ -140,9 +139,15 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
     <View>
       <FlatList
         data={data}
-        keyExtractor={item => item.key}
+        keyExtractor={() => uuid.v4().toString()}
         renderItem={item => renderItem(item.item)}
         ListHeaderComponent={<ConfigureDrillHeader state={props.state} />}
+        ListFooterComponent={
+          <TouchableOpacity
+            onPress={() => setData([...data, new BufferedChordQualityLayer()])}>
+            <Text>testing</Text>
+          </TouchableOpacity>
+        }
       />
     </View>
   );
