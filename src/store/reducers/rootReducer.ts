@@ -7,7 +7,6 @@ import configureDrillReducer, {
 import allDrillsReducer, {DrillsState} from './allDrillsSlice';
 
 const rootReducer = combineReducers({
-  counter: counterReducer,
   drillConfigurationState: configureDrillReducer,
   featureFlags: featureFlagReducer,
   allDrillsReducer: allDrillsReducer,

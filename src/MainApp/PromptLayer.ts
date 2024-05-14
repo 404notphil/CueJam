@@ -14,17 +14,7 @@ import {
   getNoteNameAtFifthBelow,
 } from '../store/reducers/ConfigureDrillTypes';
 
-export interface PromptLayer<T extends LayerTypeIntersection> {
-  optionType: PromptLayerOption;
-  childrenChosen: Array<T>;
-  promptOrder: PromptOrder;
-  currentPrompt: T;
-  advanceToNextPrompt(): T;
-}
-
-abstract class BufferedLayerBase<T extends LayerTypeIntersection>
-  implements PromptLayer<T>
-{
+export abstract class PromptLayer<T extends LayerTypeIntersection> {
   optionType: PromptLayerOption;
   childrenChosen: Array<T>;
   promptCue: Array<T> = [];
@@ -74,7 +64,7 @@ abstract class BufferedLayerBase<T extends LayerTypeIntersection>
   }
 }
 
-export class BufferedNoteNameLayer extends BufferedLayerBase<NoteName> {
+export class BufferedNoteNameLayer extends PromptLayer<NoteName> {
   constructor(
     promptOrder: PromptOrder = 'random',
     randomizeFunction?: () => NoteName,
@@ -113,7 +103,7 @@ export class BufferedNoteNameLayer extends BufferedLayerBase<NoteName> {
   }
 }
 
-export class BufferedChordQualityLayer extends BufferedLayerBase<ChordQuality> {
+export class BufferedChordQualityLayer extends PromptLayer<ChordQuality> {
   constructor(childrenChosen: Array<ChordQuality> = AllChordQualities) {
     super(PromptLayerOption.ChordQualitiesOption, childrenChosen, 'random');
   }
@@ -122,7 +112,7 @@ export class BufferedChordQualityLayer extends BufferedLayerBase<ChordQuality> {
   }
 }
 
-export class BufferedScaleLayer extends BufferedLayerBase<Scale> {
+export class BufferedScaleLayer extends PromptLayer<Scale> {
   constructor(childrenChosen: Array<Scale> = AllScales) {
     super(PromptLayerOption.ScalesOption, childrenChosen, 'random');
   }
@@ -132,7 +122,7 @@ export class BufferedScaleLayer extends BufferedLayerBase<Scale> {
   }
 }
 
-export class BufferedModeLayer extends BufferedLayerBase<Mode> {
+export class BufferedModeLayer extends PromptLayer<Mode> {
   constructor(childrenChosen: Array<Mode> = AllModes) {
     super(PromptLayerOption.ScalesOption, childrenChosen, 'random');
   }
