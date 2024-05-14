@@ -38,17 +38,20 @@ import DeleteIcon from '../assets/DeleteIcon';
 import AlertIcon from '../assets/AlertIcon';
 import {ConfigureDrillHeader} from './ConfigureDrillHeader';
 import {BufferedChordQualityLayer, PromptLayer} from './PromptLayer';
-import {NoteNamePromptLayerOption} from '../store/reducers/ConfigureDrillTypes';
+import {
+  LayerType,
+  NoteNamePromptLayerOption,
+} from '../store/reducers/ConfigureDrillTypes';
 
 interface PromptLayerListProps {
   state: ConfigureDrillState;
 }
 
 export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
-  const promptLayers = props.state.promptLayers;
+  const promptLayers = props.state.configuration.promptLayers;
   const dispatch = useAppDispatch();
 
-  const renderItem = (props: PromptLayer<any>) => {
+  const renderItem = (props: PromptLayer<LayerType>) => {
     return (
       <View>
         <Text style={globalStyles.smallText}>...show me a</Text>

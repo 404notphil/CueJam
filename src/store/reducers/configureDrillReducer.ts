@@ -34,6 +34,7 @@ export type DrillConfiguration = {
   scales: Scale[];
   modes: Mode[];
   keys: Key[];
+  promptLayers: PromptLayer<LayerType>[];
 };
 
 export function areDrillsSimilar(
@@ -58,7 +59,6 @@ export interface ConfigureDrillState {
   deleteDrillButtonVisible: boolean;
   titleError: 'You must choose a name!' | 'That name already exists!' | null;
   playButtonText: 'play' | 'play without saving';
-  promptLayers: PromptLayer<LayerType>[];
 }
 
 interface SaveDrillButtonState {
@@ -102,6 +102,7 @@ export const initialState: ConfigureDrillState = {
     scales: AllScales,
     modes: AllModes,
     keys: AllKeys,
+    promptLayers: [new BufferedNoteNameLayer()],
   } as DrillConfiguration,
   lastSavedConfiguration: null,
   isSaved: true,
@@ -113,7 +114,6 @@ export const initialState: ConfigureDrillState = {
   deleteDrillButtonVisible: false,
   titleError: null,
   playButtonText: 'play',
-  promptLayers: [new BufferedNoteNameLayer()],
 };
 
 export const configureDrillSlice = createSlice({
@@ -154,10 +154,12 @@ export const configureDrillSlice = createSlice({
       state,
       action: PayloadAction<PromptLayer<LayerType>[]>,
     ) => {
-      state.promptLayers = action.payload;
+      state.configuration.promptLayers = action.payload;
     },
     advanceToNextPrompt: state => {
-      state.promptLayers.forEach(layer => layer.advanceToNextPrompt());
+      state.configuration.promptLayers.forEach(layer =>
+        layer.advanceToNextPrompt(),
+      );
     },
     writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
       Object.assign(state, {...action.payload, isSaved: true});
