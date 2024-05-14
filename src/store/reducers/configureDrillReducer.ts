@@ -59,7 +59,7 @@ export interface ConfigureDrillState {
   deleteDrillButtonVisible: boolean;
   titleError: 'You must choose a name!' | 'That name already exists!' | null;
   playButtonText: 'play' | 'play without saving';
-  promptLayers: PromptLayer<LayerTypeIntersection>[];
+  // promptLayers: PromptLayer<LayerTypeIntersection>[];
 }
 
 interface SaveDrillButtonState {
@@ -114,7 +114,7 @@ export const initialState: ConfigureDrillState = {
   deleteDrillButtonVisible: false,
   titleError: null,
   playButtonText: 'play',
-  promptLayers: [new BufferedNoteNameLayer()],
+  // promptLayers: [new BufferedNoteNameLayer()],
 };
 
 export const configureDrillSlice = createSlice({
@@ -151,15 +151,15 @@ export const configureDrillSlice = createSlice({
     setKeys: (state, action: PayloadAction<Key[]>) => {
       state.configuration.keys = action.payload;
     },
-    setPromptLayers: (
-      state,
-      action: PayloadAction<PromptLayer<LayerTypeIntersection>[]>,
-    ) => {
-      state.promptLayers = action.payload;
-    },
-    advanceToNextPrompt: state => {
-      state.promptLayers.forEach(layer => layer.advanceToNextPrompt());
-    },
+    // setPromptLayers: (
+    //   state,
+    //   action: PayloadAction<PromptLayer<LayerTypeIntersection>[]>,
+    // ) => {
+    //   state.promptLayers = action.payload;
+    // },
+    // advanceToNextPrompt: state => {
+    //   state.promptLayers.forEach(layer => layer.advanceToNextPrompt());
+    // },
     writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
       Object.assign(state, {...action.payload, isSaved: true});
       state.lastSavedConfiguration = action.payload.configuration;
@@ -257,8 +257,8 @@ export const {
   setScales,
   setModes,
   setKeys,
-  setPromptLayers,
-  advanceToNextPrompt,
+  // setPromptLayers,
+  // advanceToNextPrompt,
   writeDrillSuccess,
   startLoading,
   loadDrillSuccess,

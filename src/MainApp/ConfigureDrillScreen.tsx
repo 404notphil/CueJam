@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-import React, {useEffect, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {globalStyles} from '../ui/theme/styles';
 import {Image} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
@@ -131,73 +131,15 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   }, [drill.noteNames.length]);
 
   return (
-    <ScrollView
-      keyboardShouldPersistTaps="handled"
-      style={globalStyles.screenContainer}>
-      <View style={{flexDirection: 'row'}}>
-        {/* Drill title */}
-        <View style={{alignItems: 'center', flex: 1}}>
-          <Text style={globalStyles.fieldHeader}>Title</Text>
-          <View
-            style={{
-              flexDirection: 'row',
-            }}>
-            <View style={{flex: 1}} />
-            {state.titleError && (
-              <AlertIcon
-                size={30}
-                strokeColor={Themes.dark.errorRed}
-                style={{alignSelf: 'center', marginEnd: 16}}
-              />
-            )}
-            <TextInput
-              style={[styles.textInputArea, {paddingHorizontal: 16}]}
-              multiline={true}
-              onChangeText={newText => dispatch(setDrillName(newText))}
-              placeholder="(drill name)">
-              {drill.drillName}
-            </TextInput>
-            <View style={{flex: 1}} />
-          </View>
-          <ExpandableText
-            error={state.titleError ?? ''}
-            isCurrent={typeof state.titleError === 'string'}
-            style={{alignSelf: 'center'}}
-          />
-        </View>
-
-        {/* Play button */}
-        <PlayDrillConfigurationButton {...{configurationState: state}} />
-      </View>
-
-      <View style={{height: 16}} />
-
-      <ExpandableCompositeActionButton {...state} />
-
-      <Text style={[globalStyles.title, {fontSize: 30, marginTop: 40}]}>
-        design your prompt
-      </Text>
-
-      <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
-        <AlertIcon size={20} strokeColor={Themes.dark.infoText} />
-        <Text
-          style={[
-            globalStyles.buttonText,
-            styles.underline,
-            {marginStart: 15, color: Themes.dark.infoText},
-          ]}>
-          See preview
-        </Text>
-      </View>
-
-      <PromptLayerList />
-
+    <View style={globalStyles.screenContainer}>
+      <PromptLayerList state={state} />
+      {/* 
       <SetPromptLayerModal
         modalIsVisible={promptLayerDialogVisible}
         promptLayer={PromptLayerOption.NoteNameOption}
         onSetPromptLayer={promptLayer => {}}
         onDismiss={() => setPromptLayerDialogVisible(false)}
-      />
+      /> */}
 
       <SettingRow
         {...{
@@ -365,7 +307,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         onSetKeys={(keys: Key[]) => dispatch(setKeys(keys))}
         onDismiss={() => setKeysDialogVisible(false)}
       />
-    </ScrollView>
+    </View>
   );
 }
 
@@ -410,218 +352,6 @@ const SettingRow: React.FC<SettingProps> = props => {
   );
 };
 
-const ExpandableCompositeActionButton: React.FC<
-  ConfigureDrillState
-> = props => {
-  const [saveButtonVisible, setSaveButtonVisible] = useState(false);
-  const [saveButtonText, setSaveButtonText] = useState('');
-  const [deleteDrillButtonVisible, setDeleteDrillButtonVisible] =
-    useState(false);
-  const [copyDrillButtonVisible, setCopyDrillButtonVisible] = useState(false);
-  const [foundSimilarDrillButtonVisible, setFoundSimilarDrillButtonVisible] =
-    useState(false);
-  useEffect(() => {
-    setSaveButtonVisible(props.saveDrillButtonState.visible);
-    props.saveDrillButtonState.text &&
-      setSaveButtonText(props.saveDrillButtonState.text);
-    setDeleteDrillButtonVisible(props.deleteDrillButtonVisible);
-    setCopyDrillButtonVisible(props.copyDrillButtonVisible);
-    setFoundSimilarDrillButtonVisible(props.foundSimilarDrillButtonVisible);
-  }, [
-    props.saveDrillButtonState,
-    props.hasBeenSavedOnceOrMore,
-    props.deleteDrillButtonVisible,
-    props.copyDrillButtonVisible,
-    props.foundSimilarDrillButtonVisible,
-  ]);
-
-  const dispatch = useAppDispatch();
-  const navigation = useAppNavigation();
-
-  const animatedOpactiy = useSharedValue(0);
-
-  useEffect(() => {
-    animatedOpactiy.value = 0;
-    animatedOpactiy.value = withSequence(withTiming(0.01), withTiming(1));
-  }, [
-    props.copyDrillButtonVisible,
-    props.deleteDrillButtonVisible,
-    props.foundSimilarDrillButtonVisible,
-    props.saveDrillButtonState,
-  ]);
-
-  return (
-    <View
-      style={[
-        globalStyles.button,
-        {paddingHorizontal: 30, paddingVertical: 0},
-      ]}>
-      <ExpandingActionButton
-        {...{
-          visible: saveButtonVisible,
-          enabled: props.saveDrillButtonState.enabled ?? true,
-          text: saveButtonText,
-          onPress: () => {
-            if (props.configuration.drillName.length === 0) {
-              dispatch(drillNameEmptyError());
-            } else {
-              dispatch(saveDrill());
-              Keyboard.dismiss();
-            }
-          },
-          icon: (
-            <SaveIcon
-              size={20}
-              strokeColor={
-                props.saveDrillButtonState.enabled
-                  ? Themes.dark.actionText
-                  : Themes.dark.disabledActionText
-              }
-            />
-          ),
-        }}
-      />
-
-      <AnimatedDivider
-        isVisible={saveButtonVisible && copyDrillButtonVisible}
-      />
-
-      <ExpandingActionButton
-        {...{
-          visible: copyDrillButtonVisible,
-          enabled: true,
-          text: 'save copy of drill',
-          onPress: () => {
-            dispatch(saveAndLoadCopy());
-            navigation.navigate('ConfigureDrill');
-            Keyboard.dismiss();
-          },
-          icon: <CopyIcon size={20} strokeColor={Themes.dark.actionText} />,
-        }}
-      />
-
-      <AnimatedDivider isVisible={copyDrillButtonVisible} />
-
-      <ExpandingActionButton
-        {...{
-          visible: deleteDrillButtonVisible,
-          enabled: true,
-          text: 'delete drill',
-          onPress: () => {
-            if (props.configuration.drillId) {
-              dispatch(deleteDrillById(props.configuration.drillId));
-              navigation.navigate('Home');
-              Keyboard.dismiss();
-            }
-          },
-          icon: (
-            <DeleteIcon
-              width={20}
-              height={22}
-              strokeColor={Themes.dark.actionText}
-            />
-          ),
-        }}
-      />
-
-      <AnimatedDivider isVisible={foundSimilarDrillButtonVisible} />
-
-      <ExpandingActionButton
-        {...{
-          visible: props.foundSimilarDrillButtonVisible,
-          enabled: true,
-          text: 'found 1 similar drill',
-          textColor: Themes.dark.infoText,
-          onPress: () => {
-            // openFoundSimilarDrillDialog
-            Keyboard.dismiss();
-          },
-          icon: <AlertIcon size={20} strokeColor={Themes.dark.infoText} />,
-        }}
-      />
-    </View>
-  );
-};
-
-interface ActionButtonProps {
-  visible: boolean;
-  enabled: boolean;
-  text: string;
-  textColor?: string;
-  onPress: () => void;
-  icon: React.ReactNode;
-}
-
-const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
-  const animatedHeight = useSharedValue(0);
-  const animatedOpacity = useSharedValue(0);
-
-  const animatedHeightStyle = useAnimatedStyle(() => {
-    return {
-      height: animatedHeight.value,
-    };
-  });
-  const animatedOpacityStyle = useAnimatedStyle(() => {
-    return {
-      opacity: animatedOpacity.value,
-    };
-  });
-
-  useEffect(() => {
-    if (props.visible) {
-      animatedHeight.value = 0;
-      animatedHeight.value = withTiming(60);
-    } else {
-      animatedHeight.value = 60;
-      animatedHeight.value = withTiming(0);
-    }
-    animatedOpacity.value = 0;
-    animatedOpacity.value = withSequence(withTiming(0.01), withTiming(1));
-  }, [props.visible]);
-
-  return (
-    <View>
-      <TouchableOpacity
-        style={{
-          flexDirection: 'row',
-          flex: 1,
-          alignItems: 'center',
-        }}
-        onPress={props.onPress}>
-        <Animated.View
-          style={[
-            animatedHeightStyle,
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-            },
-          ]}>
-          <Animated.View style={[animatedOpacityStyle]}>
-            {props.visible && (
-              <View style={{flexDirection: 'row'}}>
-                {props.icon}
-                <View style={{width: 16}} />
-
-                <Text
-                  style={[
-                    globalStyles.buttonText,
-                    // text color
-                    props.textColor
-                      ? {color: props.textColor}
-                      : props.enabled
-                      ? styles.actionButtonText
-                      : styles.actionButtonDisabledText,
-                  ]}>
-                  {props.text}
-                </Text>
-              </View>
-            )}
-          </Animated.View>
-        </Animated.View>
-      </TouchableOpacity>
-    </View>
-  );
-};
 
 const styles = StyleSheet.create({
   actionButtonText: {

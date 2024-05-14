@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
-  LayoutAnimation,
+  Keyboard,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,8 +11,35 @@ import DragIcon from '../assets/DragIcon';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
 import {DownIcon, UpIcon} from '../assets/UpIcon';
+import {
+  ConfigureDrillState,
+  drillNameEmptyError,
+} from '../store/reducers/configureDrillReducer';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
+import {useAppDispatch} from '../store/hooks';
+import {useAppNavigation} from '../ui/App';
+import {
+  deleteDrillById,
+  saveAndLoadCopy,
+  saveDrill,
+} from '../services/AppDatabase';
+import SaveIcon from '../assets/SaveIcon';
+import AnimatedDivider from './AnimatedDivider';
+import CopyIcon from '../assets/CopyIcon';
+import DeleteIcon from '../assets/DeleteIcon';
+import AlertIcon from '../assets/AlertIcon';
+import {ConfigureDrillHeader} from './ConfigureDrillHeader';
 
-export function PromptLayerList(): React.JSX.Element {
+interface PromptLayerListProps {
+  state: ConfigureDrillState;
+}
+
+export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
   type PromptLayer = {
     key: string;
     label: string;
@@ -115,13 +142,254 @@ export function PromptLayerList(): React.JSX.Element {
         data={data}
         keyExtractor={item => item.key}
         renderItem={item => renderItem(item.item)}
+        ListHeaderComponent={<ConfigureDrillHeader state={props.state} />}
       />
     </View>
   );
+};
+
+export const ExpandableCompositeActionButton: React.FC<
+  ConfigureDrillState
+> = props => {
+  const [saveButtonVisible, setSaveButtonVisible] = useState(false);
+  const [saveButtonText, setSaveButtonText] = useState('');
+  const [deleteDrillButtonVisible, setDeleteDrillButtonVisible] =
+    useState(false);
+  const [copyDrillButtonVisible, setCopyDrillButtonVisible] = useState(false);
+  const [foundSimilarDrillButtonVisible, setFoundSimilarDrillButtonVisible] =
+    useState(false);
+  useEffect(() => {
+    setSaveButtonVisible(props.saveDrillButtonState.visible);
+    props.saveDrillButtonState.text &&
+      setSaveButtonText(props.saveDrillButtonState.text);
+    setDeleteDrillButtonVisible(props.deleteDrillButtonVisible);
+    setCopyDrillButtonVisible(props.copyDrillButtonVisible);
+    setFoundSimilarDrillButtonVisible(props.foundSimilarDrillButtonVisible);
+  }, [
+    props.saveDrillButtonState,
+    props.hasBeenSavedOnceOrMore,
+    props.deleteDrillButtonVisible,
+    props.copyDrillButtonVisible,
+    props.foundSimilarDrillButtonVisible,
+  ]);
+
+  const dispatch = useAppDispatch();
+  const navigation = useAppNavigation();
+
+  const animatedOpactiy = useSharedValue(0);
+
+  useEffect(() => {
+    animatedOpactiy.value = 0;
+    animatedOpactiy.value = withSequence(withTiming(0.01), withTiming(1));
+  }, [
+    props.copyDrillButtonVisible,
+    props.deleteDrillButtonVisible,
+    props.foundSimilarDrillButtonVisible,
+    props.saveDrillButtonState,
+  ]);
+
+  return (
+    <View
+      style={[
+        globalStyles.button,
+        {paddingHorizontal: 30, paddingVertical: 0},
+      ]}>
+      <ExpandingActionButton
+        {...{
+          visible: saveButtonVisible,
+          enabled: props.saveDrillButtonState.enabled ?? true,
+          text: saveButtonText,
+          onPress: () => {
+            if (props.configuration.drillName.length === 0) {
+              dispatch(drillNameEmptyError());
+            } else {
+              dispatch(saveDrill());
+              Keyboard.dismiss();
+            }
+          },
+          icon: (
+            <SaveIcon
+              size={20}
+              strokeColor={
+                props.saveDrillButtonState.enabled
+                  ? Themes.dark.actionText
+                  : Themes.dark.disabledActionText
+              }
+            />
+          ),
+        }}
+      />
+
+      <AnimatedDivider
+        isVisible={saveButtonVisible && copyDrillButtonVisible}
+      />
+
+      <ExpandingActionButton
+        {...{
+          visible: copyDrillButtonVisible,
+          enabled: true,
+          text: 'save copy of drill',
+          onPress: () => {
+            dispatch(saveAndLoadCopy());
+            navigation.navigate('ConfigureDrill');
+            Keyboard.dismiss();
+          },
+          icon: <CopyIcon size={20} strokeColor={Themes.dark.actionText} />,
+        }}
+      />
+
+      <AnimatedDivider isVisible={copyDrillButtonVisible} />
+
+      <ExpandingActionButton
+        {...{
+          visible: deleteDrillButtonVisible,
+          enabled: true,
+          text: 'delete drill',
+          onPress: () => {
+            if (props.configuration.drillId) {
+              dispatch(deleteDrillById(props.configuration.drillId));
+              navigation.navigate('Home');
+              Keyboard.dismiss();
+            }
+          },
+          icon: (
+            <DeleteIcon
+              width={20}
+              height={22}
+              strokeColor={Themes.dark.actionText}
+            />
+          ),
+        }}
+      />
+
+      <AnimatedDivider isVisible={foundSimilarDrillButtonVisible} />
+
+      <ExpandingActionButton
+        {...{
+          visible: props.foundSimilarDrillButtonVisible,
+          enabled: true,
+          text: 'found 1 similar drill',
+          textColor: Themes.dark.infoText,
+          onPress: () => {
+            // openFoundSimilarDrillDialog
+            Keyboard.dismiss();
+          },
+          icon: <AlertIcon size={20} strokeColor={Themes.dark.infoText} />,
+        }}
+      />
+    </View>
+  );
+};
+
+interface ActionButtonProps {
+  visible: boolean;
+  enabled: boolean;
+  text: string;
+  textColor?: string;
+  onPress: () => void;
+  icon: React.ReactNode;
 }
+
+const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
+  const animatedHeight = useSharedValue(0);
+  const animatedOpacity = useSharedValue(0);
+
+  const animatedHeightStyle = useAnimatedStyle(() => {
+    return {
+      height: animatedHeight.value,
+    };
+  });
+  const animatedOpacityStyle = useAnimatedStyle(() => {
+    return {
+      opacity: animatedOpacity.value,
+    };
+  });
+
+  useEffect(() => {
+    if (props.visible) {
+      animatedHeight.value = 0;
+      animatedHeight.value = withTiming(60);
+    } else {
+      animatedHeight.value = 60;
+      animatedHeight.value = withTiming(0);
+    }
+    animatedOpacity.value = 0;
+    animatedOpacity.value = withSequence(withTiming(0.01), withTiming(1));
+  }, [props.visible]);
+
+  return (
+    <View>
+      <TouchableOpacity
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+          alignItems: 'center',
+        }}
+        onPress={props.onPress}>
+        <Animated.View
+          style={[
+            animatedHeightStyle,
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+            },
+          ]}>
+          <Animated.View style={[animatedOpacityStyle]}>
+            {props.visible && (
+              <View style={{flexDirection: 'row'}}>
+                {props.icon}
+                <View style={{width: 16}} />
+
+                <Text
+                  style={[
+                    globalStyles.buttonText,
+                    // text color
+                    props.textColor
+                      ? {color: props.textColor}
+                      : props.enabled
+                      ? styles.actionButtonText
+                      : styles.actionButtonDisabledText,
+                  ]}>
+                  {props.text}
+                </Text>
+              </View>
+            )}
+          </Animated.View>
+        </Animated.View>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   actionButtonText: {
+    color: Themes.dark.actionText,
+  },
+  underline: {textDecorationLine: 'underline'},
+  actionButtonDisabledText: {
+    color: Themes.dark.disabledActionText,
+  },
+  largePlayButtonText: {
+    color: Themes.dark.actionText,
+    textAlign: 'center',
+    fontSize: 25,
+    fontWeight: '600',
+    fontFamily: 'arciform',
+  },
+  smallPlayButtonText: {
+    color: Themes.dark.actionText,
+    textAlign: 'center',
+    fontSize: 19,
+    fontWeight: '600',
+    fontFamily: 'arciform',
+  },
+  textInputArea: {
+    fontSize: 16,
+    fontWeight: '400',
+    fontFamily: 'arciform',
+    borderColor: 'gray',
+    borderWidth: 0, // Set general border width to 0
+    borderBottomWidth: 1, // Apply border only to the bottom
     color: Themes.dark.actionText,
   },
 });
