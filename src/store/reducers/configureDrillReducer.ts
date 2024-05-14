@@ -8,7 +8,7 @@ import {
   AllScales,
   ChordQuality,
   Key,
-  LayerTypeIntersection,
+  LayerType,
   Mode,
   NoteName,
   OptionChildValue,
@@ -59,7 +59,7 @@ export interface ConfigureDrillState {
   deleteDrillButtonVisible: boolean;
   titleError: 'You must choose a name!' | 'That name already exists!' | null;
   playButtonText: 'play' | 'play without saving';
-  promptLayers: PromptLayer<LayerTypeIntersection>[];
+  promptLayers: PromptLayer<LayerType>[];
 }
 
 interface SaveDrillButtonState {
@@ -153,7 +153,7 @@ export const configureDrillSlice = createSlice({
     },
     setPromptLayers: (
       state,
-      action: PayloadAction<PromptLayer<LayerTypeIntersection>[]>,
+      action: PayloadAction<PromptLayer<LayerType>[]>,
     ) => {
       state.promptLayers = action.payload;
     },

@@ -166,12 +166,11 @@ export function getRandomMode(modes: Mode[]): Mode {
 }
 
 export interface OptionChildValue {}
-type LayerType = NoteName | ChordQuality | Key | Scale | Mode;
-export type LayerTypeIntersection = LayerType & OptionChildValue;
+export type LayerType = NoteName | ChordQuality | Key | Scale | Mode;
 
 export class PromptLayerOption {
   private constructor(
-    public children: LayerTypeIntersection[],
+    public children: LayerType[],
     public itemDisplayName: string,
     public pluralDisplayName: string,
   ) {}

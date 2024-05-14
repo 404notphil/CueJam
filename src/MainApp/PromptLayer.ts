@@ -4,7 +4,6 @@ import {
   AllNoteNames,
   AllScales,
   ChordQuality,
-  LayerTypeIntersection,
   Mode,
   NoteName,
   PromptLayerOption,
@@ -14,7 +13,7 @@ import {
   getNoteNameAtFifthBelow,
 } from '../store/reducers/ConfigureDrillTypes';
 
-export abstract class PromptLayer<T extends LayerTypeIntersection> {
+export abstract class PromptLayer<T extends LayerType> {
   optionType: PromptLayerOption;
   childrenChosen: Array<T>;
   promptCue: Array<T> = [];
