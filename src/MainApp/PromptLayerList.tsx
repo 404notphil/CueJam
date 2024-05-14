@@ -16,6 +16,7 @@ import {DownIcon, UpIcon} from '../assets/UpIcon';
 import {
   ConfigureDrillState,
   drillNameEmptyError,
+  setPromptLayers,
 } from '../store/reducers/configureDrillReducer';
 import Animated, {
   useAnimatedStyle,
@@ -44,9 +45,8 @@ interface PromptLayerListProps {
 }
 
 export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
-  const [data, setData] = useState<PromptLayer<any>[]>(
-    props.state.promptLayers,
-  );
+  const promptLayers = props.state.promptLayers;
+  const dispatch = useAppDispatch();
 
   const renderItem = (props: PromptLayer<any>) => {
     return (
@@ -71,11 +71,11 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
             style={{flex: 1, justifyContent: 'center', marginHorizontal: 15}}>
             <TouchableOpacity
               onPress={() => {
-                const newArray = [...data];
-                const oldIndex = data.indexOf(props);
+                const newArray = [...promptLayers];
+                const oldIndex = promptLayers.indexOf(props);
                 const [element] = newArray.splice(oldIndex, 1);
                 newArray.splice(oldIndex ? oldIndex - 1 : 0, 0, element);
-                setData(newArray);
+                dispatch(setPromptLayers(newArray));
               }}
               style={{
                 flex: 1,
@@ -103,16 +103,16 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
 
             <TouchableOpacity
               onPress={() => {
-                const newArray = [...data];
-                const oldIndex = data.indexOf(props);
-                const arraySize = data.length;
+                const newArray = [...promptLayers];
+                const oldIndex = promptLayers.indexOf(props);
+                const arraySize = promptLayers.length;
                 const [element] = newArray.splice(oldIndex, 1);
                 newArray.splice(
                   oldIndex === arraySize ? oldIndex : oldIndex + 1,
                   0,
                   element,
                 );
-                setData(newArray);
+                dispatch(setPromptLayers(newArray));
               }}
               style={{
                 flex: 1,
@@ -138,13 +138,20 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
   return (
     <View>
       <FlatList
-        data={data}
+        data={promptLayers}
         keyExtractor={() => uuid.v4().toString()}
         renderItem={item => renderItem(item.item)}
         ListHeaderComponent={<ConfigureDrillHeader state={props.state} />}
         ListFooterComponent={
           <TouchableOpacity
-            onPress={() => setData([...data, new BufferedChordQualityLayer()])}>
+            onPress={() =>
+              dispatch(
+                setPromptLayers([
+                  ...promptLayers,
+                  new BufferedChordQualityLayer(),
+                ]),
+              )
+            }>
             <Text>testing</Text>
           </TouchableOpacity>
         }
