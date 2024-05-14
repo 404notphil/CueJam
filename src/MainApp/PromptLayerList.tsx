@@ -65,10 +65,12 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
     dispatch(setPromptLayers(newArray));
   }
 
-  const renderItem = (currentLayer: PromptLayer<LayerType>) => {
+  const renderItem = (currentLayer: PromptLayer<LayerType>, index: number) => {
     return (
       <View>
-        <Text style={globalStyles.smallText}>...show me a</Text>
+        <Text style={globalStyles.smallText}>
+          {index === 0 ? '...show me a' : 'and a'}
+        </Text>
         <View
           style={[
             {
@@ -106,7 +108,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
                     ,
                     {marginStart: 16, marginTop: 0},
                   ]}>
-                  {currentLayer.optionType.itemDisplayName}
+                  from
                 </Text>
                 <TouchableOpacity
                   style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -117,7 +119,9 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
                       styles.underline,
                       {marginStart: 16},
                     ]}>
-                    {currentLayer.optionType.itemDisplayName}
+                    {currentLayer.childrenChosen.length +
+                      ' ' +
+                      currentLayer.optionType.pluralDisplayName}
                   </Text>
                   <EditIcon size={12} style={{marginStart: 10}} />
                 </TouchableOpacity>
@@ -172,7 +176,9 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
       <FlatList
         data={promptLayers}
         keyExtractor={() => uuid.v4().toString()}
-        renderItem={item => renderItem(item.item)}
+        renderItem={item =>
+          renderItem(item.item, promptLayers.indexOf(item.item))
+        }
         ListHeaderComponent={<ConfigureDrillHeader state={props.state} />}
         ListFooterComponent={
           <TouchableOpacity
@@ -184,7 +190,13 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
                 ]),
               )
             }>
-            <Text>testing</Text>
+            <Text
+              style={[
+                globalStyles.actionButtonText,
+                {fontSize: 20, marginBottom: 40, marginTop: 16},
+              ]}>
+              + Add more to prompt
+            </Text>
           </TouchableOpacity>
         }
       />
