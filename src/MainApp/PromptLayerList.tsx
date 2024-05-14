@@ -42,6 +42,7 @@ import {
   LayerType,
   NoteNamePromptLayerOption,
 } from '../store/reducers/ConfigureDrillTypes';
+import EditIcon from '../assets/EditIcon';
 
 interface PromptLayerListProps {
   state: ConfigureDrillState;
@@ -80,9 +81,48 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
             },
           ]}>
           <View style={{flex: 6}}>
-            <Text style={styles.actionButtonText}>
-              {currentLayer.optionType.itemDisplayName}
-            </Text>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'space-evenly',
+              }}>
+              <TouchableOpacity
+                style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={[
+                    globalStyles.smallText,
+                    styles.actionButtonText,
+                    styles.underline,
+                    {marginStart: 16},
+                  ]}>
+                  {currentLayer.optionType.itemDisplayName}
+                </Text>
+                <EditIcon size={12} style={{marginStart: 10}} />
+              </TouchableOpacity>
+              <View style={{flexDirection: 'row'}}>
+                <Text
+                  style={[
+                    globalStyles.smallText,
+                    ,
+                    {marginStart: 16, marginTop: 0},
+                  ]}>
+                  {currentLayer.optionType.itemDisplayName}
+                </Text>
+                <TouchableOpacity
+                  style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text
+                    style={[
+                      globalStyles.smallText,
+                      styles.actionButtonText,
+                      styles.underline,
+                      {marginStart: 16},
+                    ]}>
+                    {currentLayer.optionType.itemDisplayName}
+                  </Text>
+                  <EditIcon size={12} style={{marginStart: 10}} />
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
           <TouchableOpacity
             onPress={() => {
@@ -377,12 +417,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   sortButtonDivider: {
-    height: 0.1,
-    opacity: 0.5,
+    height: 1,
+    opacity: 0.2,
     backgroundColor: Themes.dark.actionText,
   },
   actionButtonText: {
     color: Themes.dark.actionText,
+    marginTop: 0,
   },
   underline: {textDecorationLine: 'underline'},
   actionButtonDisabledText: {
