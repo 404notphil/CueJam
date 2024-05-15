@@ -6,14 +6,14 @@ export const globalStyles = StyleSheet.create({
   shadowStyle: {
     shadowColor: 'black',
     shadowOffset: {
-      width: 0, // Adjust as needed
-      height: 4, // Adjust as needed
+      width: 0, 
+      height: 4, 
     },
-    shadowOpacity: 0.3, // Adjust as needed
-    shadowRadius: 5, // Adjust as needed
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
 
     // Important for Android
-    elevation: 8, // Adjust as needed
+    elevation: 8,
   },
   modalOuter: {
     justifyContent: 'center',

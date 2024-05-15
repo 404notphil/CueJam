@@ -75,6 +75,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
         </Text>
         <View
           style={[
+            globalStyles.shadowStyle,
             {
               flexDirection: 'row',
               backgroundColor: '#242C3B',
