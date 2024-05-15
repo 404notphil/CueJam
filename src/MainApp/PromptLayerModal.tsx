@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {
   AllPromptLayerOptions,
+  LayerType,
   PromptLayerOption,
 } from '../store/reducers/ConfigureDrillTypes';
 import {
@@ -17,37 +18,38 @@ import {DrillConfigurationModal} from './DrillConfigurationModal';
 import {Themes} from '../ui/theme/Theme';
 import React from 'react';
 import CloseIcon from '../assets/CloseIcon';
+import {PromptLayer} from './PromptLayer';
 
 interface SetPromptLayerModalProps {
   modalIsVisible: boolean;
-  promptLayer?: PromptLayerOption;
-  onSetPromptLayer: (promptLayer: PromptLayerOption) => void;
+  promptLayer?: PromptLayer<LayerType>;
+  onSetPromptLayer: (promptLayer: PromptLayer<LayerType>) => void;
   onDismiss: () => void;
 }
 
 export const SetPromptLayerModal: React.FC<
   SetPromptLayerModalProps
 > = props => {
-  const [currentSelectedOption, setCurrentSelectedOption] =
-    useState<PromptLayerOption>();
+  const [currentConfiguredPromptLayer, setCurrentConfiguredPromptLayer] =
+    useState<PromptLayer<LayerType>>();
 
   const [listOfOptions, setListOfOptions] = useState(AllPromptLayerOptions);
 
   useEffect(() => {
-    if (currentSelectedOption) {
-      setListOfOptions([currentSelectedOption]);
+    if (currentConfiguredPromptLayer) {
+      setListOfOptions([currentConfiguredPromptLayer.optionType]);
     } else {
       setListOfOptions(AllPromptLayerOptions);
     }
-  }, [currentSelectedOption]);
+  }, [currentConfiguredPromptLayer]);
 
   return (
     <DrillConfigurationModal
       {...props}
       title={'add to prompt'}
       onDismiss={() => {
-        if (currentSelectedOption) {
-          props.onSetPromptLayer(currentSelectedOption);
+        if (currentConfiguredPromptLayer) {
+          props.onSetPromptLayer(currentConfiguredPromptLayer);
           props.onDismiss();
         }
       }}>
@@ -59,9 +61,22 @@ export const SetPromptLayerModal: React.FC<
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <RadioIcon
               onOptionPress={isSelected => {
-                setCurrentSelectedOption(isSelected ? option.item : undefined);
+                if (isSelected) {
+                  if (
+                    props.promptLayer &&
+                    props.promptLayer.optionType === option.item
+                  )
+                    setCurrentConfiguredPromptLayer(props.promptLayer);
+                  else {
+                    setCurrentConfiguredPromptLayer(
+                      PromptLayer.fromOptionType(option.item),
+                    );
+                  }
+                }
               }}
-              isSelected={option.item === currentSelectedOption}
+              isSelected={
+                option.item === currentConfiguredPromptLayer?.optionType
+              }
             />
             <Text style={globalStyles.buttonText}>
               {option.item.itemDisplayName}
@@ -70,7 +85,7 @@ export const SetPromptLayerModal: React.FC<
         )}
       />
 
-      {currentSelectedOption && (
+      {currentConfiguredPromptLayer && (
         <View>
           <View style={{height: 0.1, backgroundColor: Themes.dark.lightText}} />
           <Text style={globalStyles.infoText}>Options will go here</Text>
@@ -86,10 +101,6 @@ interface RadioIconProps {
 }
 
 function RadioIcon(props: RadioIconProps) {
-  useEffect(() => {
-    console.log('12345 selected? ' + props.isSelected);
-  }, [props.isSelected]);
-
   return (
     <TouchableOpacity
       onPress={() => {

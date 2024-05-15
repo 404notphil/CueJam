@@ -46,6 +46,8 @@ import EditIcon from '../assets/EditIcon';
 
 interface PromptLayerListProps {
   state: ConfigureDrillState;
+  onPressPromptLayerType: (promptLayer: PromptLayer<LayerType>) => void;
+  onPressPromptLayerChildren: (promptLayer: PromptLayer<LayerType>) => void;
 }
 
 export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
@@ -89,6 +91,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
                 justifyContent: 'space-evenly',
               }}>
               <TouchableOpacity
+                onPress={() => props.onPressPromptLayerType(currentLayer)}
                 style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
                   style={[
@@ -111,6 +114,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
                   from
                 </Text>
                 <TouchableOpacity
+                  onPress={() => props.onPressPromptLayerChildren(currentLayer)}
                   style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text
                     style={[

@@ -10,6 +10,7 @@ import {
   KeysPromptLayerOption,
   LayerType,
   Mode,
+  ModesPromptLayerOption,
   NoteName,
   NoteNamePromptLayerOption,
   PromptLayerOption,
@@ -19,6 +20,7 @@ import {
   getNoteNameAtFifthAbove,
   getNoteNameAtFifthBelow,
 } from '../store/reducers/ConfigureDrillTypes';
+import uuid from 'react-native-uuid';
 
 export abstract class PromptLayer<T extends LayerType> {
   optionType: PromptLayerOption;
@@ -27,6 +29,7 @@ export abstract class PromptLayer<T extends LayerType> {
   promptOrder: PromptOrder;
   currentPrompt: T;
   randomizeFunction: () => T;
+  uniqueId: string | Uint8Array;
 
   constructor(
     optionType: PromptLayerOption,
@@ -34,6 +37,7 @@ export abstract class PromptLayer<T extends LayerType> {
     promptOrder: PromptOrder,
     randomizeFunction?: () => T,
   ) {
+    this.uniqueId = uuid.v1();
     this.optionType = optionType;
     this.childrenChosen = childrenChosen;
     this.promptOrder = promptOrder;
@@ -67,6 +71,27 @@ export abstract class PromptLayer<T extends LayerType> {
     return this.childrenChosen[
       Math.floor(Math.random() * (this.childrenChosen.length - 1))
     ];
+  }
+
+  static fromOptionType(type: PromptLayerOption): PromptLayer<LayerType> {
+    switch (type) {
+      case NoteNamePromptLayerOption: {
+        return new BufferedNoteNameLayer();
+      }
+      case ChordQualitiesPromptLayerOption: {
+        return new BufferedChordQualityLayer();
+      }
+      case KeysPromptLayerOption: {
+        return new BufferedKeyLayer();
+      }
+      case ScalesPromptLayerOption: {
+        return new BufferedScaleLayer();
+      }
+      case ModesPromptLayerOption: {
+        return new BufferedModeLayer();
+      }
+    }
+    throw Error('type did not match any known types');
   }
 }
 
@@ -124,14 +149,14 @@ export class BufferedScaleLayer extends PromptLayer<Scale> {
 
 export class BufferedModeLayer extends PromptLayer<Mode> {
   constructor(childrenChosen: Array<Mode> = AllModes) {
-    super(ScalesPromptLayerOption, childrenChosen, 'random');
+    super(ModesPromptLayerOption, childrenChosen, 'random');
   }
   advanceToNextPrompt(): Mode {
     return this.getNextPromptFromCue()!;
   }
 }
 
-export class BufferKeyLayer extends PromptLayer<Key> {
+export class BufferedKeyLayer extends PromptLayer<Key> {
   constructor(childrenChosen: Array<Key> = AllKeys) {
     super(KeysPromptLayerOption, childrenChosen, 'random');
   }

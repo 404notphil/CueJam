@@ -14,6 +14,7 @@ import {Image} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
   onDrillEdit,
+  replacePromptLayer,
   selectConfigureDrill,
   setBeatsPerChord,
   setChordQualities,
@@ -31,6 +32,7 @@ import {SetNoteNamesModal} from './SetNoteNamesModal';
 import {
   ChordQuality,
   Key,
+  LayerType,
   Mode,
   NoteName,
   PromptLayerOption,
@@ -48,6 +50,8 @@ import {SetKeysModal} from './SetKeysModal';
 import {checkForSimilarDrills} from '../services/AppDatabase';
 import {Themes} from '../ui/theme/Theme';
 import {PromptLayerList} from './PromptLayerList';
+import {PromptLayer} from './PromptLayer';
+import {SetPromptLayerModal} from './PromptLayerModal';
 
 interface SettingProps {
   title: string;
@@ -81,6 +85,12 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const animatedHeight = useSharedValue(0);
   const animatedOpacity = useSharedValue(0);
 
+  const [promptLayerTypeModalToShow, setPromptLayerTypeModalToShow] =
+    useState<PromptLayer<LayerType> | null>(null);
+
+  const [promptLayerChildrenModalToShow, setPromptLayerChildrenModalToShow] =
+    useState<PromptLayer<LayerType>>();
+
   useEffect(() => {
     dispatch(onDrillEdit(state));
     dispatch(checkForSimilarDrills(drill));
@@ -108,14 +118,31 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   return (
     <View style={globalStyles.screenContainer}>
-      <PromptLayerList state={state} />
-      {/* 
-      <SetPromptLayerModal
-        modalIsVisible={promptLayerDialogVisible}
-        promptLayer={PromptLayerOption.NoteNameOption}
-        onSetPromptLayer={promptLayer => {}}
-        onDismiss={() => setPromptLayerDialogVisible(false)}
-      /> */}
+      <PromptLayerList
+        state={state}
+        onPressPromptLayerType={layer => setPromptLayerTypeModalToShow(layer)}
+        onPressPromptLayerChildren={layer =>
+          setPromptLayerChildrenModalToShow(layer)
+        }
+      />
+
+      {promptLayerTypeModalToShow !== null && (
+        <SetPromptLayerModal
+          modalIsVisible={promptLayerTypeModalToShow !== null}
+          promptLayer={promptLayerTypeModalToShow}
+          onSetPromptLayer={promptLayer => {
+            dispatch(
+              replacePromptLayer({
+                newLayer: promptLayer,
+                oldLayer: promptLayerTypeModalToShow,
+              }),
+            );
+          }}
+          onDismiss={() => {
+            setPromptLayerTypeModalToShow(null);
+          }}
+        />
+      )}
 
       {/* <SettingRow
         {...{
