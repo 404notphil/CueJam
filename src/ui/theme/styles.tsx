@@ -6,8 +6,8 @@ export const globalStyles = StyleSheet.create({
   shadowStyle: {
     shadowColor: 'black',
     shadowOffset: {
-      width: 0, 
-      height: 4, 
+      width: 0,
+      height: 4,
     },
     shadowOpacity: 0.3,
     shadowRadius: 5,
@@ -102,7 +102,7 @@ export const globalStyles = StyleSheet.create({
   actionButtonText: {
     color: Themes.dark.actionText,
     fontFamily: 'arciform',
-    fontSize: 16,
+    fontSize: 20,
   },
   infoText: {
     color: Themes.dark.infoText,

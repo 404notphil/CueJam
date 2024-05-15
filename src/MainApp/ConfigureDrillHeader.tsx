@@ -10,6 +10,8 @@ import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {ExpandableText} from '../onboarding/ui/ExpandableText';
 import {PlayDrillConfigurationButton} from './PlayDrillConfigurationButton';
 import {ExpandableCompositeActionButton} from './PromptLayerList';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import EditIcon from '../assets/EditIcon';
 
 export interface ConfigureDrillHeaderProps {
   state: ConfigureDrillState;
@@ -67,22 +69,58 @@ export const ConfigureDrillHeader: React.FC<
         design your prompt
       </Text>
 
-      <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
-        <AlertIcon size={20} strokeColor={Themes.dark.infoText} />
-        <Text
-          style={[
-            globalStyles.buttonText,
-            styles.underline,
-            {marginStart: 15, color: Themes.dark.infoText},
-          ]}>
-          See preview
+      <View
+        style={{
+          marginTop: 25,
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <Text style={styles.promptConfigurationSentence}>every</Text>
+        <TouchableOpacity style={styles.promptConfigurationSentenceButton}>
+          <Text style={[globalStyles.actionButtonText]}>
+            {props.state.configuration.beatsPerPrompt}
+          </Text>
+          <EditIcon
+            size={15}
+            strokeColor={Themes.dark.actionText}
+            style={{marginStart: 16}}
+          />
+        </TouchableOpacity>
+        <Text style={[styles.promptConfigurationSentence, {marginStart: 16}]}>
+          beats
         </Text>
+        <Text style={[styles.promptConfigurationSentence, {marginStart: 16}]}>
+          at
+        </Text>
+        <TouchableOpacity style={styles.promptConfigurationSentenceButton}>
+          <Text style={globalStyles.actionButtonText}>
+            {props.state.configuration.tempo}
+          </Text>
+          <EditIcon
+            size={15}
+            strokeColor={Themes.dark.actionText}
+            style={{marginStart: 16}}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  promptConfigurationSentence: {
+    ...globalStyles.mediumText,
+    marginTop: 0,
+  },
+  promptConfigurationSentenceButton: {
+    ...globalStyles.button,
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    marginStart: 16,
+  },
   actionButtonText: {
     color: Themes.dark.actionText,
   },

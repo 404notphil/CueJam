@@ -70,7 +70,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
   const renderItem = (currentLayer: PromptLayer<LayerType>, index: number) => {
     return (
       <View>
-        <Text style={globalStyles.smallText}>
+        <Text style={globalStyles.mediumText}>
           {index === 0 ? '...show me a' : 'and a'}
         </Text>
         <View
@@ -96,7 +96,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
                 style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
                   style={[
-                    globalStyles.smallText,
+                    globalStyles.mediumText,
                     styles.actionButtonText,
                     styles.underline,
                     {marginStart: 16},
@@ -108,7 +108,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
               <View style={{flexDirection: 'row'}}>
                 <Text
                   style={[
-                    globalStyles.smallText,
+                    globalStyles.mediumText,
                     ,
                     {marginStart: 16, marginTop: 0},
                   ]}>
@@ -119,7 +119,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
                   style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text
                     style={[
-                      globalStyles.smallText,
+                      globalStyles.mediumText,
                       styles.actionButtonText,
                       styles.underline,
                       {marginStart: 16},
