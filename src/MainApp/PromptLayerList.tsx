@@ -19,8 +19,10 @@ import {
   setPromptLayers,
 } from '../store/reducers/configureDrillReducer';
 import Animated, {
+  Easing,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
@@ -43,6 +45,7 @@ import {
   NoteNamePromptLayerOption,
 } from '../store/reducers/ConfigureDrillTypes';
 import EditIcon from '../assets/EditIcon';
+import PlayIcon from '../assets/PlayIcon';
 
 interface PromptLayerListProps {
   state: ConfigureDrillState;
@@ -80,7 +83,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
               flexDirection: 'row',
               backgroundColor: '#242C3B',
               borderRadius: 5,
-              marginVertical: 20,
+              marginVertical: 15,
               alignItems: 'center',
             },
           ]}>
@@ -208,6 +211,21 @@ export const ExpandableCompositeActionButton: React.FC<
     props.foundSimilarDrillButtonVisible,
   ]);
 
+  const playButtonAnimatedOpacity = useSharedValue(1);
+  useEffect(() => {
+    playButtonAnimatedOpacity.value = withRepeat(
+      withTiming(0.5, {duration: 1000, easing: Easing.linear}),
+      -1, // Repeat infinitely
+      true, // Reverse the animation on every iteration
+    );
+  }, []);
+
+  const animatedOpacityStyle = useAnimatedStyle(() => {
+    return {
+      opacity: playButtonAnimatedOpacity.value,
+    };
+  });
+
   const dispatch = useAppDispatch();
   const navigation = useAppNavigation();
 
@@ -229,6 +247,22 @@ export const ExpandableCompositeActionButton: React.FC<
         globalStyles.button,
         {paddingHorizontal: 30, paddingVertical: 0},
       ]}>
+      <Animated.View style={animatedOpacityStyle}>
+        <ExpandingActionButton
+          {...{
+            visible: true,
+            enabled: true,
+            text: 'play',
+            onPress: () => {
+              navigation.navigate('Drill');
+            },
+            icon: <PlayIcon size={20} fillColor={Themes.dark.actionText} />,
+          }}
+        />
+      </Animated.View>
+
+      <AnimatedDivider isVisible={true} />
+
       <ExpandingActionButton
         {...{
           visible: saveButtonVisible,
@@ -294,22 +328,6 @@ export const ExpandableCompositeActionButton: React.FC<
               strokeColor={Themes.dark.actionText}
             />
           ),
-        }}
-      />
-
-      <AnimatedDivider isVisible={foundSimilarDrillButtonVisible} />
-
-      <ExpandingActionButton
-        {...{
-          visible: props.foundSimilarDrillButtonVisible,
-          enabled: true,
-          text: 'found 1 similar drill',
-          textColor: Themes.dark.infoText,
-          onPress: () => {
-            // openFoundSimilarDrillDialog
-            Keyboard.dismiss();
-          },
-          icon: <AlertIcon size={20} strokeColor={Themes.dark.infoText} />,
         }}
       />
     </View>

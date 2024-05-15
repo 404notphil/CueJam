@@ -28,7 +28,6 @@ export const ConfigureDrillHeader: React.FC<
       <View style={{flexDirection: 'row'}}>
         {/* Drill title */}
         <View style={{alignItems: 'center', flex: 1}}>
-          <Text style={globalStyles.fieldHeader}>Title</Text>
           <View
             style={{
               flexDirection: 'row',
@@ -56,9 +55,6 @@ export const ConfigureDrillHeader: React.FC<
             style={{alignSelf: 'center'}}
           />
         </View>
-
-        {/* Play button */}
-        <PlayDrillConfigurationButton {...{configurationState: props.state}} />
       </View>
 
       <View style={{height: 16}} />
@@ -71,7 +67,7 @@ export const ConfigureDrillHeader: React.FC<
 
       <View
         style={{
-          marginTop: 25,
+          marginVertical: 25,
           flexDirection: 'row',
           alignItems: 'center',
         }}>
@@ -143,7 +139,7 @@ const styles = StyleSheet.create({
     fontFamily: 'arciform',
   },
   textInputArea: {
-    fontSize: 16,
+    fontSize: 30,
     fontWeight: '400',
     fontFamily: 'arciform',
     borderColor: 'gray',

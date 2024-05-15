@@ -9,7 +9,6 @@ interface CustomSvgProps extends SvgProps {
 const PlayIcon = ({
   size = 30,
   fillColor = '#CF0',
-  style,
   ...props
 }: CustomSvgProps) => (
   <Svg
@@ -17,7 +16,6 @@ const PlayIcon = ({
     height={size}
     viewBox="0 0 138 145" // Original width and height as viewBox dimensions
     fill="none"
-    style={style} // Spread style prop for external styling
     {...props}>
     <Path
       fill={fillColor} // Use fillColor prop
