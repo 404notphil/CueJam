@@ -86,76 +86,72 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
     index: number,
   ) => {
     return (
-      <OpacityDecorator>
-        <ScaleDecorator>
-          <View>
-            <Text style={globalStyles.mediumText}>
-              {index === 0 ? '...show me a' : 'and a'}
-            </Text>
-            <View
-              style={[
-                globalStyles.shadowStyle,
-                {
-                  flexDirection: 'row',
-                  backgroundColor: '#242C3B',
-                  borderRadius: 5,
-                  marginVertical: 15,
-                  alignItems: 'center',
-                },
-              ]}>
-              <View style={{flex: 2}}>
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'space-evenly',
-                  }}>
-                  <TouchableOpacity
-                    onPress={() => props.onPressPromptLayerType(item)}
-                    style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text
-                      style={[
-                        globalStyles.mediumText,
-                        styles.actionButtonText,
-                        styles.underline,
-                        {marginStart: 16},
-                      ]}>
-                      {item.optionType.itemDisplayName}
-                    </Text>
-                    <EditIcon size={12} style={{marginStart: 10}} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <TouchableOpacity
-                style={[styles.layerButton, {margin: 10}]}
-                onPress={() => {
-                  dispatch(
-                    setPromptLayers(
-                      promptLayers.filter(layer => layer !== item),
-                    ),
-                  );
+      <ScaleDecorator>
+        <View>
+          <Text style={globalStyles.mediumText}>
+            {index === 0 ? '...show me a' : 'and a'}
+          </Text>
+          <View
+            style={[
+              globalStyles.shadowStyle,
+              {
+                flexDirection: 'row',
+                backgroundColor: '#242C3B',
+                borderRadius: 5,
+                marginVertical: 15,
+                alignItems: 'center',
+              },
+            ]}>
+            <View style={{flex: 2}}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'space-evenly',
                 }}>
-                <DeleteIcon />
-              </TouchableOpacity>
-
-              <View style={styles.sortButtonDivider} />
-
-              <TouchableOpacity
-                onPressIn={() => {
-                  setDragIsActive(true);
-                  drag();
-                }}
-                onPressOut={() => setDragIsActive(false)}
-                disabled={isActive && !dragIsActive}
-                style={styles.layerButton}>
-                <DragIcon
-                  fillColor={Themes.dark.actionText}
-                  style={styles.sortButtonIcon}
-                />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => props.onPressPromptLayerType(item)}
+                  style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text
+                    style={[
+                      globalStyles.mediumText,
+                      styles.actionButtonText,
+                      styles.underline,
+                      {marginStart: 16},
+                    ]}>
+                    {item.optionType.itemDisplayName}
+                  </Text>
+                  <EditIcon size={12} style={{marginStart: 10}} />
+                </TouchableOpacity>
+              </View>
             </View>
+            <TouchableOpacity
+              style={[styles.layerButton, {margin: 10}]}
+              onPress={() => {
+                dispatch(
+                  setPromptLayers(promptLayers.filter(layer => layer !== item)),
+                );
+              }}>
+              <DeleteIcon />
+            </TouchableOpacity>
+
+            <View style={styles.sortButtonDivider} />
+
+            <TouchableOpacity
+              onPressIn={() => {
+                setDragIsActive(true);
+                drag();
+              }}
+              onPressOut={() => setDragIsActive(false)}
+              disabled={isActive && !dragIsActive}
+              style={styles.layerButton}>
+              <DragIcon
+                fillColor={Themes.dark.actionText}
+                style={styles.sortButtonIcon}
+              />
+            </TouchableOpacity>
           </View>
-        </ScaleDecorator>
-      </OpacityDecorator>
+        </View>
+      </ScaleDecorator>
     );
   };
 
