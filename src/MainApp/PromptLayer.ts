@@ -21,6 +21,8 @@ import {
   getNoteNameAtFifthBelow,
 } from '../store/reducers/ConfigureDrillTypes';
 import uuid from 'react-native-uuid';
+import 'react-native-get-random-values';
+import {v4 as uuidv4} from 'uuid';
 
 export abstract class PromptLayer<T extends LayerType> {
   optionType: PromptLayerOption;
@@ -37,7 +39,7 @@ export abstract class PromptLayer<T extends LayerType> {
     promptOrder: PromptOrder,
     randomizeFunction?: () => T,
   ) {
-    this.uniqueId = uuid.v1();
+    this.uniqueId = uuidv4();
     this.optionType = optionType;
     this.childrenChosen = childrenChosen;
     this.promptOrder = promptOrder;

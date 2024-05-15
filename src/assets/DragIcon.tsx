@@ -8,8 +8,8 @@ interface CustomSvgProps extends SvgProps {
 }
 
 const DragIcon = ({
-  height = 114,
-  width = 54,
+  height = 21,
+  width = 9,
   fillColor = '#CF0',
   style,
   ...props

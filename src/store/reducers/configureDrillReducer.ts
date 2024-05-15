@@ -164,23 +164,12 @@ export const configureDrillSlice = createSlice({
       }>,
     ) => {
       if (action.payload.oldLayer) {
-        state.configuration.promptLayers.forEach((item, index) =>
-          console.log(
-            '12345 previous item id #' + index + ' = ' + item.uniqueId,
-          ),
+        state.configuration.promptLayers = state.configuration.promptLayers.map(
+          layerToCheck =>
+            layerToCheck.uniqueId === action.payload.oldLayer?.uniqueId
+              ? action.payload.newLayer
+              : layerToCheck,
         );
-        console.log(
-          '12345 payload old item id = ' + action.payload.oldLayer.uniqueId,
-        ),
-          console.log(
-            '12345 payload new item id = ' + action.payload.newLayer.uniqueId,
-          ),
-          (state.configuration.promptLayers =
-            state.configuration.promptLayers.map(layerToCheck =>
-              layerToCheck.uniqueId === action.payload.oldLayer?.uniqueId
-                ? action.payload.newLayer
-                : layerToCheck,
-            ));
       } else {
         state.configuration.promptLayers.push(action.payload.newLayer);
       }
