@@ -79,13 +79,12 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
             {
               flexDirection: 'row',
               backgroundColor: '#242C3B',
-              height: 100,
               borderRadius: 5,
-              marginVertical: 15,
+              marginVertical: 20,
               alignItems: 'center',
             },
           ]}>
-          <View style={{flex: 6}}>
+          <View style={{flex: 2}}>
             <View
               style={{
                 flex: 1,
@@ -105,35 +104,10 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
                 </Text>
                 <EditIcon size={12} style={{marginStart: 10}} />
               </TouchableOpacity>
-              <View style={{flexDirection: 'row'}}>
-                <Text
-                  style={[
-                    globalStyles.mediumText,
-                    ,
-                    {marginStart: 16, marginTop: 0},
-                  ]}>
-                  from
-                </Text>
-                <TouchableOpacity
-                  onPress={() => props.onPressPromptLayerChildren(currentLayer)}
-                  style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text
-                    style={[
-                      globalStyles.mediumText,
-                      styles.actionButtonText,
-                      styles.underline,
-                      {marginStart: 16},
-                    ]}>
-                    {currentLayer.childrenChosen.length +
-                      ' ' +
-                      currentLayer.optionType.pluralDisplayName}
-                  </Text>
-                  <EditIcon size={12} style={{marginStart: 10}} />
-                </TouchableOpacity>
-              </View>
             </View>
           </View>
           <TouchableOpacity
+            style={[styles.layerButton, {margin: 10}]}
             onPress={() => {
               dispatch(
                 setPromptLayers(
@@ -143,34 +117,34 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
             }}>
             <DeleteIcon />
           </TouchableOpacity>
-          <View
-            style={{flex: 1, justifyContent: 'center', marginHorizontal: 15}}>
-            <TouchableOpacity
-              onPress={() => {
-                moveItemInList(currentLayer, false);
-              }}
-              style={styles.sortButton}>
-              <UpIcon
-                size={25}
-                strokeColor={Themes.dark.actionText}
-                style={styles.sortButtonIcon}
-              />
-            </TouchableOpacity>
 
-            <View style={styles.sortButtonDivider} />
+          <View style={styles.sortButtonDivider} />
 
-            <TouchableOpacity
-              onPress={() => {
-                moveItemInList(currentLayer);
-              }}
-              style={styles.sortButton}>
-              <DownIcon
-                size={25}
-                strokeColor={Themes.dark.actionText}
-                style={styles.sortButtonIcon}
-              />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => {
+              moveItemInList(currentLayer, false);
+            }}
+            style={styles.layerButton}>
+            <UpIcon
+              size={15}
+              strokeColor={Themes.dark.actionText}
+              style={styles.sortButtonIcon}
+            />
+          </TouchableOpacity>
+
+          <View style={styles.sortButtonDivider} />
+
+          <TouchableOpacity
+            onPress={() => {
+              moveItemInList(currentLayer);
+            }}
+            style={styles.layerButton}>
+            <DownIcon
+              size={15}
+              strokeColor={Themes.dark.actionText}
+              style={styles.sortButtonIcon}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -423,18 +397,19 @@ const ExpandingActionButton: React.FC<ActionButtonProps> = props => {
 };
 
 const styles = StyleSheet.create({
-  sortButton: {
-    flex: 1,
+  layerButton: {
     alignItems: 'center',
+    width: 60,
     justifyContent: 'center',
   },
   sortButtonIcon: {
-    margin: 10,
+    margin: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   sortButtonDivider: {
-    height: 1,
+    width: 1,
+    height: 25,
     opacity: 0.2,
     backgroundColor: Themes.dark.actionText,
   },
