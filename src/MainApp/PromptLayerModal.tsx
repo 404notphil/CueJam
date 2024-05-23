@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {
+  AllNoteNames,
   AllPromptLayerOptions,
   LayerChildItem,
   PromptLayerOption,
@@ -34,10 +35,15 @@ export const SetPromptLayerModal: React.FC<
     useState<PromptLayer<LayerChildItem>>();
 
   const [listOfOptions, setListOfOptions] = useState(AllPromptLayerOptions);
+  const [currentlyDisplayedChildItems, setCurrentlyDisplayedChildItems] =
+    useState<LayerChildItem[]>(AllNoteNames);
 
   useEffect(() => {
     if (currentConfiguredPromptLayer) {
       setListOfOptions([currentConfiguredPromptLayer.optionType]);
+      setCurrentlyDisplayedChildItems(
+        currentConfiguredPromptLayer.optionType.children,
+      );
     } else {
       setListOfOptions(AllPromptLayerOptions);
     }
@@ -94,7 +100,17 @@ export const SetPromptLayerModal: React.FC<
               backgroundColor: Themes.dark.lightText,
             }}
           />
-          <Text style={globalStyles.infoText}>Options will go here</Text>
+
+          <FlatList
+            style={{flexGrow: 0}}
+            data={currentlyDisplayedChildItems}
+            keyExtractor={option => option}
+            renderItem={option => (
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={globalStyles.buttonText}>{option.item}</Text>
+              </View>
+            )}
+          />
         </View>
       )}
     </DrillConfigurationModal>
