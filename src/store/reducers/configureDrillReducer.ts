@@ -8,7 +8,7 @@ import {
   AllScales,
   ChordQuality,
   Key,
-  LayerType,
+  LayerChildItem,
   Mode,
   NoteName,
   PromptOrder,
@@ -34,7 +34,7 @@ export type DrillConfiguration = {
   scales: Scale[];
   modes: Mode[];
   keys: Key[];
-  promptLayers: PromptLayer<LayerType>[];
+  promptLayers: PromptLayer<LayerChildItem>[];
 };
 
 export function areDrillsSimilar(
@@ -152,15 +152,15 @@ export const configureDrillSlice = createSlice({
     },
     setPromptLayers: (
       state,
-      action: PayloadAction<PromptLayer<LayerType>[]>,
+      action: PayloadAction<PromptLayer<LayerChildItem>[]>,
     ) => {
       state.configuration.promptLayers = action.payload;
     },
     replacePromptLayer: (
       state,
       action: PayloadAction<{
-        newLayer: PromptLayer<LayerType>;
-        oldLayer?: PromptLayer<LayerType>;
+        newLayer: PromptLayer<LayerChildItem>;
+        oldLayer?: PromptLayer<LayerChildItem>;
       }>,
     ) => {
       if (action.payload.oldLayer) {

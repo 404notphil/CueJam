@@ -32,7 +32,7 @@ import {SetNoteNamesModal} from './SetNoteNamesModal';
 import {
   ChordQuality,
   Key,
-  LayerType,
+  LayerChildItem,
   Mode,
   NoteName,
   PromptLayerOption,
@@ -86,10 +86,10 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const animatedOpacity = useSharedValue(0);
 
   const [promptLayerTypeModalToShow, setPromptLayerTypeModalToShow] =
-    useState<PromptLayer<LayerType> | null>(null);
+    useState<PromptLayer<LayerChildItem> | null>(null);
 
   const [promptLayerChildrenModalToShow, setPromptLayerChildrenModalToShow] =
-    useState<PromptLayer<LayerType>>();
+    useState<PromptLayer<LayerChildItem>>();
 
   useEffect(() => {
     dispatch(onDrillEdit(state));

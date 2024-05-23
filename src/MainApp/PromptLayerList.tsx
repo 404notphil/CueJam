@@ -46,7 +46,7 @@ import {
   PromptLayer,
 } from './PromptLayer';
 import {
-  LayerType,
+  LayerChildItem,
   NoteNamePromptLayerOption,
 } from '../store/reducers/ConfigureDrillTypes';
 import EditIcon from '../assets/EditIcon';
@@ -59,8 +59,10 @@ import DraggableFlatList, {
 
 interface PromptLayerListProps {
   state: ConfigureDrillState;
-  onPressPromptLayerType: (promptLayer: PromptLayer<LayerType>) => void;
-  onPressPromptLayerChildren: (promptLayer: PromptLayer<LayerType>) => void;
+  onPressPromptLayerType: (promptLayer: PromptLayer<LayerChildItem>) => void;
+  onPressPromptLayerChildren: (
+    promptLayer: PromptLayer<LayerChildItem>,
+  ) => void;
 }
 
 export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
@@ -68,7 +70,10 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
   const dispatch = useAppDispatch();
   const [dragIsActive, setDragIsActive] = useState(false);
 
-  function moveItemInList(layer: PromptLayer<LayerType>, down: boolean = true) {
+  function moveItemInList(
+    layer: PromptLayer<LayerChildItem>,
+    down: boolean = true,
+  ) {
     const newArray = [...promptLayers];
     const oldIndex = promptLayers.indexOf(layer);
     const arraySize = promptLayers.length;
@@ -82,7 +87,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
   }
 
   const renderItem = (
-    {item, drag, isActive}: RenderItemParams<PromptLayer<LayerType>>,
+    {item, drag, isActive}: RenderItemParams<PromptLayer<LayerChildItem>>,
     index: number,
   ) => {
     return (

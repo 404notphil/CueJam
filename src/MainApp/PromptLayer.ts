@@ -8,7 +8,7 @@ import {
   ChordQuality,
   Key,
   KeysPromptLayerOption,
-  LayerType,
+  LayerChildItem,
   Mode,
   ModesPromptLayerOption,
   NoteName,
@@ -24,7 +24,7 @@ import uuid from 'react-native-uuid';
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 
-export abstract class PromptLayer<T extends LayerType> {
+export abstract class PromptLayer<T extends LayerChildItem> {
   optionType: PromptLayerOption;
   childrenChosen: Array<T>;
   promptCue: Array<T> = [];
@@ -75,7 +75,7 @@ export abstract class PromptLayer<T extends LayerType> {
     ];
   }
 
-  static fromOptionType(type: PromptLayerOption): PromptLayer<LayerType> {
+  static fromOptionType(type: PromptLayerOption): PromptLayer<LayerChildItem> {
     switch (type) {
       case NoteNamePromptLayerOption: {
         return new BufferedNoteNameLayer();

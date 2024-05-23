@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {
   AllPromptLayerOptions,
-  LayerType,
+  LayerChildItem,
   PromptLayerOption,
 } from '../store/reducers/ConfigureDrillTypes';
 import {
@@ -22,8 +22,8 @@ import {PromptLayer} from './PromptLayer';
 
 interface SetPromptLayerModalProps {
   modalIsVisible: boolean;
-  promptLayer?: PromptLayer<LayerType>;
-  onSetPromptLayer: (promptLayer: PromptLayer<LayerType>) => void;
+  promptLayer?: PromptLayer<LayerChildItem>;
+  onSetPromptLayer: (promptLayer: PromptLayer<LayerChildItem>) => void;
   onDismiss: () => void;
 }
 
@@ -31,7 +31,7 @@ export const SetPromptLayerModal: React.FC<
   SetPromptLayerModalProps
 > = props => {
   const [currentConfiguredPromptLayer, setCurrentConfiguredPromptLayer] =
-    useState<PromptLayer<LayerType>>();
+    useState<PromptLayer<LayerChildItem>>();
 
   const [listOfOptions, setListOfOptions] = useState(AllPromptLayerOptions);
 
@@ -87,7 +87,13 @@ export const SetPromptLayerModal: React.FC<
 
       {currentConfiguredPromptLayer && (
         <View>
-          <View style={{height: 0.1, backgroundColor: Themes.dark.lightText}} />
+          <View
+            style={{
+              height: 1,
+              opacity: 0.2,
+              backgroundColor: Themes.dark.lightText,
+            }}
+          />
           <Text style={globalStyles.infoText}>Options will go here</Text>
         </View>
       )}
