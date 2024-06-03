@@ -182,7 +182,7 @@ const PromptLayerChildItemListItem: React.FC<ListItemProps> = props => {
         },
       ]}>
       <CheckIcon strokeColor={Themes.dark.actionText} size={20} />
-      <Text style={[globalStyles.buttonText, {marginStart: 10}]}>{props.name}</Text>
+      <Text style={[globalStyles.buttonText, {marginHorizontal: 16}]}>{props.name}</Text>
       <View style={{flex: 1}}/>
       <DragIcon style={{marginEnd: 16}}/>
     </View>
