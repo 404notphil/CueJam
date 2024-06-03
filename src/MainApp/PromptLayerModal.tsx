@@ -65,21 +65,13 @@ export const SetPromptLayerModal: React.FC<
       }}>
       <View>
         <DraggableFlatList
-          style={{flexGrow: 0, marginTop: 16}}
+          style={{flexGrow: 0}}
           data={currentlyDisplayedChildItems}
           keyExtractor={option => option}
           ListHeaderComponent={
             <View>
-              <View
-                style={{
-                  height: 1,
-                  opacity: 0.2,
-                  backgroundColor: Themes.dark.lightText,
-                }}
-              />
-
               {listOfOptions.map((item, index) => (
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 5}}>
                   <RadioIcon
                     onOptionPress={isSelected => {
                       if (isSelected) {
@@ -102,7 +94,7 @@ export const SetPromptLayerModal: React.FC<
                       item === currentConfiguredPromptLayer?.optionType
                     }
                   />
-                  <Text style={globalStyles.buttonText}>
+                  <Text style={[globalStyles.buttonText]}>
                     {item.itemDisplayName}
                   </Text>
                 </View>
@@ -111,6 +103,8 @@ export const SetPromptLayerModal: React.FC<
               <View
                 style={{
                   height: 1,
+                  marginBottom: 16,
+                  marginTop: 5,
                   opacity: 0.2,
                   backgroundColor: Themes.dark.lightText,
                 }}
