@@ -32,7 +32,7 @@ export const SetPromptLayerModal: React.FC<
   SetPromptLayerModalProps
 > = props => {
   const [currentConfiguredPromptLayer, setCurrentConfiguredPromptLayer] =
-    useState<PromptLayer<LayerChildItem>>();
+    useState<PromptLayer<LayerChildItem> | undefined>(props.promptLayer);
 
   const [listOfOptions, setListOfOptions] = useState(AllPromptLayerOptions);
   const [currentlyDisplayedChildItems, setCurrentlyDisplayedChildItems] =
