@@ -122,4 +122,7 @@ export const globalStyles = StyleSheet.create({
     fontWeight: '400',
     fontFamily: 'arciform',
   },
+  listItemBackground: {
+    backgroundColor: "#242C3B"
+  }
 });

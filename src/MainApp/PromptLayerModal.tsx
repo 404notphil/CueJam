@@ -20,6 +20,9 @@ import {Themes} from '../ui/theme/Theme';
 import React from 'react';
 import CloseIcon from '../assets/CloseIcon';
 import {PromptLayer} from './PromptLayer';
+import CheckIcon from '../assets/CheckIIcon';
+import DragIcon from '../assets/DragIcon';
+import DraggableFlatList from 'react-native-draggable-flatlist';
 
 interface SetPromptLayerModalProps {
   modalIsVisible: boolean;
@@ -39,6 +42,7 @@ export const SetPromptLayerModal: React.FC<
     useState<LayerChildItem[]>(AllNoteNames);
 
   useEffect(() => {
+    // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     if (currentConfiguredPromptLayer) {
       setListOfOptions([currentConfiguredPromptLayer.optionType]);
       setCurrentlyDisplayedChildItems(
@@ -79,7 +83,7 @@ export const SetPromptLayerModal: React.FC<
                     );
                   }
                 } else {
-                  setCurrentConfiguredPromptLayer(undefined)
+                  setCurrentConfiguredPromptLayer(undefined);
                 }
               }}
               isSelected={
@@ -103,14 +107,12 @@ export const SetPromptLayerModal: React.FC<
             }}
           />
 
-          <FlatList
-            style={{flexGrow: 0}}
+          <DraggableFlatList
+            style={{flexGrow: 0, marginTop: 16}}
             data={currentlyDisplayedChildItems}
             keyExtractor={option => option}
             renderItem={option => (
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={globalStyles.buttonText}>{option.item}</Text>
-              </View>
+              <PromptLayerChildItemListItem name={option.item} />
             )}
           />
         </View>
@@ -154,4 +156,35 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     paddingVertical: 15,
   },
+  listItemBorder: {
+    borderColor: '#799700',
+    borderWidth: 1,
+    borderRadius: 20,
+  },
 });
+
+interface ListItemProps {
+  name: string;
+}
+
+const PromptLayerChildItemListItem: React.FC<ListItemProps> = props => {
+  return (
+    <View
+      style={[
+        globalStyles.listItemBackground,
+        styles.listItemBorder,
+        {
+          marginVertical: 8,
+          paddingVertical: 5,
+          paddingHorizontal: 15,
+          flexDirection: 'row',
+          alignItems: 'center',
+        },
+      ]}>
+      <CheckIcon strokeColor={Themes.dark.actionText} size={20} />
+      <Text style={[globalStyles.buttonText, {marginStart: 10}]}>{props.name}</Text>
+      <View style={{flex: 1}}/>
+      <DragIcon style={{marginEnd: 16}}/>
+    </View>
+  );
+};

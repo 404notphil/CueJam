@@ -118,6 +118,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   return (
     <View style={globalStyles.screenContainer}>
+      {/* Please be aware that content displays above the PromptLayerList, by means of a header in that list.  */}
       <PromptLayerList
         state={state}
         onPressPromptLayerType={layer => setPromptLayerTypeModalToShow(layer)}

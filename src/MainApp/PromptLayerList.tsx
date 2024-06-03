@@ -99,9 +99,9 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
           <View
             style={[
               globalStyles.shadowStyle,
+              globalStyles.listItemBackground,
               {
                 flexDirection: 'row',
-                backgroundColor: '#242C3B',
                 borderRadius: 5,
                 marginVertical: 15,
                 alignItems: 'center',
