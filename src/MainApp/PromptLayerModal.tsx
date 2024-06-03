@@ -78,6 +78,8 @@ export const SetPromptLayerModal: React.FC<
                       PromptLayer.fromOptionType(option.item),
                     );
                   }
+                } else {
+                  setCurrentConfiguredPromptLayer(undefined)
                 }
               }}
               isSelected={
