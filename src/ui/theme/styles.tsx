@@ -2,6 +2,21 @@ import {StyleSheet} from 'react-native';
 import {Themes} from './Theme';
 import {ThemeProvider} from '@react-navigation/native';
 
+export const shadowStyleSheet = StyleSheet.create({
+  shadowStyle: {
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+
+    // Important for Android
+    elevation: 8,
+  },
+});
+
 export const globalStyles = StyleSheet.create({
   shadowStyle: {
     shadowColor: 'black',
@@ -28,6 +43,7 @@ export const globalStyles = StyleSheet.create({
     borderRadius: 15,
     alignSelf: 'center',
     justifyContent: 'center',
+    ...shadowStyleSheet.shadowStyle,
   },
   screenContainer: {
     padding: 24,
@@ -123,6 +139,7 @@ export const globalStyles = StyleSheet.create({
     fontFamily: 'arciform',
   },
   listItemBackground: {
-    backgroundColor: "#242C3B"
+    backgroundColor: "#242C3B",
+    ...shadowStyleSheet.shadowStyle
   }
 });

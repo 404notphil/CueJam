@@ -64,7 +64,7 @@ export const SetPromptLayerModal: React.FC<
           props.onDismiss();
         }
       }}>
-      <View style={{backgroundColor: 'red'}}>
+      <View>
         <ScrollView style={{flexGrow: 0}}>
           <View onStartShouldSetResponder={(): boolean => true}>
             <DraggableFlatList
