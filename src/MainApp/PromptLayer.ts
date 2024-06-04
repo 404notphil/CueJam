@@ -17,6 +17,7 @@ import {
   PromptOrder,
   Scale,
   ScalesPromptLayerOption,
+  getCircleOf5ths,
   getNoteNameAtFifthAbove,
   getNoteNameAtFifthBelow,
 } from '../store/reducers/ConfigureDrillTypes';
@@ -26,10 +27,12 @@ import {v4 as uuidv4} from 'uuid';
 
 export abstract class PromptLayer<T extends LayerChildItem> {
   optionType: PromptLayerOption;
+  // childrenChosen should have the order given to it by the client.
   childrenChosen: Array<T>;
   promptCue: Array<T> = [];
   promptOrder: PromptOrder;
-  currentPrompt: T;
+  currentPrompt: T | undefined;
+  nextPrompt: T | undefined;
   randomizeFunction: () => T;
   uniqueId: string | Uint8Array;
 
@@ -46,27 +49,36 @@ export abstract class PromptLayer<T extends LayerChildItem> {
     randomizeFunction
       ? (this.randomizeFunction = randomizeFunction)
       : (this.randomizeFunction = this.defaultRandomizeFunction);
-    this.currentPrompt = this.randomizeFunction();
+    this.getNextPromptPairFromCue();
+
   }
 
-  abstract advanceToNextPrompt(): T;
-
   protected refillPromptCue(): void {
-    if (this.promptCue.length === 0) {
-      if (this.promptOrder === 'random') {
-        this.promptCue = shuffleArray([...this.childrenChosen]); // Ensure a copy is shuffled, not the original array.
-      } else {
-        this.promptCue.push(this.randomizeFunction()); // Add only one element for non-random orders.
-      }
+    if (this.promptOrder === 'random') {
+      this.promptCue = shuffleArray([...this.childrenChosen]); // Ensure a copy is shuffled, not the original array.
+    } else {
+      this.promptCue = this.childrenChosen; // Simply use given order for the children chosen
     }
   }
 
-  protected getNextPromptFromCue(): T {
+  getNextPromptPairFromCue(): {first: T; second: T} {
+    if (this.nextPrompt === undefined) {
+      this.refillPromptCue();
+      this.currentPrompt = this.promptCue.shift()!;
+      this.nextPrompt = this.promptCue.shift()!;
+
+      return {first: this.currentPrompt, second: this.nextPrompt};
+    } 
+
     if (this.promptCue.length === 0) {
       this.refillPromptCue();
     }
-    this.currentPrompt = this.promptCue.shift()!;
-    return this.currentPrompt;
+    
+    this.currentPrompt = this.nextPrompt;
+
+    this.nextPrompt = this.promptCue.shift()!;
+
+    return {first: this.currentPrompt, second: this.nextPrompt};
   }
 
   protected defaultRandomizeFunction() {
@@ -111,22 +123,14 @@ export class BufferedNoteNameLayer extends PromptLayer<NoteName> {
     );
   }
 
-  advanceToNextPrompt(): NoteName {
-    // Process according to the order
+  refillPromptCue(): void {
     if (this.promptOrder === 'random') {
-      return this.getNextPromptFromCue();
-    } else if (this.promptOrder === 'ascending5ths') {
-      const note = getNoteNameAtFifthAbove(this.currentPrompt);
-      this.currentPrompt = note; // Update the current note in cue to the new value
-      return note;
+      this.promptCue = shuffleArray([...this.childrenChosen]); // Ensure a copy is shuffled, not the original array.
     } else if (this.promptOrder === 'descending5ths') {
-      const note = getNoteNameAtFifthBelow(this.currentPrompt);
-      this.currentPrompt = note; // Update the current note in cue to the new value
-      return note;
+      this.promptCue = getCircleOf5ths(this.childrenChosen[0], false);
+    } else {
+      this.promptCue = this.childrenChosen; // Simply use given order for the children chosen
     }
-
-    // Fallback for any unsupported order types
-    throw new Error('Unsupported order type');
   }
 }
 
@@ -134,18 +138,11 @@ export class BufferedChordQualityLayer extends PromptLayer<ChordQuality> {
   constructor(childrenChosen: Array<ChordQuality> = AllChordQualities) {
     super(ChordQualitiesPromptLayerOption, childrenChosen, 'random');
   }
-  advanceToNextPrompt(): ChordQuality {
-    return this.getNextPromptFromCue()!;
-  }
 }
 
 export class BufferedScaleLayer extends PromptLayer<Scale> {
   constructor(childrenChosen: Array<Scale> = AllScales) {
     super(ScalesPromptLayerOption, childrenChosen, 'random');
-  }
-
-  advanceToNextPrompt(): Scale {
-    return this.getNextPromptFromCue()!;
   }
 }
 
@@ -153,17 +150,11 @@ export class BufferedModeLayer extends PromptLayer<Mode> {
   constructor(childrenChosen: Array<Mode> = AllModes) {
     super(ModesPromptLayerOption, childrenChosen, 'random');
   }
-  advanceToNextPrompt(): Mode {
-    return this.getNextPromptFromCue()!;
-  }
 }
 
 export class BufferedKeyLayer extends PromptLayer<Key> {
   constructor(childrenChosen: Array<Key> = AllKeys) {
     super(KeysPromptLayerOption, childrenChosen, 'random');
-  }
-  advanceToNextPrompt(): Key {
-    return this.getNextPromptFromCue()!;
   }
 }
 

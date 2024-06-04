@@ -176,7 +176,7 @@ export const configureDrillSlice = createSlice({
     },
     advanceToNextPrompt: state => {
       state.configuration.promptLayers.forEach(layer =>
-        layer.advanceToNextPrompt(),
+        layer.getNextPromptPairFromCue(),
       );
     },
     writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
