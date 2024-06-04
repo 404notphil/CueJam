@@ -40,9 +40,7 @@ import DeleteIcon from '../assets/DeleteIcon';
 import AlertIcon from '../assets/AlertIcon';
 import {ConfigureDrillHeader} from './ConfigureDrillHeader';
 import {
-  BufferedChordQualityLayer,
-  BufferedKeyLayer,
-  BufferedModeLayer,
+  BufferedNoteNameLayer,
   PromptLayer,
 } from './PromptLayer';
 import {
@@ -178,7 +176,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
               dispatch(
                 setPromptLayers([
                   ...promptLayers,
-                  new BufferedChordQualityLayer(),
+                  new BufferedNoteNameLayer(),
                 ]),
               )
             }>

@@ -8,6 +8,7 @@ import {
 import {
   FlatList,
   LayoutAnimation,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -63,58 +64,68 @@ export const SetPromptLayerModal: React.FC<
           props.onDismiss();
         }
       }}>
-      <View>
-        <DraggableFlatList
-          style={{flexGrow: 0}}
-          data={currentlyDisplayedChildItems}
-          keyExtractor={option => option}
-          ListHeaderComponent={
-            <View>
-              {listOfOptions.map((item, index) => (
-                <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 5}}>
-                  <RadioIcon
-                    onOptionPress={isSelected => {
-                      if (isSelected) {
-                        if (
-                          props.promptLayer &&
-                          props.promptLayer.optionType === item
-                        )
-                          setCurrentConfiguredPromptLayer(props.promptLayer);
-                        else {
-                          setCurrentConfiguredPromptLayer(
-                            PromptLayer.fromOptionType(item),
-                          );
+      <View style={{backgroundColor: 'red'}}>
+        <ScrollView style={{flexGrow: 0}}>
+          <View onStartShouldSetResponder={(): boolean => true}>
+            <DraggableFlatList
+              data={currentlyDisplayedChildItems}
+              keyExtractor={option => option}
+              ListHeaderComponent={
+                <View>
+                  {listOfOptions.map((item, index) => (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginTop: 5,
+                      }}>
+                      <RadioIcon
+                        onOptionPress={isSelected => {
+                          if (isSelected) {
+                            if (
+                              props.promptLayer &&
+                              props.promptLayer.optionType === item
+                            )
+                              setCurrentConfiguredPromptLayer(
+                                props.promptLayer,
+                              );
+                            else {
+                              setCurrentConfiguredPromptLayer(
+                                PromptLayer.fromOptionType(item),
+                              );
+                            }
+                          } else {
+                            setCurrentConfiguredPromptLayer(undefined);
+                            setCurrentlyDisplayedChildItems([]);
+                          }
+                        }}
+                        isSelected={
+                          item === currentConfiguredPromptLayer?.optionType
                         }
-                      } else {
-                        setCurrentConfiguredPromptLayer(undefined);
-                        setCurrentlyDisplayedChildItems([])
-                      }
-                    }}
-                    isSelected={
-                      item === currentConfiguredPromptLayer?.optionType
-                    }
-                  />
-                  <Text style={[globalStyles.buttonText]}>
-                    {item.itemDisplayName}
-                  </Text>
-                </View>
-              ))}
+                      />
+                      <Text style={[globalStyles.buttonText]}>
+                        {item.itemDisplayName}
+                      </Text>
+                    </View>
+                  ))}
 
-              <View
-                style={{
-                  height: 1,
-                  marginBottom: 16,
-                  marginTop: 5,
-                  opacity: 0.2,
-                  backgroundColor: Themes.dark.lightText,
-                }}
-              />
-            </View>
-          }
-          renderItem={option => (
-            <PromptLayerChildItemListItem name={option.item} />
-          )}
-        />
+                  <View
+                    style={{
+                      height: 1,
+                      marginBottom: 16,
+                      marginTop: 5,
+                      opacity: 0.2,
+                      backgroundColor: Themes.dark.lightText,
+                    }}
+                  />
+                </View>
+              }
+              renderItem={option => (
+                <PromptLayerChildItemListItem name={option.item} />
+              )}
+            />
+          </View>
+        </ScrollView>
       </View>
     </DrillConfigurationModal>
   );
