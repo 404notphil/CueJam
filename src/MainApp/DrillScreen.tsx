@@ -251,7 +251,8 @@ export function DrillScreen(): React.JSX.Element {
 
           {divider(orientation)}
 
-          <View
+          {/* Next prompt view*/}
+          {shouldShowNextPromptText ? (<View
             style={{
               flexDirection: 'column',
               flex: 3,
@@ -268,24 +269,18 @@ export function DrillScreen(): React.JSX.Element {
                 </Text>
               </View>
             ))}
-          </View>
-
-          {divider(orientation)}
-
-          {/* Next prompt view*/}
-          <Animated.View
+          </View>)
+           : (<Animated.View
             style={[
               animatedStyleForNextPrompt,
-              ,
               {
                 flexDirection: 'column',
               },
             ]}>
-            <RawAnimated.View
-              style={{opacity: fadeAnim, flex: 1, justifyContent: 'center'}}>
-              
-            </RawAnimated.View>
-          </Animated.View>
+            {/* Previous value */}
+            <View style={{flex: 1, justifyContent: 'center'}}></View>
+          </Animated.View>)}
+          
         </View>
       </View>
 
