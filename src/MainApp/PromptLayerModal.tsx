@@ -65,7 +65,6 @@ export const SetPromptLayerModal: React.FC<
         }
       }}>
       <View>
-        <ScrollView style={{flexGrow: 0}}>
           <View onStartShouldSetResponder={(): boolean => true}>
             <DraggableFlatList
               data={currentlyDisplayedChildItems}
@@ -125,7 +124,6 @@ export const SetPromptLayerModal: React.FC<
               )}
             />
           </View>
-        </ScrollView>
       </View>
     </DrillConfigurationModal>
   );

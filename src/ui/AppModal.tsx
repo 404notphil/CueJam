@@ -1,6 +1,7 @@
 import {
   GestureResponderEvent,
   Modal,
+  ScrollView,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -36,11 +37,9 @@ export const AppModal: React.FC<AppModalProps> = props => {
         }}>
         <View style={globalStyles.modalOuter}>
           <View
-            style={[
-              globalStyles.modalInner,
-            ]}
+            style={[globalStyles.modalInner]}
             onStartShouldSetResponder={preventDismiss}>
-            {props.children}
+            <ScrollView style={{flexGrow: 0}}>{props.children}</ScrollView>
           </View>
         </View>
       </TouchableWithoutFeedback>
