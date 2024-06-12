@@ -1,11 +1,13 @@
 import {
   GestureResponderEvent,
+  LogBox,
   Modal,
   ScrollView,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {globalStyles} from './theme/styles';
+import { useEffect } from 'react';
 
 interface AppModalProps {
   modalIsVisible: boolean;
@@ -20,6 +22,10 @@ export const AppModal: React.FC<AppModalProps> = props => {
     event.stopPropagation();
     return true;
   };
+
+  useEffect(() => {
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+}, [])
 
   return (
     <Modal
