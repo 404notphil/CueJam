@@ -165,11 +165,11 @@ export function getRandomMode(modes: Mode[]): Mode {
   return modes[Math.floor(Math.random() * modes.length)];
 }
 
-export type LayerType = NoteName | ChordQuality | Key | Scale | Mode;
+export type LayerChildItem = NoteName | ChordQuality | Key | Scale | Mode;
 export type LayerTypeId = 'NOTE_NAME' | 'CHORD_QUALITY' | 'KEYS' | 'SCALES' | 'MODES'
 export interface PromptLayerOption {
   id: LayerTypeId,
-  children: LayerType[];
+  children: LayerChildItem[];
   itemDisplayName: string;
   pluralDisplayName: string;
 }
