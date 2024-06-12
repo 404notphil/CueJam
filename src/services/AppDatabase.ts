@@ -19,6 +19,7 @@ import {
   loadStart,
   loadSuccess,
 } from '../store/reducers/allDrillsSlice';
+import { PromptLayer } from '../MainApp/PromptLayer';
 
 SQLite.enablePromise(true);
 
@@ -140,10 +141,16 @@ export const loadDrillById =
       );
       if (results[0].rows.length > 0) {
         const storeData = results[0].rows.item(0);
-        const configuration = JSON.parse(storeData.configuration);
+        const configuration: DrillConfiguration = JSON.parse(storeData.configuration);
+
+        // // Rehydrate each layer in the configuration
+        const rehydratedPromptLayers = configuration.promptLayers.map(layer => 
+          PromptLayer.rehydrateLayer(layer)
+        );
+        
         const drillState: ConfigureDrillState = {
           ...initialState,
-          configuration: {...configuration, drillId: drillId},
+          configuration: {...configuration, drillId: drillId, promptLayers: rehydratedPromptLayers},
           isSaved: true,
           isLoading: false,
         };

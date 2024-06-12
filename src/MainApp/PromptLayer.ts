@@ -9,6 +9,7 @@ import {
   Key,
   KeysPromptLayerOption,
   LayerChildItem,
+  LayerTypeId,
   Mode,
   ModesPromptLayerOption,
   NoteName,
@@ -106,6 +107,31 @@ export abstract class PromptLayer<T extends LayerChildItem> {
       }
     }
     throw Error('type did not match any known types');
+  }
+
+  static rehydrateLayer(layer: any): PromptLayer<any> {
+    let rehydratedLayer: PromptLayer<any>;
+    const id = layer.optionType.id as LayerTypeId
+    switch (id) {
+      case 'NOTE_NAME':
+        rehydratedLayer = Object.assign(new BufferedNoteNameLayer(), layer);
+        break;
+      case 'CHORD_QUALITY':
+        rehydratedLayer = Object.assign(new BufferedChordQualityLayer(), layer);
+        break;
+      case 'KEYS':
+        rehydratedLayer = Object.assign(new BufferedKeyLayer(), layer);
+        break;
+      case 'SCALES':
+        rehydratedLayer = Object.assign(new BufferedScaleLayer(), layer);
+        break;
+      case 'MODES':
+        rehydratedLayer = Object.assign(new BufferedModeLayer(), layer);
+        break;
+      default:
+        throw new Error('Unknown layer option type');
+    }
+    return rehydratedLayer;
   }
 }
 

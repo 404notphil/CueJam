@@ -165,40 +165,46 @@ export function getRandomMode(modes: Mode[]): Mode {
   return modes[Math.floor(Math.random() * modes.length)];
 }
 
-export type LayerChildItem = NoteName | ChordQuality | Key | Scale | Mode;
-
+export type LayerType = NoteName | ChordQuality | Key | Scale | Mode;
+export type LayerTypeId = 'NOTE_NAME' | 'CHORD_QUALITY' | 'KEYS' | 'SCALES' | 'MODES'
 export interface PromptLayerOption {
-  children: LayerChildItem[];
+  id: LayerTypeId,
+  children: LayerType[];
   itemDisplayName: string;
   pluralDisplayName: string;
 }
 
 // Creation of specific layer options
 export const NoteNamePromptLayerOption: PromptLayerOption = {
+  id: 'NOTE_NAME',
   children: AllNoteNames,
   itemDisplayName: 'note name',
   pluralDisplayName: 'note names',
 };
 
 export const ChordQualitiesPromptLayerOption: PromptLayerOption = {
+  id: 'CHORD_QUALITY',
   children: AllChordQualities,
   itemDisplayName: 'chord quality',
   pluralDisplayName: 'chord qualities',
 };
 
 export const KeysPromptLayerOption: PromptLayerOption = {
+  id: 'KEYS',
   children: AllKeys,
   itemDisplayName: 'key',
   pluralDisplayName: 'keys',
 };
 
 export const ScalesPromptLayerOption: PromptLayerOption = {
+  id: 'SCALES',
   children: AllScales,
   itemDisplayName: 'scale',
   pluralDisplayName: 'scales',
 };
 
 export const ModesPromptLayerOption: PromptLayerOption = {
+  id: 'MODES',
   children: AllModes,
   itemDisplayName: 'mode',
   pluralDisplayName: 'modes',
