@@ -13,6 +13,7 @@ import {globalStyles} from '../ui/theme/styles';
 import {Image} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
+  addPromptLayer,
   onDrillEdit,
   replacePromptLayer,
   selectConfigureDrill,
@@ -21,6 +22,7 @@ import {
   setKeys,
   setModes,
   setNoteNames,
+  setPromptLayers,
   setPromptOrder,
   setScales,
   setTempo,
@@ -85,8 +87,9 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   const animatedHeight = useSharedValue(0);
   const animatedOpacity = useSharedValue(0);
 
-  const [promptLayerTypeModalToShow, setPromptLayerTypeModalToShow] =
-    useState<PromptLayer<LayerChildItem> | null>(null);
+  const [promptLayerTypeModalToShow, setPromptLayerTypeModalToShow] = useState<
+    PromptLayer<LayerChildItem> | null | undefined
+  >(undefined);
 
   const [promptLayerChildrenModalToShow, setPromptLayerChildrenModalToShow] =
     useState<PromptLayer<LayerChildItem>>();
@@ -125,22 +128,28 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         onPressPromptLayerChildren={layer =>
           setPromptLayerChildrenModalToShow(layer)
         }
+        onPressAddNewLayer={() => 
+          // setting this to null (instead of undefined) means we want to see the modal, but with no layer specified yet
+          setPromptLayerTypeModalToShow(null) 
+        }
       />
 
-      {promptLayerTypeModalToShow !== null && (
+      {promptLayerTypeModalToShow !== undefined && (
         <SetPromptLayerModal
-          modalIsVisible={promptLayerTypeModalToShow !== null}
+          modalIsVisible={promptLayerTypeModalToShow !== undefined}
           promptLayer={promptLayerTypeModalToShow}
           onSetPromptLayer={promptLayer => {
-            dispatch(
-              replacePromptLayer({
-                newLayer: promptLayer,
-                oldLayer: promptLayerTypeModalToShow,
-              }),
-            );
+            promptLayerTypeModalToShow
+              ? dispatch(
+                  replacePromptLayer({
+                    newLayer: promptLayer,
+                    oldLayer: promptLayerTypeModalToShow,
+                  }),
+                )
+              : dispatch(addPromptLayer(promptLayer));
           }}
           onDismiss={() => {
-            setPromptLayerTypeModalToShow(null);
+            setPromptLayerTypeModalToShow(undefined);
           }}
         />
       )}
@@ -355,7 +364,6 @@ const SettingRow: React.FC<SettingProps> = props => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   actionButtonText: {

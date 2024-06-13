@@ -156,6 +156,12 @@ export const configureDrillSlice = createSlice({
     ) => {
       state.configuration.promptLayers = action.payload;
     },
+    addPromptLayer: (
+      state,
+      action: PayloadAction<PromptLayer<LayerChildItem>>,
+    ) => {
+      state.configuration.promptLayers = [...state.configuration.promptLayers, action.payload];
+    },
     replacePromptLayer: (
       state,
       action: PayloadAction<{
@@ -277,6 +283,7 @@ export const {
   setModes,
   setKeys,
   setPromptLayers,
+  addPromptLayer,
   replacePromptLayer,
   advanceToNextPrompt,
   writeDrillSuccess,

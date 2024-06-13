@@ -27,7 +27,7 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 
 interface SetPromptLayerModalProps {
   modalIsVisible: boolean;
-  promptLayer?: PromptLayer<LayerChildItem>;
+  promptLayer: PromptLayer<LayerChildItem> | null;
   onSetPromptLayer: (promptLayer: PromptLayer<LayerChildItem>) => void;
   onDismiss: () => void;
 }
@@ -36,7 +36,7 @@ export const SetPromptLayerModal: React.FC<
   SetPromptLayerModalProps
 > = props => {
   const [currentConfiguredPromptLayer, setCurrentConfiguredPromptLayer] =
-    useState<PromptLayer<LayerChildItem> | undefined>(props.promptLayer);
+    useState<PromptLayer<LayerChildItem> | null>(props.promptLayer);
 
   const [listOfOptions, setListOfOptions] = useState(AllPromptLayerOptions);
   const [currentlyDisplayedChildItems, setCurrentlyDisplayedChildItems] =
@@ -51,6 +51,7 @@ export const SetPromptLayerModal: React.FC<
       );
     } else {
       setListOfOptions(AllPromptLayerOptions);
+      setCurrentlyDisplayedChildItems([]);
     }
   }, [currentConfiguredPromptLayer]);
 
@@ -61,53 +62,52 @@ export const SetPromptLayerModal: React.FC<
       onDismiss={() => {
         if (currentConfiguredPromptLayer) {
           props.onSetPromptLayer(currentConfiguredPromptLayer);
-          props.onDismiss();
         }
+        props.onDismiss();
       }}>
       <View>
-          <View onStartShouldSetResponder={(): boolean => true}>
-            <DraggableFlatList
-              data={currentlyDisplayedChildItems}
-              keyExtractor={option => option}
-              ListHeaderComponent={
-                <View>
-                  {listOfOptions.map((item, index) => (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginTop: 5,
-                      }}>
-                      <RadioIcon
-                        onOptionPress={isSelected => {
-                          if (isSelected) {
-                            if (
-                              props.promptLayer &&
-                              props.promptLayer.optionType === item
-                            )
-                              setCurrentConfiguredPromptLayer(
-                                props.promptLayer,
-                              );
-                            else {
-                              setCurrentConfiguredPromptLayer(
-                                PromptLayer.fromOptionType(item),
-                              );
-                            }
-                          } else {
-                            setCurrentConfiguredPromptLayer(undefined);
-                            setCurrentlyDisplayedChildItems([]);
+        <View onStartShouldSetResponder={(): boolean => true}>
+          <DraggableFlatList
+            data={currentlyDisplayedChildItems}
+            keyExtractor={option => option}
+            ListHeaderComponent={
+              <View>
+                {listOfOptions.map((item, index) => (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginTop: 5,
+                    }}>
+                    <RadioIcon
+                      onOptionPress={isSelected => {
+                        if (isSelected) {
+                          if (
+                            props.promptLayer &&
+                            props.promptLayer.optionType === item
+                          )
+                            setCurrentConfiguredPromptLayer(props.promptLayer);
+                          else {
+                            setCurrentConfiguredPromptLayer(
+                              PromptLayer.fromOptionType(item),
+                            );
                           }
-                        }}
-                        isSelected={
-                          item === currentConfiguredPromptLayer?.optionType
+                        } else {
+                          setCurrentConfiguredPromptLayer(null);
+                          setCurrentlyDisplayedChildItems([]);
                         }
-                      />
-                      <Text style={[globalStyles.buttonText]}>
-                        {item.itemDisplayName}
-                      </Text>
-                    </View>
-                  ))}
+                      }}
+                      isSelected={
+                        item === currentConfiguredPromptLayer?.optionType
+                      }
+                    />
+                    <Text style={[globalStyles.buttonText]}>
+                      {item.itemDisplayName}
+                    </Text>
+                  </View>
+                ))}
 
+                {currentConfiguredPromptLayer && (
                   <View
                     style={{
                       height: 1,
@@ -117,13 +117,14 @@ export const SetPromptLayerModal: React.FC<
                       backgroundColor: Themes.dark.lightText,
                     }}
                   />
-                </View>
-              }
-              renderItem={option => (
-                <PromptLayerChildItemListItem name={option.item} />
-              )}
-            />
-          </View>
+                )}
+              </View>
+            }
+            renderItem={option => (
+              <PromptLayerChildItemListItem name={option.item} />
+            )}
+          />
+        </View>
       </View>
     </DrillConfigurationModal>
   );
