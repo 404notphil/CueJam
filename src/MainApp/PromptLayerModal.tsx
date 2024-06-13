@@ -58,7 +58,7 @@ export const SetPromptLayerModal: React.FC<
   return (
     <DrillConfigurationModal
       {...props}
-      title={'add to prompt'}
+      title={props.promptLayer ? 'edit prompt layer' : 'add to prompt'}
       onDismiss={() => {
         if (currentConfiguredPromptLayer) {
           props.onSetPromptLayer(currentConfiguredPromptLayer);
