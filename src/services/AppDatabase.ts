@@ -33,7 +33,7 @@ const openDatabase = async (): Promise<SQLite.SQLiteDatabase | undefined> => {
       'CREATE TABLE IF NOT EXISTS Drills(drillId INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, configuration TEXT)',
     );
     await db.executeSql(
-      'CREATE TABLE IF NOT EXISTS Sessions(id INTEGER PRIMARY KEY AUTOINCREMENT, drillId INTEGER, timestamp DATETIME, data TEXT, FOREIGN KEY(drillId) REFERENCES Drills(id))',
+      'CREATE TABLE IF NOT EXISTS Sessions(id INTEGER PRIMARY KEY AUTOINCREMENT, drillId INTEGER, timeStarted DATETIME, totalSessionTimeMillis INTEGER, promptCount INTEGER, millisecondsPerPrompt INTEGER, beatsPerPrompt INTEGER, tempo INTEGER, FOREIGN KEY(drillId) REFERENCES Drills(id))',
     );
     return db;
   } catch (error) {
@@ -42,21 +42,49 @@ const openDatabase = async (): Promise<SQLite.SQLiteDatabase | undefined> => {
   }
 };
 
-const addSession = async (
-  db: SQLiteDatabase,
-  drillId: number,
-  data: string,
-) => {
-  try {
-    const timestamp = new Date().toISOString();
-    await db.executeSql(
-      'INSERT INTO Sessions (id, timestamp, data) VALUES (?, ?, ?)',
-      [drillId, timestamp, data],
-    );
-  } catch (error) {
-    console.error(error);
-  }
-};
+export const addSessionToDB =
+  (props: {
+    drillId: number;
+    timeStarted: number;
+    totalSessionTimeMillis: number;
+    promptCount: number;
+    millisecondsPerPrompt: number;
+    beatsPerPrompt: number;
+    tempo: number;
+  }): AppThunk =>
+  async dispatch => {
+    console.log('12345 ' + 'starting write to db');
+    try {
+      const db = (await openDatabase()) as SQLiteDatabase;
+      await db.executeSql(
+        'INSERT INTO Sessions (drillId, timeStarted, totalSessionTimeMillis, promptCount, millisecondsPerPrompt, beatsPerPrompt, tempo) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [
+          props.drillId,
+          props.timeStarted,
+          props.totalSessionTimeMillis,
+          props.promptCount,
+          props.millisecondsPerPrompt,
+          props.beatsPerPrompt,
+          props.tempo,
+        ],
+      );
+      console.log('12345 drillId -> ' + props.drillId);
+      console.log('12345 timeStarted -> ' + props.timeStarted);
+      console.log(
+        '12345 totalSessionTimeMillis -> ' +
+          props.totalSessionTimeMillis / 1000 +
+          ' seconds',
+      );
+      console.log('12345 promptCount -> ' + props.promptCount);
+      console.log(
+        '12345 millisecondsPerPrompt -> ' + props.millisecondsPerPrompt,
+      );
+      console.log('12345 beatsPerPrompt -> ' + props.beatsPerPrompt);
+      console.log('12345 tempo -> ' + props.tempo);
+    } catch (error) {
+      console.log('12345 error -> ' + JSON.stringify(error));
+    }
+  };
 
 export const saveDrill = (): AppThunk => async (dispatch, getState) => {
   try {
