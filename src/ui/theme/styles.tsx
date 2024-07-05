@@ -2,18 +2,33 @@ import {StyleSheet} from 'react-native';
 import {Themes} from './Theme';
 import {ThemeProvider} from '@react-navigation/native';
 
+export const shadowStyleSheet = StyleSheet.create({
+  shadowStyle: {
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+
+    // Important for Android
+    elevation: 8,
+  },
+});
+
 export const globalStyles = StyleSheet.create({
   shadowStyle: {
     shadowColor: 'black',
     shadowOffset: {
-      width: 0, // Adjust as needed
-      height: 4, // Adjust as needed
+      width: 0,
+      height: 4,
     },
-    shadowOpacity: 0.3, // Adjust as needed
-    shadowRadius: 5, // Adjust as needed
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
 
     // Important for Android
-    elevation: 8, // Adjust as needed
+    elevation: 8,
   },
   modalOuter: {
     justifyContent: 'center',
@@ -28,6 +43,7 @@ export const globalStyles = StyleSheet.create({
     borderRadius: 15,
     alignSelf: 'center',
     justifyContent: 'center',
+    ...shadowStyleSheet.shadowStyle,
   },
   screenContainer: {
     padding: 24,
@@ -72,6 +88,7 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: Themes.dark.buttonSurface,
     padding: 16,
     borderRadius: 5,
+    ...shadowStyleSheet.shadowStyle
   },
   chipStyle: {
     height: 40,
@@ -102,7 +119,7 @@ export const globalStyles = StyleSheet.create({
   actionButtonText: {
     color: Themes.dark.actionText,
     fontFamily: 'arciform',
-    fontSize: 16,
+    fontSize: 20,
   },
   infoText: {
     color: Themes.dark.infoText,
@@ -122,4 +139,8 @@ export const globalStyles = StyleSheet.create({
     fontWeight: '400',
     fontFamily: 'arciform',
   },
+  listItemBackground: {
+    backgroundColor: "#242C3B",
+    ...shadowStyleSheet.shadowStyle
+  }
 });

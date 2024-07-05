@@ -11,7 +11,10 @@ import {
 } from 'react-native';
 import {Themes} from '../ui/theme/Theme';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
-import {selectConfigureDrill} from '../store/reducers/configureDrillReducer';
+import {
+  advanceToNextPrompt,
+  selectConfigureDrill,
+} from '../store/reducers/configureDrillReducer';
 import {globalStyles} from '../ui/theme/styles';
 import {useEffect, useState} from 'react';
 import {
@@ -30,7 +33,6 @@ import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
   withTiming,
 } from 'react-native-reanimated';
 
@@ -160,6 +162,8 @@ export function DrillScreen(): React.JSX.Element {
       setNextNote(computeNextNoteName(nextNote));
       setCurrentTonalContextValue(nextTonalContextValue);
       setNextTonalContextValue(getRandomTonalContextValue());
+
+      dispatch(advanceToNextPrompt());
     }
   }, [currentBeat]);
 
@@ -213,7 +217,7 @@ export function DrillScreen(): React.JSX.Element {
             flexDirection: orientation === 'PORTRAIT' ? 'column' : 'row',
             flex: 1,
           }}>
-          {/* Previous prompt view*/}
+          {/* Previous prompt view (only used during animation, and shows as an empty view)*/}
           <Animated.View
             style={[
               animatedStyleForPreviousPrompt,
@@ -232,35 +236,51 @@ export function DrillScreen(): React.JSX.Element {
               flex: 3,
             }}>
             {/* Current value */}
-            <View style={{flex: 1, justifyContent: 'center'}}>
-              <Text style={localStyles.promptText}>{currentNote}</Text>
-              <Text style={localStyles.promptSubtitleText}>
-                {currentTonalContextValue}
-              </Text>
-            </View>
+
+            {drill.promptLayers.map(item => (
+              <View style={{flex: 1, justifyContent: 'center'}}>
+                <Text
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  style={localStyles.promptText}>
+                  {item.currentPrompt}
+                </Text>
+              </View>
+            ))}
           </View>
 
           {divider(orientation)}
 
           {/* Next prompt view*/}
-          <Animated.View
+          {shouldShowNextPromptText ? (<View
+            style={{
+              flexDirection: 'column',
+              flex: 3,
+            }}>
+            {/* Current value */}
+
+            {drill.promptLayers.map(item => (
+              <View style={{flex: 1, justifyContent: 'center'}}>
+                <Text
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  style={localStyles.promptText}>
+                  {item.nextPrompt}
+                </Text>
+              </View>
+            ))}
+          </View>)
+           : (<Animated.View
             style={[
               animatedStyleForNextPrompt,
-              ,
               {
                 flexDirection: 'column',
               },
             ]}>
-            <RawAnimated.View
-              style={{opacity: fadeAnim, flex: 1, justifyContent: 'center'}}>
-              <Text style={[localStyles.promptText, {color: 'grey'}]}>
-                {nextNote}
-              </Text>
-              <Text style={[localStyles.promptSubtitleText, {color: 'grey'}]}>
-                {nextTonalContextValue}
-              </Text>
-            </RawAnimated.View>
-          </Animated.View>
+            {/* Previous value */}
+            <View style={{flex: 1, justifyContent: 'center'}}></View>
+          </Animated.View>)}
+          
         </View>
       </View>
 

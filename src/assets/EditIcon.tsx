@@ -9,7 +9,6 @@ interface CustomSvgProps extends SvgProps {
 const EditIcon = ({
   size = 50,
   strokeColor = '#CF0',
-  style,
   ...props
 }: CustomSvgProps) => (
   <Svg
@@ -17,7 +16,6 @@ const EditIcon = ({
     height={size}
     viewBox={'0 0 30 30'} // Set viewBox to original width and height
     fill="none"
-    style={style}
     {...props}>
     <Path
       stroke={strokeColor} // Use strokeColor prop

@@ -24,7 +24,8 @@ export const DrillConfigurationModal: React.FC<
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          margin: 16,
+          marginTop: 16,
+          marginHorizontal: 16,
         }}>
         <Text
           style={[

@@ -1,11 +1,14 @@
 import {useEffect, useState} from 'react';
 import {
+  AllNoteNames,
   AllPromptLayerOptions,
+  LayerChildItem,
   PromptLayerOption,
 } from '../store/reducers/ConfigureDrillTypes';
 import {
   FlatList,
   LayoutAnimation,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -17,65 +20,112 @@ import {DrillConfigurationModal} from './DrillConfigurationModal';
 import {Themes} from '../ui/theme/Theme';
 import React from 'react';
 import CloseIcon from '../assets/CloseIcon';
+import {PromptLayer} from './PromptLayer';
+import CheckIcon from '../assets/CheckIIcon';
+import DragIcon from '../assets/DragIcon';
+import DraggableFlatList from 'react-native-draggable-flatlist';
 
 interface SetPromptLayerModalProps {
   modalIsVisible: boolean;
-  promptLayer?: PromptLayerOption;
-  onSetPromptLayer: (promptLayer: PromptLayerOption) => void;
+  promptLayer: PromptLayer<LayerChildItem> | null;
+  onSetPromptLayer: (promptLayer: PromptLayer<LayerChildItem>) => void;
   onDismiss: () => void;
 }
 
 export const SetPromptLayerModal: React.FC<
   SetPromptLayerModalProps
 > = props => {
-  const [currentSelectedOption, setCurrentSelectedOption] =
-    useState<PromptLayerOption>();
+  const [currentConfiguredPromptLayer, setCurrentConfiguredPromptLayer] =
+    useState<PromptLayer<LayerChildItem> | null>(props.promptLayer);
 
   const [listOfOptions, setListOfOptions] = useState(AllPromptLayerOptions);
+  const [currentlyDisplayedChildItems, setCurrentlyDisplayedChildItems] =
+    useState<LayerChildItem[]>(AllNoteNames);
 
   useEffect(() => {
-    if (currentSelectedOption) {
-      setListOfOptions([currentSelectedOption]);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    if (currentConfiguredPromptLayer) {
+      setListOfOptions([currentConfiguredPromptLayer.optionType]);
+      setCurrentlyDisplayedChildItems(
+        currentConfiguredPromptLayer.optionType.children,
+      );
     } else {
       setListOfOptions(AllPromptLayerOptions);
+      setCurrentlyDisplayedChildItems([]);
     }
-  }, [currentSelectedOption]);
+  }, [currentConfiguredPromptLayer]);
 
   return (
     <DrillConfigurationModal
       {...props}
-      title={'add to prompt'}
+      title={props.promptLayer ? 'edit prompt layer' : 'add to prompt'}
       onDismiss={() => {
-        if (currentSelectedOption) {
-          props.onSetPromptLayer(currentSelectedOption);
-          props.onDismiss();
+        if (currentConfiguredPromptLayer) {
+          props.onSetPromptLayer(currentConfiguredPromptLayer);
         }
+        props.onDismiss();
       }}>
-      <FlatList
-        style={{flexGrow: 0}}
-        data={listOfOptions}
-        keyExtractor={option => option.itemDisplayName}
-        renderItem={option => (
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <RadioIcon
-              onOptionPress={isSelected => {
-                setCurrentSelectedOption(isSelected ? option.item : undefined);
-              }}
-              isSelected={option.item === currentSelectedOption}
-            />
-            <Text style={globalStyles.buttonText}>
-              {option.item.itemDisplayName}
-            </Text>
-          </View>
-        )}
-      />
+      <View>
+        <View onStartShouldSetResponder={(): boolean => true}>
+          <DraggableFlatList
+            data={currentlyDisplayedChildItems}
+            keyExtractor={option => option}
+            ListHeaderComponent={
+              <View>
+                {listOfOptions.map((item, index) => (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginTop: 5,
+                    }}>
+                    <RadioIcon
+                      onOptionPress={isSelected => {
+                        if (isSelected) {
+                          if (
+                            props.promptLayer &&
+                            props.promptLayer.optionType === item
+                          )
+                            setCurrentConfiguredPromptLayer(props.promptLayer);
+                          else {
+                            setCurrentConfiguredPromptLayer(
+                              PromptLayer.fromOptionType(item),
+                            );
+                          }
+                        } else {
+                          setCurrentConfiguredPromptLayer(null);
+                          setCurrentlyDisplayedChildItems([]);
+                        }
+                      }}
+                      isSelected={
+                        item === currentConfiguredPromptLayer?.optionType
+                      }
+                    />
+                    <Text style={[globalStyles.buttonText]}>
+                      {item.itemDisplayName}
+                    </Text>
+                  </View>
+                ))}
 
-      {currentSelectedOption && (
-        <View>
-          <View style={{height: 0.1, backgroundColor: Themes.dark.lightText}} />
-          <Text style={globalStyles.infoText}>Options will go here</Text>
+                {currentConfiguredPromptLayer && (
+                  <View
+                    style={{
+                      height: 1,
+                      marginBottom: 16,
+                      marginTop: 5,
+                      opacity: 0.2,
+                      backgroundColor: Themes.dark.lightText,
+                    }}
+                  />
+                )}
+              </View>
+            }
+            renderItem={option => (
+              <PromptLayerChildItemListItem name={option.item} />
+            )}
+          />
         </View>
-      )}
+      </View>
     </DrillConfigurationModal>
   );
 };
@@ -86,10 +136,6 @@ interface RadioIconProps {
 }
 
 function RadioIcon(props: RadioIconProps) {
-  useEffect(() => {
-    console.log('12345 selected? ' + props.isSelected);
-  }, [props.isSelected]);
-
   return (
     <TouchableOpacity
       onPress={() => {
@@ -119,4 +165,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     paddingVertical: 15,
   },
+  listItemBorder: {
+    borderColor: '#799700',
+    borderWidth: 1,
+    borderRadius: 20,
+  },
 });
+
+interface ListItemProps {
+  name: string;
+}
+
+const PromptLayerChildItemListItem: React.FC<ListItemProps> = props => {
+  return (
+    <View
+      style={[
+        globalStyles.listItemBackground,
+        styles.listItemBorder,
+        {
+          marginVertical: 8,
+          paddingVertical: 5,
+          paddingHorizontal: 15,
+          flexDirection: 'row',
+          alignItems: 'center',
+        },
+      ]}>
+      <CheckIcon strokeColor={Themes.dark.actionText} size={20} />
+      <Text style={[globalStyles.buttonText, {marginHorizontal: 16}]}>
+        {props.name}
+      </Text>
+      <View style={{flex: 1}} />
+      <DragIcon style={{marginEnd: 16}} />
+    </View>
+  );
+};

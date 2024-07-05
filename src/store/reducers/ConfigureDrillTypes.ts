@@ -66,6 +66,22 @@ export function getRandomNoteName(noteNameFilter: NoteName[] = AllNoteNames): No
   return noteNameFilter[Math.floor(Math.random() * noteNameFilter.length)]
 }
 
+export function getCircleOf5ths(
+  seedNote?: NoteName,
+  ascending: boolean = true,
+): NoteName[] {
+  const sortedNotes = [] as NoteName[];
+  let currentNote = seedNote ?? getRandomNoteName(); // The seed note will never actually be seen by the user.
+  for (let i = 0; i < 12; i++) {
+    const newNote = ascending
+      ? getNoteNameAtFifthAbove(currentNote)
+      : getNoteNameAtFifthBelow(currentNote);
+    sortedNotes.push(newNote);
+    currentNote = newNote;
+  }
+  return sortedNotes;
+}
+
 const ChordQualityDefinitions = [
   'major triad',
   'minor triad',
@@ -87,8 +103,10 @@ const ChordQualityDefinitions = [
 export type ChordQuality = (typeof ChordQualityDefinitions)[number];
 export const AllChordQualities = [...ChordQualityDefinitions] as ChordQuality[];
 
-export function getRandomChordQuality(chordQualities: ChordQuality[]): ChordQuality {
-  return chordQualities[Math.floor(Math.random() * chordQualities.length)]
+export function getRandomChordQuality(
+  chordQualities: ChordQuality[],
+): ChordQuality {
+  return chordQualities[Math.floor(Math.random() * chordQualities.length)];
 }
 
 const TonalContextsDefinitions = [
@@ -147,48 +165,56 @@ export function getRandomMode(modes: Mode[]): Mode {
   return modes[Math.floor(Math.random() * modes.length)];
 }
 
-interface OptionChildValue {}
-type LayerType = NoteName | ChordQuality | Key | Scale | Mode;
-export type LayerTypeIntersection = LayerType & OptionChildValue;
-
-export class PromptLayerOption {
-  private constructor(
-    public options: LayerTypeIntersection[],
-    public itemDisplayName: string,
-    public pluralDisplayName: string,
-  ) {}
-
-  static readonly NoteNameOption = new PromptLayerOption(
-    AllNoteNames,
-    'note name',
-    'note names',
-  );
-
-  static readonly ChordQualitiesOption = new PromptLayerOption(
-    AllChordQualities,
-    'chord quality',
-    'chord qualities',
-  );
-
-  static readonly KeysOption = new PromptLayerOption(AllKeys, 'key', 'keys');
-
-  static readonly ScalesOption = new PromptLayerOption(
-    AllScales,
-    'scale',
-    'scales',
-  );
-
-  static readonly ModesOption = new PromptLayerOption(
-    AllModes,
-    'mode',
-    'modes',
-  );
+export type LayerChildItem = NoteName | ChordQuality | Key | Scale | Mode;
+export type LayerTypeId = 'NOTE_NAME' | 'CHORD_QUALITY' | 'KEYS' | 'SCALES' | 'MODES'
+export interface PromptLayerOption {
+  id: LayerTypeId,
+  children: LayerChildItem[];
+  itemDisplayName: string;
+  pluralDisplayName: string;
 }
 
+// Creation of specific layer options
+export const NoteNamePromptLayerOption: PromptLayerOption = {
+  id: 'NOTE_NAME',
+  children: AllNoteNames,
+  itemDisplayName: 'note name',
+  pluralDisplayName: 'note names',
+};
+
+export const ChordQualitiesPromptLayerOption: PromptLayerOption = {
+  id: 'CHORD_QUALITY',
+  children: AllChordQualities,
+  itemDisplayName: 'chord quality',
+  pluralDisplayName: 'chord qualities',
+};
+
+export const KeysPromptLayerOption: PromptLayerOption = {
+  id: 'KEYS',
+  children: AllKeys,
+  itemDisplayName: 'key',
+  pluralDisplayName: 'keys',
+};
+
+export const ScalesPromptLayerOption: PromptLayerOption = {
+  id: 'SCALES',
+  children: AllScales,
+  itemDisplayName: 'scale',
+  pluralDisplayName: 'scales',
+};
+
+export const ModesPromptLayerOption: PromptLayerOption = {
+  id: 'MODES',
+  children: AllModes,
+  itemDisplayName: 'mode',
+  pluralDisplayName: 'modes',
+};
+
+// All options collected in an array
 export const AllPromptLayerOptions = [
-  PromptLayerOption.NoteNameOption,
-  PromptLayerOption.ChordQualitiesOption,
-  PromptLayerOption.KeysOption,
-  PromptLayerOption.ScalesOption,
-  PromptLayerOption.ModesOption,
+  NoteNamePromptLayerOption,
+  ChordQualitiesPromptLayerOption,
+  KeysPromptLayerOption,
+  ScalesPromptLayerOption,
+  ModesPromptLayerOption,
 ];

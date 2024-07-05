@@ -8,12 +8,19 @@ import {
   AllScales,
   ChordQuality,
   Key,
+  LayerChildItem,
   Mode,
   NoteName,
   PromptOrder,
   Scale,
   TonalContext,
 } from './ConfigureDrillTypes';
+import {
+  BufferedChordQualityLayer,
+  PromptLayer,
+  BufferedNoteNameLayer,
+  BufferedScaleLayer,
+} from '../../MainApp/PromptLayer';
 
 export type DrillConfiguration = {
   drillId?: number;
@@ -27,6 +34,7 @@ export type DrillConfiguration = {
   scales: Scale[];
   modes: Mode[];
   keys: Key[];
+  promptLayers: PromptLayer<LayerChildItem>[];
 };
 
 export function areDrillsSimilar(
@@ -94,6 +102,7 @@ export const initialState: ConfigureDrillState = {
     scales: AllScales,
     modes: AllModes,
     keys: AllKeys,
+    promptLayers: [new BufferedNoteNameLayer()],
   } as DrillConfiguration,
   lastSavedConfiguration: null,
   isSaved: true,
@@ -140,6 +149,41 @@ export const configureDrillSlice = createSlice({
     },
     setKeys: (state, action: PayloadAction<Key[]>) => {
       state.configuration.keys = action.payload;
+    },
+    setPromptLayers: (
+      state,
+      action: PayloadAction<PromptLayer<LayerChildItem>[]>,
+    ) => {
+      state.configuration.promptLayers = action.payload;
+    },
+    addPromptLayer: (
+      state,
+      action: PayloadAction<PromptLayer<LayerChildItem>>,
+    ) => {
+      state.configuration.promptLayers = [...state.configuration.promptLayers, action.payload];
+    },
+    replacePromptLayer: (
+      state,
+      action: PayloadAction<{
+        newLayer: PromptLayer<LayerChildItem>;
+        oldLayer?: PromptLayer<LayerChildItem>;
+      }>,
+    ) => {
+      if (action.payload.oldLayer) {
+        state.configuration.promptLayers = state.configuration.promptLayers.map(
+          layerToCheck =>
+            layerToCheck.uniqueId === action.payload.oldLayer?.uniqueId
+              ? action.payload.newLayer
+              : layerToCheck,
+        );
+      } else {
+        state.configuration.promptLayers.push(action.payload.newLayer);
+      }
+    },
+    advanceToNextPrompt: state => {
+      state.configuration.promptLayers.forEach(layer =>
+        layer.getNextPromptPairFromCue()
+      );
     },
     writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
       Object.assign(state, {...action.payload, isSaved: true});
@@ -223,8 +267,9 @@ export const configureDrillSlice = createSlice({
 
 export default configureDrillSlice.reducer;
 
-export const selectConfigureDrill: (state: RootState) => ConfigureDrillState = state =>
-  state.drillConfigurationState;
+export const selectConfigureDrill: (
+  state: RootState,
+) => ConfigureDrillState = state => state.drillConfigurationState;
 
 export const {
   setDrillName,
@@ -237,6 +282,10 @@ export const {
   setScales,
   setModes,
   setKeys,
+  setPromptLayers,
+  addPromptLayer,
+  replacePromptLayer,
+  advanceToNextPrompt,
   writeDrillSuccess,
   startLoading,
   loadDrillSuccess,
