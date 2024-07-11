@@ -35,7 +35,10 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {addSessionToDB} from '../services/AppDatabase';
+import {
+  addSessionToDB,
+  loadSessionDataForDrillForTimeRange,
+} from '../services/AppDatabase';
 
 export function DrillScreen(): React.JSX.Element {
   const state = useAppSelector(selectConfigureDrill);
@@ -140,7 +143,6 @@ export function DrillScreen(): React.JSX.Element {
   );
 
   const addCurrentSessionToDb = () => {
-    console.log('12345 ' + 'starting callback');
     drill.drillId &&
       dispatch(
         addSessionToDB({
@@ -154,6 +156,7 @@ export function DrillScreen(): React.JSX.Element {
           tempo: drill.tempo,
         }),
       );
+
     setPromptsSinceStartedPlayback(0);
   };
 

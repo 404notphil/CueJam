@@ -4,6 +4,7 @@ import {
   DrillConfiguration,
   areDrillsSimilar,
   checkedForSimilarDrills,
+  fetchedDrillStats,
   initialState,
   loadDrillFailure,
   loadDrillSuccess,
@@ -19,7 +20,7 @@ import {
   loadStart,
   loadSuccess,
 } from '../store/reducers/allDrillsSlice';
-import { PromptLayer } from '../MainApp/PromptLayer';
+import {PromptLayer} from '../MainApp/PromptLayer';
 
 SQLite.enablePromise(true);
 
@@ -33,7 +34,7 @@ const openDatabase = async (): Promise<SQLite.SQLiteDatabase | undefined> => {
       'CREATE TABLE IF NOT EXISTS Drills(drillId INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, configuration TEXT)',
     );
     await db.executeSql(
-      'CREATE TABLE IF NOT EXISTS Sessions(id INTEGER PRIMARY KEY AUTOINCREMENT, drillId INTEGER, timeStarted DATETIME, totalSessionTimeMillis INTEGER, promptCount INTEGER, millisecondsPerPrompt INTEGER, beatsPerPrompt INTEGER, tempo INTEGER, FOREIGN KEY(drillId) REFERENCES Drills(id))',
+      'CREATE TABLE IF NOT EXISTS Sessions(id INTEGER PRIMARY KEY AUTOINCREMENT, drillId INTEGER, timeStarted INTEGER, totalSessionTimeMillis INTEGER, promptCount INTEGER, millisecondsPerPrompt INTEGER, beatsPerPrompt INTEGER, tempo INTEGER, FOREIGN KEY(drillId) REFERENCES Drills(id))',
     );
     return db;
   } catch (error) {
@@ -83,6 +84,83 @@ export const addSessionToDB =
       console.log('12345 tempo -> ' + props.tempo);
     } catch (error) {
       console.log('12345 error -> ' + JSON.stringify(error));
+    }
+  };
+
+export const loadSessionDataForDrillForTimeRange =
+  (props: {
+    drillId: number;
+    timeRangeStart: number;
+    timeRangeEnd: number;
+  }): AppThunk =>
+  async dispatch => {
+    console.log('12345 starting reading from DB -> ');
+
+    try {
+      const db = (await openDatabase()) as SQLiteDatabase;
+
+      const results = await db.executeSql(
+        'SELECT * FROM Sessions WHERE timeStarted > ? AND timeStarted < ?',
+        [props.timeRangeStart, props.timeRangeEnd],
+      );
+      console.log('12345 executed SQL -> ' + JSON.stringify(results));
+      const rows = results[0].rows;
+      console.log('12345 rows SQL -> ' + JSON.stringify(rows));
+      let resultsAsArray = [];
+      for (let i = 0; i < rows.length; i++) {
+        resultsAsArray.push(rows.item(i));
+      }
+      let resultsFiltered = resultsAsArray.filter(
+        myItem =>
+          myItem.drillId === props.drillId &&
+          myItem.timeStarted >= props.timeRangeStart &&
+          myItem.timeStarted <= props.timeRangeEnd,
+      );
+      const totalAllTime = resultsFiltered.reduce((sum, item) => {
+        if (typeof item.totalSessionTimeMillis === 'number') {
+          return sum + item.totalSessionTimeMillis;
+        }
+        return sum;
+      }, 0);
+
+      const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+      const totalTimeLastWeek = resultsFiltered.reduce((sum, item) => {
+        // Check if the item's timeStarted is within the last week
+        if (
+          item.timeStarted > oneWeekAgo &&
+          typeof item.totalSessionTimeMillis === 'number'
+        ) {
+          return sum + item.totalSessionTimeMillis;
+        }
+        return sum;
+      }, 0);
+
+      const now = new Date();
+      const lastMidnight = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+      );
+      const totalSinceMidnight = resultsFiltered.reduce((sum, item) => {
+        // Check if the item's timeStarted is more recent than last midnight
+        if (
+          item.timeStarted > lastMidnight &&
+          typeof item.totalSessionTimeMillis === 'number'
+        ) {
+          return sum + item.totalSessionTimeMillis;
+        }
+        return sum;
+      }, 0);
+
+      dispatch(
+        fetchedDrillStats({
+          totalAllTime: totalAllTime,
+          totalTimeLastWeek: totalTimeLastWeek,
+          totalSinceMidnight: totalSinceMidnight,
+        }),
+      );
+    } catch (error) {
+      console.log('12345 error reading from DB-> ' + JSON.stringify(error));
     }
   };
 

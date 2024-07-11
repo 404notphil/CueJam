@@ -4,6 +4,7 @@ export type RootStackParamList = {
   Drill: undefined;
   ConfigureDrill: undefined;
   SavedDrills: undefined;
+  Stats: undefined;
   Landing: undefined;
   Signup: undefined;
 };

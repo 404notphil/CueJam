@@ -61,6 +61,10 @@ const AppHeaderTitle: React.FC<AppHeaderTitleProps> = props => {
       screenTitle = 'saved drills';
       break;
     }
+    case 'Stats': {
+      screenTitle = 'stats';
+      break;
+    }
     default: {
       screenTitle = 'noteprompter';
       break;

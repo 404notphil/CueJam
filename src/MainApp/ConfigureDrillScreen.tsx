@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import {globalStyles} from '../ui/theme/styles';
 import {Image} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
@@ -49,11 +49,15 @@ import {SetScalesModal} from './SetScalesModal';
 import Animated, {useSharedValue, withTiming} from 'react-native-reanimated';
 import {SetModesModal} from './SetModesModal';
 import {SetKeysModal} from './SetKeysModal';
-import {checkForSimilarDrills} from '../services/AppDatabase';
+import {
+  checkForSimilarDrills,
+  loadSessionDataForDrillForTimeRange,
+} from '../services/AppDatabase';
 import {Themes} from '../ui/theme/Theme';
 import {PromptLayerList} from './PromptLayerList';
 import {PromptLayer} from './PromptLayer';
 import {SetPromptLayerModal} from './PromptLayerModal';
+import {useFocusEffect} from '@react-navigation/native';
 
 interface SettingProps {
   title: string;
@@ -99,6 +103,27 @@ export function ConfigureDrillScreen(): React.JSX.Element {
     dispatch(checkForSimilarDrills(drill));
   }, [drill]);
 
+  useFocusEffect(
+    useCallback(() => {
+      drill.drillId &&
+        dispatch(
+          loadSessionDataForDrillForTimeRange({
+            drillId: drill.drillId,
+            timeRangeStart: 0,
+            timeRangeEnd: Number.MAX_SAFE_INTEGER,
+          }),
+        );
+
+      return () => {
+        console.log('ScreenA is unfocused');
+      };
+    }, []),
+  );
+
+  useEffect(() => {
+    console.log('123456 got drill stats -> ' + JSON.stringify(state.stats));
+  }, [state.stats]);
+
   useEffect(() => {
     if (state.isSaved) {
       animatedHeight.value = 0;
@@ -128,9 +153,9 @@ export function ConfigureDrillScreen(): React.JSX.Element {
         onPressPromptLayerChildren={layer =>
           setPromptLayerChildrenModalToShow(layer)
         }
-        onPressAddNewLayer={() => 
+        onPressAddNewLayer={() =>
           // setting this to null (instead of undefined) means we want to see the modal, but with no layer specified yet
-          setPromptLayerTypeModalToShow(null) 
+          setPromptLayerTypeModalToShow(null)
         }
       />
 

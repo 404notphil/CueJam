@@ -18,8 +18,14 @@ import {store} from '../store/store';
 import {PaperProvider} from 'react-native-paper';
 import { RootStackParamList } from '../navigation/RootStackParamList';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {StatsScreen} from '../MainApp/StatsScreen';
 
-export type ScreenName = 'Home' | 'ConfigureDrill' | 'SavedDrills' | 'Drill';
+export type ScreenName =
+  | 'Home'
+  | 'ConfigureDrill'
+  | 'SavedDrills'
+  | 'Drill'
+  | 'Stats';
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +66,13 @@ function AuthorizedStack(): React.JSX.Element {
         component={ConfigureDrillScreen}
         options={{
           header: () => <MainAppHeader screenName="ConfigureDrill" />,
+        }}
+      />
+      <Stack.Screen
+        name="Stats"
+        component={StatsScreen}
+        options={{
+          header: () => <MainAppHeader screenName="Stats" />,
         }}
       />
       <Stack.Screen

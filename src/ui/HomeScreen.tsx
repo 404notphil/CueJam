@@ -69,6 +69,19 @@ export function HomeScreen(): React.JSX.Element {
           resizeMode="contain"
         />
       </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('Stats');
+        }}
+        style={styles.largeButton}>
+        <Text style={globalStyles.fieldHeader}>stats</Text>
+
+        <Image
+          style={styles.largeButtonIcon}
+          source={require('../assets/stats_icon_large.png')}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
     </Animated.View>
   );
 }

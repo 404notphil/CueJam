@@ -58,6 +58,11 @@ export interface ConfigureDrillState {
   foundSimilarDrillButtonVisible: boolean;
   deleteDrillButtonVisible: boolean;
   titleError: 'You must choose a name!' | 'That name already exists!' | null;
+  stats: {
+    totalAllTime: number;
+    totalTimeLastWeek: number;
+    totalSinceMidnight: number;
+  } | null;
   playButtonText: 'play' | 'play without saving';
 }
 
@@ -113,6 +118,7 @@ export const initialState: ConfigureDrillState = {
   foundSimilarDrillButtonVisible: false,
   deleteDrillButtonVisible: false,
   titleError: null,
+  stats: null,
   playButtonText: 'play',
 };
 
@@ -160,7 +166,10 @@ export const configureDrillSlice = createSlice({
       state,
       action: PayloadAction<PromptLayer<LayerChildItem>>,
     ) => {
-      state.configuration.promptLayers = [...state.configuration.promptLayers, action.payload];
+      state.configuration.promptLayers = [
+        ...state.configuration.promptLayers,
+        action.payload,
+      ];
     },
     replacePromptLayer: (
       state,
@@ -182,7 +191,7 @@ export const configureDrillSlice = createSlice({
     },
     advanceToNextPrompt: state => {
       state.configuration.promptLayers.forEach(layer =>
-        layer.getNextPromptPairFromCue()
+        layer.getNextPromptPairFromCue(),
       );
     },
     writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
@@ -262,6 +271,17 @@ export const configureDrillSlice = createSlice({
     drillNameNotUniqueError: state => {
       state.titleError = 'That name already exists!';
     },
+    fetchedDrillStats: (
+      state,
+      action: PayloadAction<{
+        totalAllTime: number;
+        totalTimeLastWeek: number;
+        totalSinceMidnight: number;
+      }>,
+    ) => {
+      console.log('12345 dispatched thingy');
+      state.stats = action.payload;
+    },
   },
 });
 
@@ -295,4 +315,5 @@ export const {
   checkedForSimilarDrills,
   drillNameEmptyError,
   drillNameNotUniqueError,
+  fetchedDrillStats,
 } = configureDrillSlice.actions;
