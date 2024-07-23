@@ -1,5 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View, Platform} from 'react-native';
 import {Image} from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
 import Animated, {
   Easing,
   ReduceMotion,
@@ -7,46 +8,55 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {useEffect, useState} from 'react';
+import {ReactNode, useEffect, useState} from 'react';
 import {useAppDispatch} from '../store/hooks';
-import {clearDrill} from '../store/reducers/configureDrillReducer';
 import {useAppNavigation} from '../ui/App';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
 import {TextInput} from 'react-native-paper';
+import {TimeValues, calculateTimes} from '../util/TimeUtils';
+import {loadSessionDataForTimeRange} from '../services/AppDatabase';
+
+type StatsDisplayData = {
+  dummyData: string;
+};
 
 export function StatsScreen(): React.JSX.Element {
   const navigation = useAppNavigation();
   const dispatch = useAppDispatch();
-  const animatedOpacity = useSharedValue(0);
   const animatedFlex = useSharedValue(0);
+  const [startTimes, setStartTimes] = useState<TimeValues | null>(null);
+  const [statsDisplayData, setStatsDisplayData] =
+    useState<StatsDisplayData | null>(null);
 
   useEffect(() => {
-    animatedOpacity.value = 0;
+    setStartTimes(calculateTimes());
+  }, []);
+
+  useEffect(() => {
     animatedFlex.value = 0;
-    animatedOpacity.value = withTiming(1, {
-      duration: 1500,
-      easing: Easing.inOut(Easing.quad),
-      reduceMotion: ReduceMotion.System,
-    });
     animatedFlex.value = withTiming(1, {
       duration: 400,
       easing: Easing.inOut(Easing.quad),
       reduceMotion: ReduceMotion.System,
     });
   }, []);
-  const animatedOpacityStyle = useAnimatedStyle(() => {
-    return {
-      opacity: animatedOpacity.value,
-      flex: animatedFlex.value,
-    };
-  });
 
   const [selectedTimespanOption, setSelectedTimespanOption] =
     useState<TimespanOption>('TODAY');
 
+  useEffect(() => {
+    switch (selectedTimespanOption) {
+      case 'ALL_TIME':
+        dispatch(loadSessionDataForTimeRange());
+        break;
+      default:
+        break;
+    }
+  }, [selectedTimespanOption]);
+
   return (
-    <Animated.View style={[globalStyles.screenContainer, animatedOpacityStyle]}>
+    <Animated.View style={[globalStyles.screenContainer]}>
       <View>
         <Text style={[globalStyles.fieldHeader, {marginBottom: 10}]}>
           Show me stats from
@@ -154,11 +164,17 @@ export function StatsScreen(): React.JSX.Element {
     </Animated.View>
   );
 }
+
 interface TimespanOptionButtonProps {
   text: string;
   currentOptionSelected: TimespanOption;
   thisOption: TimespanOption;
   onTimespanOptionSelected: (option: TimespanOption) => void;
+}
+
+interface ClickableGroupProps {
+  children: ReactNode;
+  onSelected: () => void;
 }
 
 const TimespanOptionButton: React.FC<TimespanOptionButtonProps> = props => {
@@ -184,39 +200,125 @@ const TimespanOptionButton: React.FC<TimespanOptionButtonProps> = props => {
     };
   });
 
-  return (
-    <Animated.View>
-      <TouchableOpacity
+  const [itemIsClickable, setItemIsClickable] = useState(true);
+  useEffect(() => {
+    setItemIsClickable(!isSelected);
+  }, [isSelected]);
+
+  const ClickableGroup: React.FC<ClickableGroupProps> = ({
+    children,
+    onSelected,
+  }) => {
+    if (itemIsClickable) {
+      return (
+        <TouchableOpacity
+          style={[styles.optionPadding]}
+          onPress={() => props.onTimespanOptionSelected(props.thisOption)}>
+          {children}
+        </TouchableOpacity>
+      );
+    }
+    return (
+      <View
         style={[
+          globalStyles.button,
+          styles.optionButtonSelected,
           styles.optionPadding,
-          isSelected ? [styles.optionButtonSelected] : {},
-        ]}
-        onPress={() => props.onTimespanOptionSelected(props.thisOption)}>
+        ]}>
+        {children}
+      </View>
+    );
+  };
+
+  const [customTimespanConfig, setCustomTimespanConfig] = useState({
+    x: 7,
+    unit: 'days',
+  });
+
+  return (
+    <View>
+      <ClickableGroup
+        onSelected={() => props.onTimespanOptionSelected(props.thisOption)}>
         <Animated.Text style={[styles.smallText, animatedFontSizeStyle]}>
           {props.text}
         </Animated.Text>
-        {props.thisOption === 'CUSTOM' && (
-          <View style={{flexDirection: 'row'}}>
-            {props.currentOptionSelected === 'CUSTOM' && (
-              <View style={{flexDirection: 'row'}}>
-                <TextInput
-                  style={[styles.textInputArea, {paddingHorizontal: 16}]}
-                  multiline={false}
-                  onChangeText={newText => {}}
-                  placeholder="7"></TextInput>
-                <TextInput
-                  style={[styles.textInputArea, {paddingHorizontal: 16}]}
-                  multiline={false}
-                  onChangeText={newText => {}}
-                  placeholder="days"></TextInput>
-              </View>
-            )}
+        {props.thisOption === 'CUSTOM' && isSelected && (
+          <View style={{flexDirection: 'row', gap: 30}}>
+            <TextInput
+              style={[
+                styles.textInputArea,
+                globalStyles.mediumText,
+                {paddingHorizontal: 16},
+              ]}
+              multiline={false}
+              onChangeText={newText => {}}
+              placeholder="7"
+            />
+
+            <Picker
+              {...{
+                selected: customTimespanConfig.unit,
+                onSelected: newUnitValue =>
+                  setCustomTimespanConfig({
+                    x: customTimespanConfig.x,
+                    unit: newUnitValue,
+                  }),
+              }}
+            />
           </View>
         )}
-      </TouchableOpacity>
-    </Animated.View>
+      </ClickableGroup>
+    </View>
   );
 };
+
+interface PickerProps {
+  selected: string;
+  onSelected: (newValue: string) => void;
+}
+
+const Picker: React.FC<PickerProps> = props => {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}>
+      <Text style={[globalStyles.mediumText]}>{props.selected}</Text>
+      <RNPickerSelect
+        style={pickerSelectStyles}
+        onValueChange={value => props.onSelected(value)}
+        value={{label: props.selected, value: props.selected}}
+        items={[
+          {label: 'days', value: 'days'},
+          {label: 'weeks', value: 'weeks'},
+          {label: 'months', value: 'months'},
+        ]}
+      />
+    </View>
+  );
+};
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: Themes.dark.background,
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
+    fontSize: 16,
+    marginStart: 40,
+    padding: 24,
+    borderWidth: 0.5,
+    borderRadius: 30,
+    color: Themes.dark.background,
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+});
 
 const styles = StyleSheet.create({
   smallText: {
@@ -230,9 +332,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   optionButtonSelected: {
-    borderRadius: 15,
-    borderWidth: 0.5,
-    borderColor: Themes.dark.actionText,
+    backgroundColor: Themes.dark.buttonSurface,
+  },
+  dropdownStyle: {
+    backgroundColor: 'black',
+  },
+  dropdownContainerStyle: {
+    backgroundColor: 'black',
+  },
+  dropdownPlaceholderStyle: {
+    color: '#999',
+  },
+  dropdownLabelStyle: {
+    color: '#999',
+  },
+  dropdownSelectedItemLabelStyle: {
+    color: '#999',
   },
   textInputArea: {
     backgroundColor: '#00000000',

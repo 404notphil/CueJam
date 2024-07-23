@@ -37,7 +37,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {
   addSessionToDB,
-  loadSessionDataForDrillForTimeRange,
+  loadSessionDataForTimeRange,
 } from '../services/AppDatabase';
 
 export function DrillScreen(): React.JSX.Element {

@@ -51,7 +51,7 @@ import {SetModesModal} from './SetModesModal';
 import {SetKeysModal} from './SetKeysModal';
 import {
   checkForSimilarDrills,
-  loadSessionDataForDrillForTimeRange,
+  loadSessionDataForTimeRange,
 } from '../services/AppDatabase';
 import {Themes} from '../ui/theme/Theme';
 import {PromptLayerList} from './PromptLayerList';
@@ -107,7 +107,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
     useCallback(() => {
       drill.drillId &&
         dispatch(
-          loadSessionDataForDrillForTimeRange({
+          loadSessionDataForTimeRange({
             drillId: drill.drillId,
             timeRangeStart: 0,
             timeRangeEnd: Number.MAX_SAFE_INTEGER,

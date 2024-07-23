@@ -16,31 +16,9 @@ import {clearDrill} from '../store/reducers/configureDrillReducer';
 export function HomeScreen(): React.JSX.Element {
   const navigation = useAppNavigation();
   const dispatch = useAppDispatch();
-  const animatedOpacity = useSharedValue(0);
-  const animatedFlex = useSharedValue(0);
-  useEffect(() => {
-    animatedOpacity.value = 0;
-    animatedFlex.value = 0;
-    animatedOpacity.value = withTiming(1, {
-      duration: 1500,
-      easing: Easing.inOut(Easing.quad),
-      reduceMotion: ReduceMotion.System,
-    });
-    animatedFlex.value = withTiming(1, {
-      duration: 400,
-      easing: Easing.inOut(Easing.quad),
-      reduceMotion: ReduceMotion.System,
-    });
-  }, []);
-  const animatedOpacityStyle = useAnimatedStyle(() => {
-    return {
-      opacity: animatedOpacity.value,
-      flex: animatedFlex.value,
-    };
-  });
 
   return (
-    <Animated.View style={[globalStyles.screenContainer, animatedOpacityStyle]}>
+    <View style={[globalStyles.screenContainer]}>
       <TouchableOpacity
         onPress={() => {
           dispatch(clearDrill());
@@ -82,7 +60,7 @@ export function HomeScreen(): React.JSX.Element {
           resizeMode="contain"
         />
       </TouchableOpacity>
-    </Animated.View>
+    </View>
   );
 }
 

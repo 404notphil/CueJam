@@ -88,7 +88,6 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: Themes.dark.buttonSurface,
     padding: 16,
     borderRadius: 5,
-    ...shadowStyleSheet.shadowStyle
   },
   chipStyle: {
     height: 40,
@@ -140,7 +139,7 @@ export const globalStyles = StyleSheet.create({
     fontFamily: 'arciform',
   },
   listItemBackground: {
-    backgroundColor: "#242C3B",
-    ...shadowStyleSheet.shadowStyle
-  }
+    backgroundColor: '#242C3B',
+    ...shadowStyleSheet.shadowStyle,
+  },
 });

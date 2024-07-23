@@ -87,12 +87,18 @@ export const addSessionToDB =
     }
   };
 
-export const loadSessionDataForDrillForTimeRange =
-  (props: {
-    drillId: number;
-    timeRangeStart: number;
-    timeRangeEnd: number;
-  }): AppThunk =>
+export const loadSessionDataForTimeRange =
+  (
+    props: {
+      drillId: number | null;
+      timeRangeStart: number;
+      timeRangeEnd: number;
+    } = {
+      drillId: null,
+      timeRangeStart: 0,
+      timeRangeEnd: Number.MAX_VALUE,
+    },
+  ): AppThunk =>
   async dispatch => {
     console.log('12345 starting reading from DB -> ');
 
@@ -110,13 +116,18 @@ export const loadSessionDataForDrillForTimeRange =
       for (let i = 0; i < rows.length; i++) {
         resultsAsArray.push(rows.item(i));
       }
-      let resultsFiltered = resultsAsArray.filter(
+
+      let resultsFilteredForDrillIfNeeded = props.drillId
+        ? resultsAsArray.filter(myItem => myItem.drillId === props.drillId)
+        : resultsAsArray;
+
+      let resultsFilteredForDates = resultsFilteredForDrillIfNeeded.filter(
         myItem =>
-          myItem.drillId === props.drillId &&
           myItem.timeStarted >= props.timeRangeStart &&
           myItem.timeStarted <= props.timeRangeEnd,
       );
-      const totalAllTime = resultsFiltered.reduce((sum, item) => {
+
+      const totalAllTime = resultsFilteredForDates.reduce((sum, item) => {
         if (typeof item.totalSessionTimeMillis === 'number') {
           return sum + item.totalSessionTimeMillis;
         }
@@ -124,7 +135,7 @@ export const loadSessionDataForDrillForTimeRange =
       }, 0);
 
       const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-      const totalTimeLastWeek = resultsFiltered.reduce((sum, item) => {
+      const totalTimeLastWeek = resultsFilteredForDates.reduce((sum, item) => {
         // Check if the item's timeStarted is within the last week
         if (
           item.timeStarted > oneWeekAgo &&
@@ -141,7 +152,7 @@ export const loadSessionDataForDrillForTimeRange =
         now.getMonth(),
         now.getDate(),
       );
-      const totalSinceMidnight = resultsFiltered.reduce((sum, item) => {
+      const totalSinceMidnight = resultsFilteredForDates.reduce((sum, item) => {
         // Check if the item's timeStarted is more recent than last midnight
         if (
           item.timeStarted > lastMidnight &&
@@ -151,6 +162,18 @@ export const loadSessionDataForDrillForTimeRange =
         }
         return sum;
       }, 0);
+
+      console.log(
+        '12345 fetched times from DB-> ' +
+          JSON.stringify(
+            '12345 totalAllTime -> ' +
+              totalAllTime +
+              '. totalTimeLastWeek -> ' +
+              totalTimeLastWeek +
+              '. totalSinceMidnight -> ' +
+              totalSinceMidnight,
+          ),
+      );
 
       dispatch(
         fetchedDrillStats({
