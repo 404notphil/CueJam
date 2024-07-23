@@ -15,6 +15,9 @@ export const getBeginningOfWeek = (date: Date): number => {
 export const getBeginningOfMonth = (date: Date): number => {
   return new Date(date.getFullYear(), date.getMonth(), 1).getTime();
 };
+export const getBeginningOfYear = (date: Date): number => {
+  return new Date(date.getFullYear(), 0, 1).getTime();
+};
 
 export const calculateXUnitsAgo = (
   x: number,
@@ -40,16 +43,18 @@ export const calculateTimes = (): TimeValues => {
     beginningOfToday: getBeginningOfDay(new Date(now)),
     beginningOfWeek: getBeginningOfWeek(new Date(now)),
     beginningOfMonth: getBeginningOfMonth(new Date(now)),
+    beginningOfYear: getBeginningOfYear(new Date(now)),
     sevenDaysAgo: calculateXUnitsAgo(7, 'days', now),
     thirtyDaysAgo: calculateXUnitsAgo(30, 'days', now),
   };
 };
 
 export type TimeValues = {
-    currentMoment: number;
-    beginningOfToday: number;
-    beginningOfWeek: number;
-    beginningOfMonth: number;
-    sevenDaysAgo: number;
-    thirtyDaysAgo: number;
-  };
+  currentMoment: number;
+  beginningOfToday: number;
+  beginningOfWeek: number;
+  beginningOfMonth: number;
+  beginningOfYear: number;
+  sevenDaysAgo: number;
+  thirtyDaysAgo: number;
+};

@@ -58,11 +58,8 @@ export interface ConfigureDrillState {
   foundSimilarDrillButtonVisible: boolean;
   deleteDrillButtonVisible: boolean;
   titleError: 'You must choose a name!' | 'That name already exists!' | null;
-  stats: {
-    totalAllTime: number;
-    totalTimeLastWeek: number;
-    totalSinceMidnight: number;
-  } | null;
+
+  totalSessionTimeForSelectedTimePeriod: number | null;
   playButtonText: 'play' | 'play without saving';
 }
 
@@ -118,7 +115,7 @@ export const initialState: ConfigureDrillState = {
   foundSimilarDrillButtonVisible: false,
   deleteDrillButtonVisible: false,
   titleError: null,
-  stats: null,
+  totalSessionTimeForSelectedTimePeriod: null,
   playButtonText: 'play',
 };
 
@@ -271,16 +268,9 @@ export const configureDrillSlice = createSlice({
     drillNameNotUniqueError: state => {
       state.titleError = 'That name already exists!';
     },
-    fetchedDrillStats: (
-      state,
-      action: PayloadAction<{
-        totalAllTime: number;
-        totalTimeLastWeek: number;
-        totalSinceMidnight: number;
-      }>,
-    ) => {
-      console.log('12345 dispatched thingy');
-      state.stats = action.payload;
+    fetchedDrillStats: (state, action: PayloadAction<number>) => {
+      console.log('12345 dispatching -> ' + action.payload);
+      state.totalSessionTimeForSelectedTimePeriod = action.payload;
     },
   },
 });

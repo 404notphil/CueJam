@@ -9,13 +9,16 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {ReactNode, useEffect, useState} from 'react';
-import {useAppDispatch} from '../store/hooks';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {useAppNavigation} from '../ui/App';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
 import {TextInput} from 'react-native-paper';
 import {TimeValues, calculateTimes} from '../util/TimeUtils';
 import {loadSessionDataForTimeRange} from '../services/AppDatabase';
+import configureDrillReducer, {
+  selectConfigureDrill,
+} from '../store/reducers/configureDrillReducer';
 
 type StatsDisplayData = {
   dummyData: string;
@@ -23,11 +26,18 @@ type StatsDisplayData = {
 
 export function StatsScreen(): React.JSX.Element {
   const navigation = useAppNavigation();
+  const state = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
   const animatedFlex = useSharedValue(0);
   const [startTimes, setStartTimes] = useState<TimeValues | null>(null);
   const [statsDisplayData, setStatsDisplayData] =
     useState<StatsDisplayData | null>(null);
+  const [useTestData, setUseTestData] = useState(false);
+
+  const toggleTestData = () => {
+    const useTest = useTestData;
+    setUseTestData(!useTest);
+  };
 
   useEffect(() => {
     setStartTimes(calculateTimes());
@@ -46,7 +56,42 @@ export function StatsScreen(): React.JSX.Element {
     useState<TimespanOption>('TODAY');
 
   useEffect(() => {
+    const {
+      currentMoment,
+      beginningOfToday,
+      beginningOfMonth,
+      beginningOfWeek,
+      beginningOfYear,
+      sevenDaysAgo,
+      thirtyDaysAgo,
+    } = calculateTimes();
     switch (selectedTimespanOption) {
+      case 'TODAY':
+        dispatch(
+          loadSessionDataForTimeRange({timeRangeStart: beginningOfToday}),
+        );
+        break;
+      case 'THIS_WEEK':
+        dispatch(
+          loadSessionDataForTimeRange({timeRangeStart: beginningOfWeek}),
+        );
+        break;
+      case 'THIS_MONTH':
+        dispatch(
+          loadSessionDataForTimeRange({timeRangeStart: beginningOfMonth}),
+        );
+        break;
+      case 'THIS_YEAR':
+        dispatch(
+          loadSessionDataForTimeRange({timeRangeStart: beginningOfYear}),
+        );
+        break;
+      case 'LAST_7_DAYS':
+        dispatch(loadSessionDataForTimeRange({timeRangeStart: sevenDaysAgo}));
+        break;
+      case 'LAST_30_DAYS':
+        dispatch(loadSessionDataForTimeRange({timeRangeStart: thirtyDaysAgo}));
+        break;
       case 'ALL_TIME':
         dispatch(loadSessionDataForTimeRange());
         break;
@@ -55,8 +100,28 @@ export function StatsScreen(): React.JSX.Element {
     }
   }, [selectedTimespanOption]);
 
+  const [stats, setStats] = useState(
+    state.totalSessionTimeForSelectedTimePeriod,
+  );
+
+  useEffect(() => {
+    setStats(useTestData ? 0 : state.totalSessionTimeForSelectedTimePeriod);
+  }, [selectedTimespanOption, useTestData]);
+
   return (
-    <Animated.View style={[globalStyles.screenContainer]}>
+    <View style={[globalStyles.screenContainer]}>
+      <TouchableOpacity
+        style={globalStyles.button}
+        onPress={() => toggleTestData()}>
+        <Text
+          style={
+            useTestData ? globalStyles.actionButtonText : globalStyles.infoText
+          }>
+          {useTestData
+            ? 'Using test data (tap to change)'
+            : 'Using real data (tap to change)'}
+        </Text>
+      </TouchableOpacity>
       <View>
         <Text style={[globalStyles.fieldHeader, {marginBottom: 10}]}>
           Show me stats from
@@ -136,9 +201,7 @@ export function StatsScreen(): React.JSX.Element {
               backgroundColor: Themes.dark.infoText,
             }}
           />
-          <Text style={[globalStyles.infoText, {fontSize: 25}]}>
-            2hrs 58min
-          </Text>
+          <Text style={[globalStyles.infoText, {fontSize: 25}]}>{stats}</Text>
         </View>
       </View>
 
@@ -161,7 +224,7 @@ export function StatsScreen(): React.JSX.Element {
         />
         <Text style={[globalStyles.infoText, {fontSize: 20}]}>36min</Text>
       </View>
-    </Animated.View>
+    </View>
   );
 }
 

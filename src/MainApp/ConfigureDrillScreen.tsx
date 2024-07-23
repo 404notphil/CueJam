@@ -121,8 +121,11 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   );
 
   useEffect(() => {
-    console.log('123456 got drill stats -> ' + JSON.stringify(state.stats));
-  }, [state.stats]);
+    console.log(
+      '123456 got drill stats -> ' +
+        JSON.stringify(state.totalSessionTimeForSelectedTimePeriod),
+    );
+  }, [state.totalSessionTimeForSelectedTimePeriod]);
 
   useEffect(() => {
     if (state.isSaved) {

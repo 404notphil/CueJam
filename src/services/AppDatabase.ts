@@ -90,13 +90,11 @@ export const addSessionToDB =
 export const loadSessionDataForTimeRange =
   (
     props: {
-      drillId: number | null;
+      drillId?: number;
       timeRangeStart: number;
-      timeRangeEnd: number;
+      timeRangeEnd?: number;
     } = {
-      drillId: null,
       timeRangeStart: 0,
-      timeRangeEnd: Number.MAX_VALUE,
     },
   ): AppThunk =>
   async dispatch => {
@@ -118,13 +116,13 @@ export const loadSessionDataForTimeRange =
       }
 
       let resultsFilteredForDrillIfNeeded = props.drillId
-        ? resultsAsArray.filter(myItem => myItem.drillId === props.drillId)
+        ? resultsAsArray.filter(item => item.drillId === props.drillId)
         : resultsAsArray;
 
       let resultsFilteredForDates = resultsFilteredForDrillIfNeeded.filter(
-        myItem =>
-          myItem.timeStarted >= props.timeRangeStart &&
-          myItem.timeStarted <= props.timeRangeEnd,
+        item =>
+          item.timeStarted >= props.timeRangeStart &&
+          (props.timeRangeEnd ? item.time <= props.timeRangeEnd : true),
       );
 
       const totalAllTime = resultsFilteredForDates.reduce((sum, item) => {
@@ -134,54 +132,12 @@ export const loadSessionDataForTimeRange =
         return sum;
       }, 0);
 
-      const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-      const totalTimeLastWeek = resultsFilteredForDates.reduce((sum, item) => {
-        // Check if the item's timeStarted is within the last week
-        if (
-          item.timeStarted > oneWeekAgo &&
-          typeof item.totalSessionTimeMillis === 'number'
-        ) {
-          return sum + item.totalSessionTimeMillis;
-        }
-        return sum;
-      }, 0);
-
-      const now = new Date();
-      const lastMidnight = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-      );
-      const totalSinceMidnight = resultsFilteredForDates.reduce((sum, item) => {
-        // Check if the item's timeStarted is more recent than last midnight
-        if (
-          item.timeStarted > lastMidnight &&
-          typeof item.totalSessionTimeMillis === 'number'
-        ) {
-          return sum + item.totalSessionTimeMillis;
-        }
-        return sum;
-      }, 0);
-
       console.log(
         '12345 fetched times from DB-> ' +
-          JSON.stringify(
-            '12345 totalAllTime -> ' +
-              totalAllTime +
-              '. totalTimeLastWeek -> ' +
-              totalTimeLastWeek +
-              '. totalSinceMidnight -> ' +
-              totalSinceMidnight,
-          ),
+          JSON.stringify('12345 totalTime -> ' + totalAllTime),
       );
 
-      dispatch(
-        fetchedDrillStats({
-          totalAllTime: totalAllTime,
-          totalTimeLastWeek: totalTimeLastWeek,
-          totalSinceMidnight: totalSinceMidnight,
-        }),
-      );
+      dispatch(fetchedDrillStats(totalAllTime));
     } catch (error) {
       console.log('12345 error reading from DB-> ' + JSON.stringify(error));
     }
