@@ -147,6 +147,7 @@ export function DrillScreen(): React.JSX.Element {
       dispatch(
         addSessionToDB({
           drillId: drill.drillId,
+          drillName: drill.drillName,
           timeStarted: Date.now(),
           totalSessionTimeMillis: Date.now() - playbackStartTime,
           promptCount: promptsSinceStartedPlayback,

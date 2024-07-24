@@ -121,13 +121,6 @@ export function ConfigureDrillScreen(): React.JSX.Element {
   );
 
   useEffect(() => {
-    console.log(
-      '123456 got drill stats -> ' +
-        JSON.stringify(state.totalSessionTimeForSelectedTimePeriod),
-    );
-  }, [state.totalSessionTimeForSelectedTimePeriod]);
-
-  useEffect(() => {
     if (state.isSaved) {
       animatedHeight.value = 0;
       animatedOpacity.value = 0;

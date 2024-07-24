@@ -1,3 +1,5 @@
+import {Duration} from 'luxon';
+
 export const getBeginningOfDay = (date: Date): number => {
   return new Date(
     date.getFullYear(),
@@ -47,6 +49,31 @@ export const calculateTimes = (): TimeValues => {
     sevenDaysAgo: calculateXUnitsAgo(7, 'days', now),
     thirtyDaysAgo: calculateXUnitsAgo(30, 'days', now),
   };
+};
+
+export const formatDurationInMillis = (
+  durationInMillis: number,
+  locale: string = 'en',
+) => {
+  const fromMillis: Duration = Duration.fromMillis(durationInMillis);
+  const hours = Math.floor(fromMillis.as('hours'));
+  const minutes = Math.floor(fromMillis.minus({hours}).as('minutes'));
+  const seconds = Math.floor(fromMillis.minus({hours, minutes}).as('seconds'));
+
+  const nf = new Intl.NumberFormat(locale, {minimumIntegerDigits: 2});
+
+  let formatted = '';
+  if (hours > 0) {
+    formatted += `${nf.format(hours)}h `;
+  }
+  if (minutes > 0 || hours > 0) {
+    formatted += `${nf.format(minutes)}m `;
+  }
+  if (hours === 0 && minutes === 0) {
+    formatted += `${nf.format(seconds)}s`;
+  }
+
+  return formatted.trim().replace(/^0+/, '');
 };
 
 export type TimeValues = {

@@ -2,6 +2,7 @@ import SQLite, {SQLiteDatabase} from 'react-native-sqlite-storage';
 import {
   ConfigureDrillState,
   DrillConfiguration,
+  DrillStat,
   areDrillsSimilar,
   checkedForSimilarDrills,
   fetchedDrillStats,
@@ -34,7 +35,7 @@ const openDatabase = async (): Promise<SQLite.SQLiteDatabase | undefined> => {
       'CREATE TABLE IF NOT EXISTS Drills(drillId INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, configuration TEXT)',
     );
     await db.executeSql(
-      'CREATE TABLE IF NOT EXISTS Sessions(id INTEGER PRIMARY KEY AUTOINCREMENT, drillId INTEGER, timeStarted INTEGER, totalSessionTimeMillis INTEGER, promptCount INTEGER, millisecondsPerPrompt INTEGER, beatsPerPrompt INTEGER, tempo INTEGER, FOREIGN KEY(drillId) REFERENCES Drills(id))',
+      'CREATE TABLE IF NOT EXISTS Sessions(id INTEGER PRIMARY KEY AUTOINCREMENT, drillId INTEGER, drillName TEXT,timeStarted INTEGER, totalSessionTimeMillis INTEGER, promptCount INTEGER, millisecondsPerPrompt INTEGER, beatsPerPrompt INTEGER, tempo INTEGER, FOREIGN KEY(drillId) REFERENCES Drills(id))',
     );
     return db;
   } catch (error) {
@@ -46,6 +47,7 @@ const openDatabase = async (): Promise<SQLite.SQLiteDatabase | undefined> => {
 export const addSessionToDB =
   (props: {
     drillId: number;
+    drillName: string;
     timeStarted: number;
     totalSessionTimeMillis: number;
     promptCount: number;
@@ -54,13 +56,13 @@ export const addSessionToDB =
     tempo: number;
   }): AppThunk =>
   async dispatch => {
-    console.log('12345 ' + 'starting write to db');
     try {
       const db = (await openDatabase()) as SQLiteDatabase;
       await db.executeSql(
-        'INSERT INTO Sessions (drillId, timeStarted, totalSessionTimeMillis, promptCount, millisecondsPerPrompt, beatsPerPrompt, tempo) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO Sessions (drillId, drillName, timeStarted, totalSessionTimeMillis, promptCount, millisecondsPerPrompt, beatsPerPrompt, tempo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
         [
           props.drillId,
+          props.drillName,
           props.timeStarted,
           props.totalSessionTimeMillis,
           props.promptCount,
@@ -69,19 +71,6 @@ export const addSessionToDB =
           props.tempo,
         ],
       );
-      console.log('12345 drillId -> ' + props.drillId);
-      console.log('12345 timeStarted -> ' + props.timeStarted);
-      console.log(
-        '12345 totalSessionTimeMillis -> ' +
-          props.totalSessionTimeMillis / 1000 +
-          ' seconds',
-      );
-      console.log('12345 promptCount -> ' + props.promptCount);
-      console.log(
-        '12345 millisecondsPerPrompt -> ' + props.millisecondsPerPrompt,
-      );
-      console.log('12345 beatsPerPrompt -> ' + props.beatsPerPrompt);
-      console.log('12345 tempo -> ' + props.tempo);
     } catch (error) {
       console.log('12345 error -> ' + JSON.stringify(error));
     }
@@ -98,8 +87,6 @@ export const loadSessionDataForTimeRange =
     },
   ): AppThunk =>
   async dispatch => {
-    console.log('12345 starting reading from DB -> ');
-
     try {
       const db = (await openDatabase()) as SQLiteDatabase;
 
@@ -107,18 +94,33 @@ export const loadSessionDataForTimeRange =
         'SELECT * FROM Sessions WHERE timeStarted > ? AND timeStarted < ?',
         [props.timeRangeStart, props.timeRangeEnd],
       );
-      console.log('12345 executed SQL -> ' + JSON.stringify(results));
       const rows = results[0].rows;
-      console.log('12345 rows SQL -> ' + JSON.stringify(rows));
+
       let resultsAsArray = [];
       for (let i = 0; i < rows.length; i++) {
         resultsAsArray.push(rows.item(i));
       }
+      const allDrillGroupedByIds: DrillStat[] = Object.values(
+        resultsAsArray
+          .map(item => {
+            return {
+              drillName: item.drillName,
+              totalTime: item.totalSessionTimeMillis,
+            };
+          })
+          .reduce((acc, current) => {
+            if (acc[current.drillName]) {
+              acc[current.drillName].totalTime += current.totalTime;
+            } else {
+              acc[current.drillName] = {...current};
+            }
+            return acc;
+          }, {} as Record<string, DrillStat>),
+      ).sort((a, b) => b.totalTime - a.totalTime);
 
       let resultsFilteredForDrillIfNeeded = props.drillId
         ? resultsAsArray.filter(item => item.drillId === props.drillId)
         : resultsAsArray;
-
       let resultsFilteredForDates = resultsFilteredForDrillIfNeeded.filter(
         item =>
           item.timeStarted >= props.timeRangeStart &&
@@ -132,12 +134,12 @@ export const loadSessionDataForTimeRange =
         return sum;
       }, 0);
 
-      console.log(
-        '12345 fetched times from DB-> ' +
-          JSON.stringify('12345 totalTime -> ' + totalAllTime),
+      dispatch(
+        fetchedDrillStats({
+          totalAllDrills: totalAllTime,
+          perDrill: allDrillGroupedByIds,
+        }),
       );
-
-      dispatch(fetchedDrillStats(totalAllTime));
     } catch (error) {
       console.log('12345 error reading from DB-> ' + JSON.stringify(error));
     }

@@ -1,4 +1,11 @@
-import {StyleSheet, Text, TouchableOpacity, View, Platform} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Platform,
+  FlatList,
+} from 'react-native';
 import {Image} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import Animated, {
@@ -8,49 +15,36 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {ReactNode, useEffect, useState} from 'react';
+import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {useAppNavigation} from '../ui/App';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
 import {TextInput} from 'react-native-paper';
-import {TimeValues, calculateTimes} from '../util/TimeUtils';
+import {v4 as uuidv4} from 'uuid';
+import {
+  TimeValues,
+  calculateTimes,
+  formatDurationInMillis,
+} from '../util/TimeUtils';
 import {loadSessionDataForTimeRange} from '../services/AppDatabase';
-import configureDrillReducer, {
+import {
+  DrillStat,
+  DrillStats,
   selectConfigureDrill,
 } from '../store/reducers/configureDrillReducer';
-
-type StatsDisplayData = {
-  dummyData: string;
-};
+import {ScrollView} from 'react-native-gesture-handler';
 
 export function StatsScreen(): React.JSX.Element {
   const navigation = useAppNavigation();
   const state = useAppSelector(selectConfigureDrill);
   const dispatch = useAppDispatch();
-  const animatedFlex = useSharedValue(0);
-  const [startTimes, setStartTimes] = useState<TimeValues | null>(null);
-  const [statsDisplayData, setStatsDisplayData] =
-    useState<StatsDisplayData | null>(null);
   const [useTestData, setUseTestData] = useState(false);
 
   const toggleTestData = () => {
     const useTest = useTestData;
     setUseTestData(!useTest);
   };
-
-  useEffect(() => {
-    setStartTimes(calculateTimes());
-  }, []);
-
-  useEffect(() => {
-    animatedFlex.value = 0;
-    animatedFlex.value = withTiming(1, {
-      duration: 400,
-      easing: Easing.inOut(Easing.quad),
-      reduceMotion: ReduceMotion.System,
-    });
-  }, []);
 
   const [selectedTimespanOption, setSelectedTimespanOption] =
     useState<TimespanOption>('TODAY');
@@ -96,22 +90,48 @@ export function StatsScreen(): React.JSX.Element {
         dispatch(loadSessionDataForTimeRange());
         break;
       default:
+        dispatch(loadSessionDataForTimeRange());
         break;
     }
   }, [selectedTimespanOption]);
 
-  const [stats, setStats] = useState(
-    state.totalSessionTimeForSelectedTimePeriod,
-  );
+  const [stats, setStats] = useState(state.stats);
 
   useEffect(() => {
-    setStats(useTestData ? 0 : state.totalSessionTimeForSelectedTimePeriod);
-  }, [selectedTimespanOption, useTestData]);
+    if (useTestData) {
+      setSelectedTimespanOption('ALL_TIME');
+      const perDrill = [
+        {drillName: 'rhythm changes at fast tempo', totalTime: 3211222379},
+        {drillName: 'drop 2 voicings', totalTime: 4211222379},
+        {drillName: 'drop 3 voicings', totalTime: 13445439},
+        {drillName: 'drop 3 voicings', totalTime: 13445439},
+        {drillName: 'drop 3 voicings', totalTime: 13445439},
+        {drillName: 'drop 3 voicings', totalTime: 13445439},
+        {drillName: 'drop 3 voicings', totalTime: 13445439},
+        {drillName: 'drop 3 voicings', totalTime: 13445439},
+        {drillName: 'drop 3 voicings', totalTime: 13445439},
+        {drillName: 'drop 3 voicings', totalTime: 13445439},
+        {drillName: 'pentatonic', totalTime: 1299379},
+        {drillName: 'double stops', totalTime: 1465379},
+        {drillName: 'diatonic fixed shape scalular', totalTime: 8265379},
+        {drillName: 'block chords', totalTime: 273379},
+      ].sort((a, b) => b.totalTime - a.totalTime);
+      const total = perDrill.reduce((acc, current) => {
+        return acc + current.totalTime;
+      }, 0);
+      setStats({
+        totalAllDrills: total,
+        perDrill: perDrill,
+      });
+    } else {
+      setStats(state.stats);
+    }
+  }, [selectedTimespanOption, useTestData, state.stats]);
 
   return (
-    <View style={[globalStyles.screenContainer]}>
+    <View style={globalStyles.screenContainerScrollable}>
       <TouchableOpacity
-        style={globalStyles.button}
+        style={[globalStyles.button]}
         onPress={() => toggleTestData()}>
         <Text
           style={
@@ -122,111 +142,176 @@ export function StatsScreen(): React.JSX.Element {
             : 'Using real data (tap to change)'}
         </Text>
       </TouchableOpacity>
-      <View>
-        <Text style={[globalStyles.fieldHeader, {marginBottom: 10}]}>
-          Show me stats from
-        </Text>
-        {/* "today", "this week", "this month", "this year" */}
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <TimespanOptionButton
-            text={'today'}
-            thisOption="TODAY"
-            currentOptionSelected={selectedTimespanOption}
-            onTimespanOptionSelected={setSelectedTimespanOption}
-          />
-          <TimespanOptionButton
-            text={'this week'}
-            thisOption="THIS_WEEK"
-            currentOptionSelected={selectedTimespanOption}
-            onTimespanOptionSelected={setSelectedTimespanOption}
-          />
-          <TimespanOptionButton
-            text={'this month'}
-            thisOption="THIS_MONTH"
-            currentOptionSelected={selectedTimespanOption}
-            onTimespanOptionSelected={setSelectedTimespanOption}
-          />
-          <TimespanOptionButton
-            text={'this year'}
-            thisOption="THIS_YEAR"
-            currentOptionSelected={selectedTimespanOption}
-            onTimespanOptionSelected={setSelectedTimespanOption}
-          />
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <TimespanOptionButton
-            text={'last 7 days'}
-            thisOption="LAST_7_DAYS"
-            currentOptionSelected={selectedTimespanOption}
-            onTimespanOptionSelected={setSelectedTimespanOption}
-          />
-          <TimespanOptionButton
-            text={'last 30 days'}
-            thisOption="LAST_30_DAYS"
-            currentOptionSelected={selectedTimespanOption}
-            onTimespanOptionSelected={setSelectedTimespanOption}
-          />
-          <TimespanOptionButton
-            text={'all time'}
-            thisOption="ALL_TIME"
-            currentOptionSelected={selectedTimespanOption}
-            onTimespanOptionSelected={setSelectedTimespanOption}
-          />
-        </View>
 
-        <TimespanOptionButton
-          text={'custom time span'}
-          thisOption="CUSTOM"
-          currentOptionSelected={selectedTimespanOption}
-          onTimespanOptionSelected={setSelectedTimespanOption}
-        />
+      {/* Timespan options */}
+      <TimespanOptions
+        selectedTimespanOption={selectedTimespanOption}
+        setSelectedTimespanOption={setSelectedTimespanOption}
+      />
 
-        {/* Total time */}
-        <View
-          style={{
-            marginTop: 50,
-            marginBottom: 30,
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 10,
-          }}>
-          <Text style={[globalStyles.infoText, {fontSize: 25}]}>
-            all drills
-          </Text>
-          <View
-            style={{
-              height: 1,
-              width: 50,
-              flex: 1,
-              backgroundColor: Themes.dark.infoText,
-            }}
-          />
-          <Text style={[globalStyles.infoText, {fontSize: 25}]}>{stats}</Text>
+      <MainContent {...stats} />
+
+      {/* Empty state */}
+      {stats.totalAllDrills === 0 && (
+        <View style={{alignItems: 'center'}}>
+          <Text style={globalStyles.title}>no stats yet!</Text>
         </View>
-      </View>
-
-      {/* Each item */}
-      <View
-        style={{
-          marginBottom: 10,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 10,
-        }}>
-        <Text style={[globalStyles.infoText, {fontSize: 20}]}>First drill</Text>
-        <View
-          style={{
-            height: 1,
-            width: 50,
-            flex: 1,
-            backgroundColor: Themes.dark.infoText,
-          }}
-        />
-        <Text style={[globalStyles.infoText, {fontSize: 20}]}>36min</Text>
-      </View>
+      )}
     </View>
   );
 }
+
+const MainContent: React.FC<DrillStats> = props => {
+  const renderItem = ({item}: {item: DrillStat}) => <EachDrill {...item} />;
+
+  const keyExtractor = (item: DrillStat) => uuidv4();
+
+  return (
+    <View style={{flex: 1}}>
+      {/* Total time display */}
+      <TotalTimeDisplay
+        drillName={'all drills'}
+        totalTime={props.totalAllDrills ?? 0}
+      />
+
+      <FlatList
+        scrollEnabled={true}
+        data={props.perDrill}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        style={{paddingHorizontal: 24}}
+      />
+    </View>
+  );
+};
+
+interface TimeSpanOptionsProps {
+  selectedTimespanOption: TimespanOption;
+  setSelectedTimespanOption: Dispatch<SetStateAction<TimespanOption>>;
+}
+
+const TimespanOptions: React.FC<TimeSpanOptionsProps> = props => (
+  <View
+    style={{
+      paddingHorizontal: 24,
+    }}>
+    <Text style={[globalStyles.fieldHeader, {marginBottom: 10}]}>
+      Show me stats from
+    </Text>
+    {/* "today", "this week", "this month", "this year" */}
+    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <TimespanOptionButton
+        text={'today'}
+        thisOption="TODAY"
+        currentOptionSelected={props.selectedTimespanOption}
+        onTimespanOptionSelected={props.setSelectedTimespanOption}
+      />
+      <TimespanOptionButton
+        text={'this week'}
+        thisOption="THIS_WEEK"
+        currentOptionSelected={props.selectedTimespanOption}
+        onTimespanOptionSelected={props.setSelectedTimespanOption}
+      />
+      <TimespanOptionButton
+        text={'this month'}
+        thisOption="THIS_MONTH"
+        currentOptionSelected={props.selectedTimespanOption}
+        onTimespanOptionSelected={props.setSelectedTimespanOption}
+      />
+      <TimespanOptionButton
+        text={'this year'}
+        thisOption="THIS_YEAR"
+        currentOptionSelected={props.selectedTimespanOption}
+        onTimespanOptionSelected={props.setSelectedTimespanOption}
+      />
+    </View>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}>
+      <TimespanOptionButton
+        text={'last 7 days'}
+        thisOption="LAST_7_DAYS"
+        currentOptionSelected={props.selectedTimespanOption}
+        onTimespanOptionSelected={props.setSelectedTimespanOption}
+      />
+      <TimespanOptionButton
+        text={'last 30 days'}
+        thisOption="LAST_30_DAYS"
+        currentOptionSelected={props.selectedTimespanOption}
+        onTimespanOptionSelected={props.setSelectedTimespanOption}
+      />
+      <TimespanOptionButton
+        text={'all time'}
+        thisOption="ALL_TIME"
+        currentOptionSelected={props.selectedTimespanOption}
+        onTimespanOptionSelected={props.setSelectedTimespanOption}
+      />
+    </View>
+
+    <TimespanOptionButton
+      text={'custom time span'}
+      thisOption="CUSTOM"
+      currentOptionSelected={props.selectedTimespanOption}
+      onTimespanOptionSelected={props.setSelectedTimespanOption}
+    />
+  </View>
+);
+
+const TotalTimeDisplay: React.FC<DrillStat> = props => (
+  <View
+    style={{
+      marginTop: 50,
+      marginBottom: 30,
+      paddingHorizontal: 24,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+    }}>
+    <Text style={[globalStyles.infoText, {fontSize: 25}]}>all drills</Text>
+    <View
+      style={{
+        height: 1,
+        width: 50,
+        flex: 1,
+        backgroundColor: Themes.dark.infoText,
+      }}
+    />
+    <Text style={[globalStyles.actionButtonText, {fontSize: 25}]}>
+      {formatDurationInMillis(props.totalTime)}
+    </Text>
+  </View>
+);
+
+const EachDrill: React.FC<DrillStat> = props => (
+  <View
+    style={{
+      marginBottom: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+    }}>
+    <Text
+      style={[globalStyles.infoText, {fontSize: 20, flexShrink: 1}]}
+      numberOfLines={1}
+      ellipsizeMode="tail">
+      {props.drillName}
+    </Text>
+    <View
+      style={{
+        height: 1,
+        flex: 1,
+        marginHorizontal: 10, // Use margin instead of gap
+        backgroundColor: Themes.dark.infoText,
+      }}
+    />
+    <Text
+      style={[globalStyles.actionButtonText, {fontSize: 20}]}
+      numberOfLines={1}>
+      {formatDurationInMillis(props.totalTime)}
+    </Text>
+  </View>
+);
 
 interface TimespanOptionButtonProps {
   text: string;
@@ -276,11 +361,14 @@ const TimespanOptionButton: React.FC<TimespanOptionButtonProps> = props => {
       return (
         <TouchableOpacity
           style={[styles.optionPadding]}
-          onPress={() => props.onTimespanOptionSelected(props.thisOption)}>
+          onPress={() => {
+            props.onTimespanOptionSelected(props.thisOption);
+          }}>
           {children}
         </TouchableOpacity>
       );
     }
+
     return (
       <View
         style={[
@@ -313,8 +401,14 @@ const TimespanOptionButton: React.FC<TimespanOptionButtonProps> = props => {
                 globalStyles.mediumText,
                 {paddingHorizontal: 16},
               ]}
-              multiline={false}
-              onChangeText={newText => {}}
+              keyboardType="numeric"
+              multiline={true}
+              onChangeText={newText => {
+                setCustomTimespanConfig({
+                  ...customTimespanConfig,
+                  x: parseInt(newText.replace(/[^0-9]/g, '')),
+                });
+              }}
               placeholder="7"
             />
 

@@ -50,6 +50,11 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: Themes.dark.background,
   },
+  screenContainerScrollable: {
+    paddingVertical: 24,
+    flex: 1,
+    backgroundColor: Themes.dark.background,
+  },
   title: {
     marginTop: 8,
     fontSize: 40,
