@@ -34,6 +34,7 @@ import {
   selectConfigureDrill,
 } from '../store/reducers/configureDrillReducer';
 import {ScrollView} from 'react-native-gesture-handler';
+import EditIcon from '../assets/EditIcon';
 
 export function StatsScreen(): React.JSX.Element {
   const navigation = useAppNavigation();
@@ -254,7 +255,7 @@ const TimespanOptions: React.FC<TimeSpanOptionsProps> = props => (
     </View>
 
     <TimespanOptionButton
-      text={'custom time span'}
+      text={'custom'}
       thisOption="CUSTOM"
       currentOptionSelected={props.selectedTimespanOption}
       onTimespanOptionSelected={props.setSelectedTimespanOption}
@@ -361,40 +362,45 @@ const TimespanOptionButton: React.FC<TimespanOptionButtonProps> = props => {
       <ClickableGroup
         onSelected={() => props.onTimespanOptionSelected(props.thisOption)}
         itemIsClickable={itemIsClickable}>
-        <Animated.Text style={[styles.smallText, animatedFontSizeStyle]}>
-          {props.text}
-        </Animated.Text>
-        {props.thisOption === 'CUSTOM' && isSelected && (
-          <View style={{flexDirection: 'row', gap: 30}}>
-            <TextInput
-              style={[
-                styles.textInputArea,
-                globalStyles.mediumText,
-                {paddingHorizontal: 16},
-              ]}
-              keyboardType="numeric"
-              multiline={true}
-              onChangeText={newText => {
-                setCustomTimespanConfig({
-                  ...customTimespanConfig,
-                  x: parseInt(newText.replace(/[^0-9]/g, '')),
-                });
-              }}
-              placeholder="7"
-            />
-
-            <Picker
-              {...{
-                selected: customTimespanConfig.unit,
-                onSelected: newUnitValue =>
-                  setCustomTimespanConfig({
-                    x: customTimespanConfig.x,
-                    unit: newUnitValue,
-                  }),
-              }}
-            />
-          </View>
-        )}
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 20,
+          }}>
+          <Animated.Text style={[styles.smallText, animatedFontSizeStyle]}>
+            {props.text}
+          </Animated.Text>
+          {props.thisOption === 'CUSTOM' && isSelected && (
+            <View style={{flexDirection: 'row'}}>
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  padding: 16,
+                  gap: 10,
+                }}>
+                <Text style={[globalStyles.actionButtonText, {fontSize: 25}]}>
+                  7
+                </Text>
+                <EditIcon size={15} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  padding: 16,
+                  gap: 10,
+                }}>
+                <Text style={[globalStyles.actionButtonText, {fontSize: 25}]}>
+                  days
+                </Text>
+                <EditIcon size={15} />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
       </ClickableGroup>
     </View>
   );
@@ -414,7 +420,9 @@ const ClickableGroup: React.FC<ClickableGroupProps> = ({
   if (itemIsClickable) {
     console.log('12345 item IS clickable');
     return (
-      <TouchableOpacity style={[styles.optionPadding]} onPress={onSelected}>
+      <TouchableOpacity
+        style={[styles.optionPadding, {flexDirection: 'row'}]}
+        onPress={onSelected}>
         {children}
       </TouchableOpacity>
     );
@@ -433,54 +441,6 @@ const ClickableGroup: React.FC<ClickableGroupProps> = ({
     </View>
   );
 };
-
-interface PickerProps {
-  selected: string;
-  onSelected: (newValue: string) => void;
-}
-
-const Picker: React.FC<PickerProps> = props => {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}>
-      <Text style={[globalStyles.mediumText]}>{props.selected}</Text>
-      <RNPickerSelect
-        style={pickerSelectStyles}
-        onValueChange={value => props.onSelected(value)}
-        value={{label: props.selected, value: props.selected}}
-        items={[
-          {label: 'days', value: 'days'},
-          {label: 'weeks', value: 'weeks'},
-          {label: 'months', value: 'months'},
-        ]}
-      />
-    </View>
-  );
-};
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    padding: 24,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: Themes.dark.background,
-    paddingRight: 30, // to ensure the text is never behind the icon
-  },
-  inputAndroid: {
-    fontSize: 16,
-    marginStart: 40,
-    padding: 24,
-    borderWidth: 0.5,
-    borderRadius: 30,
-    color: Themes.dark.background,
-    paddingRight: 30, // to ensure the text is never behind the icon
-  },
-});
 
 const styles = StyleSheet.create({
   smallText: {
