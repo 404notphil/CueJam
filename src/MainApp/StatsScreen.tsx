@@ -101,20 +101,23 @@ export function StatsScreen(): React.JSX.Element {
     if (useTestData) {
       setSelectedTimespanOption('ALL_TIME');
       const perDrill = [
-        {drillName: 'rhythm changes at fast tempo', totalTime: 3211222379},
-        {drillName: 'drop 2 voicings', totalTime: 4211222379},
-        {drillName: 'drop 3 voicings', totalTime: 13445439},
-        {drillName: 'drop 3 voicings', totalTime: 13445439},
-        {drillName: 'drop 3 voicings', totalTime: 13445439},
-        {drillName: 'drop 3 voicings', totalTime: 13445439},
-        {drillName: 'drop 3 voicings', totalTime: 13445439},
-        {drillName: 'drop 3 voicings', totalTime: 13445439},
-        {drillName: 'drop 3 voicings', totalTime: 13445439},
-        {drillName: 'drop 3 voicings', totalTime: 13445439},
-        {drillName: 'pentatonic', totalTime: 1299379},
-        {drillName: 'double stops', totalTime: 1465379},
-        {drillName: 'diatonic fixed shape scalular', totalTime: 8265379},
-        {drillName: 'block chords', totalTime: 273379},
+        {drillName: 'rhythm changes at fast tempo', totalTime: 211222379},
+        {drillName: 'rhythm changes at slow tempo', totalTime: 231222379},
+        {drillName: 'drop 2 voicings', totalTime: 221122379},
+        {drillName: 'all the things you are', totalTime: 23445439},
+        {drillName: 'drop 3 voicings', totalTime: 22445439},
+        {drillName: 'shearing voicings', totalTime: 27745439},
+        {drillName: 'block chords mixolydian', totalTime: 25445439},
+        {drillName: 'block chords -7b5', totalTime: 24475439},
+        {drillName: 'block chords melodic minor', totalTime: 24475439},
+        {drillName: 'block chords harmonic minor', totalTime: 22447439},
+        {drillName: 'block chords dorian', totalTime: 26445439},
+        {drillName: 'pentatonic scales', totalTime: 21445439},
+        {drillName: 'pentatonic voicings', totalTime: 2299379},
+        {drillName: 'double stops slow with pedal', totalTime: 2365379},
+        {drillName: 'double stops fast, 2 hands', totalTime: 2365379},
+        {drillName: 'diatonic fixed shape stepwise', totalTime: 8265379},
+        {drillName: 'block chords ionian', totalTime: 273379},
       ].sort((a, b) => b.totalTime - a.totalTime);
       const total = perDrill.reduce((acc, current) => {
         return acc + current.totalTime;
@@ -153,7 +156,7 @@ export function StatsScreen(): React.JSX.Element {
 
       {/* Empty state */}
       {stats.totalAllDrills === 0 && (
-        <View style={{alignItems: 'center'}}>
+        <View style={{flex: 1, alignItems: 'center'}}>
           <Text style={globalStyles.title}>no stats yet!</Text>
         </View>
       )}
@@ -169,18 +172,21 @@ const MainContent: React.FC<DrillStats> = props => {
   return (
     <View style={{flex: 1}}>
       {/* Total time display */}
-      <TotalTimeDisplay
-        drillName={'all drills'}
-        totalTime={props.totalAllDrills ?? 0}
-      />
-
-      <FlatList
-        scrollEnabled={true}
-        data={props.perDrill}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        style={{paddingHorizontal: 24}}
-      />
+      {props.totalAllDrills !== 0 && (
+        <View style={{flex: 1}}>
+          <TotalTimeDisplay
+            drillName={'all drills'}
+            totalTime={props.totalAllDrills ?? 0}
+          />
+          <FlatList
+            scrollEnabled={true}
+            data={props.perDrill}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            style={{paddingHorizontal: 24}}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -191,10 +197,7 @@ interface TimeSpanOptionsProps {
 }
 
 const TimespanOptions: React.FC<TimeSpanOptionsProps> = props => (
-  <View
-    style={{
-      paddingHorizontal: 24,
-    }}>
+  <View style={{paddingHorizontal: 24}}>
     <Text style={[globalStyles.fieldHeader, {marginBottom: 10}]}>
       Show me stats from
     </Text>
@@ -320,11 +323,6 @@ interface TimespanOptionButtonProps {
   onTimespanOptionSelected: (option: TimespanOption) => void;
 }
 
-interface ClickableGroupProps {
-  children: ReactNode;
-  onSelected: () => void;
-}
-
 const TimespanOptionButton: React.FC<TimespanOptionButtonProps> = props => {
   const animatedFontSize = useSharedValue(16);
   const selectedFontSize = 20;
@@ -353,34 +351,6 @@ const TimespanOptionButton: React.FC<TimespanOptionButtonProps> = props => {
     setItemIsClickable(!isSelected);
   }, [isSelected]);
 
-  const ClickableGroup: React.FC<ClickableGroupProps> = ({
-    children,
-    onSelected,
-  }) => {
-    if (itemIsClickable) {
-      return (
-        <TouchableOpacity
-          style={[styles.optionPadding]}
-          onPress={() => {
-            props.onTimespanOptionSelected(props.thisOption);
-          }}>
-          {children}
-        </TouchableOpacity>
-      );
-    }
-
-    return (
-      <View
-        style={[
-          globalStyles.button,
-          styles.optionButtonSelected,
-          styles.optionPadding,
-        ]}>
-        {children}
-      </View>
-    );
-  };
-
   const [customTimespanConfig, setCustomTimespanConfig] = useState({
     x: 7,
     unit: 'days',
@@ -389,7 +359,8 @@ const TimespanOptionButton: React.FC<TimespanOptionButtonProps> = props => {
   return (
     <View>
       <ClickableGroup
-        onSelected={() => props.onTimespanOptionSelected(props.thisOption)}>
+        onSelected={() => props.onTimespanOptionSelected(props.thisOption)}
+        itemIsClickable={itemIsClickable}>
         <Animated.Text style={[styles.smallText, animatedFontSizeStyle]}>
           {props.text}
         </Animated.Text>
@@ -425,6 +396,40 @@ const TimespanOptionButton: React.FC<TimespanOptionButtonProps> = props => {
           </View>
         )}
       </ClickableGroup>
+    </View>
+  );
+};
+
+interface ClickableGroupProps {
+  children: ReactNode;
+  itemIsClickable: boolean;
+  onSelected: () => void;
+}
+
+const ClickableGroup: React.FC<ClickableGroupProps> = ({
+  children,
+  itemIsClickable,
+  onSelected,
+}) => {
+  if (itemIsClickable) {
+    console.log('12345 item IS clickable');
+    return (
+      <TouchableOpacity style={[styles.optionPadding]} onPress={onSelected}>
+        {children}
+      </TouchableOpacity>
+    );
+  }
+
+  console.log('12345 item is not clickable');
+
+  return (
+    <View
+      style={[
+        globalStyles.button,
+        styles.optionButtonSelected,
+        styles.optionPadding,
+      ]}>
+      {children}
     </View>
   );
 };
