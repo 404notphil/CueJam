@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
-import {AppModal} from '../ui/AppModal';
 import {NumberSelectorView} from './NumberSelectorView';
-import {DrillConfigurationModal} from './DrillConfigurationModal';
-
+import {DefaultAppModal} from './DrillConfigurationModal';
+DefaultAppModalDefaultAppModal;
 interface SetTempoModalProps {
   modalIsVisible: boolean;
   tempo: number;
@@ -16,8 +15,8 @@ export const SetTempoModal: React.FC<SetTempoModalProps> = props => {
   );
 
   return (
-    <DrillConfigurationModal
-      {...props}
+    <DefaultAppModal
+      DefaultAppModal
       title={'tempo'}
       onDismiss={() => {
         props.onSetTempo(currentDisplayedTempo);
@@ -31,6 +30,7 @@ export const SetTempoModal: React.FC<SetTempoModalProps> = props => {
           props.onDismiss();
         }}
       />
-    </DrillConfigurationModal>
+    </DefaultAppModal>
   );
+  DefaultAppModal;
 };

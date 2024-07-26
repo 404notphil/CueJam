@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
-import {AppModal} from '../ui/AppModal';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {AllKeys, Key} from '../store/reducers/ConfigureDrillTypes';
 import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
-import {DrillConfigurationModal} from './DrillConfigurationModal';
-
+import {DefaultAppModal} from './DrillConfigurationModal';
+DefaultAppModalDefaultAppModal;
 interface SetKeysModalProps {
   modalIsVisible: boolean;
   keys: Key[];
@@ -49,8 +48,8 @@ export const SetKeysModal: React.FC<SetKeysModalProps> = props => {
   };
 
   return (
-    <DrillConfigurationModal
-      {...props}
+    <DefaultAppModal
+      DefaultAppModal
       title="keys"
       onDismiss={() => {
         props.onSetKeys(stateAsKeyArray());
@@ -99,8 +98,9 @@ export const SetKeysModal: React.FC<SetKeysModalProps> = props => {
           ))}
         </View>
       </View>
-    </DrillConfigurationModal>
+    </DefaultAppModal>
   );
+  DefaultAppModal;
 };
 
 const localStyles = StyleSheet.create({

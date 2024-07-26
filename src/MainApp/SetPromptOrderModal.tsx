@@ -5,7 +5,7 @@ import {
 } from '../store/reducers/ConfigureDrillTypes';
 import {Text, View} from 'react-native';
 import {RadioButton} from 'react-native-paper';
-import {DrillConfigurationModal} from './DrillConfigurationModal';
+import {DefaultAppModal./DrillConDefaultAppModal
 
 interface SetPromptOrderModalProps {
   modalIsVisible: boolean;
@@ -25,7 +25,7 @@ export const SetPromptOrderModal: React.FC<
   }, [props.promptOrder]);
 
   return (
-    <DrillConfigurationModal
+    <DefaultAppModal
       {...props}
       title={'prompt order'}
       onDismiss={() => {
@@ -46,6 +46,6 @@ export const SetPromptOrderModal: React.FC<
           ))}
         </View>
       </RadioButton.Group>
-    </DrillConfigurationModal>
+    </DefaultAppModal
   );
 };

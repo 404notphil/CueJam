@@ -10,7 +10,7 @@ interface DrillConfigurationModalProps {
   onDismiss: () => void;
 }
 
-export const DrillConfigurationModal: React.FC<
+export const DefaultAppModal: React.FC<
   DrillConfigurationModalProps
 > = props => {
   return (

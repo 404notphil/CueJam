@@ -50,6 +50,11 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: Themes.dark.background,
   },
+  screenContainerScrollable: {
+    paddingVertical: 24,
+    flex: 1,
+    backgroundColor: Themes.dark.background,
+  },
   title: {
     marginTop: 8,
     fontSize: 40,
@@ -88,7 +93,6 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: Themes.dark.buttonSurface,
     padding: 16,
     borderRadius: 5,
-    ...shadowStyleSheet.shadowStyle
   },
   chipStyle: {
     height: 40,
@@ -116,6 +120,7 @@ export const globalStyles = StyleSheet.create({
     fontFamily: 'arciform',
     fontSize: 16,
   },
+  underline: {textDecorationLine: 'underline'},
   actionButtonText: {
     color: Themes.dark.actionText,
     fontFamily: 'arciform',
@@ -140,7 +145,7 @@ export const globalStyles = StyleSheet.create({
     fontFamily: 'arciform',
   },
   listItemBackground: {
-    backgroundColor: "#242C3B",
-    ...shadowStyleSheet.shadowStyle
-  }
+    backgroundColor: '#242C3B',
+    ...shadowStyleSheet.shadowStyle,
+  },
 });

@@ -25,6 +25,7 @@ import {
 export type DrillConfiguration = {
   drillId?: number;
   drillName: string;
+  responseInstruction: string;
   tempo: number;
   beatsPerPrompt: number;
   noteNames: NoteName[];
@@ -58,6 +59,8 @@ export interface ConfigureDrillState {
   foundSimilarDrillButtonVisible: boolean;
   deleteDrillButtonVisible: boolean;
   titleError: 'You must choose a name!' | 'That name already exists!' | null;
+  stats: DrillStats;
+  totalSessionTimeForSelectedTimePeriod: number | null;
   playButtonText: 'play' | 'play without saving';
 }
 
@@ -90,9 +93,17 @@ const SaveDrillButtonStates = {
   } as SaveDrillButtonState,
 };
 
+export type DrillStats = {
+  totalAllDrills: number | null;
+  perDrill: DrillStat[];
+};
+
+export type DrillStat = {drillName: string; totalTime: number};
+
 export const initialState: ConfigureDrillState = {
   configuration: {
     drillName: '',
+    responseInstruction: '',
     tempo: 150,
     beatsPerPrompt: 4,
     noteNames: AllNoteNames,
@@ -113,6 +124,8 @@ export const initialState: ConfigureDrillState = {
   foundSimilarDrillButtonVisible: false,
   deleteDrillButtonVisible: false,
   titleError: null,
+  stats: {totalAllDrills: null, perDrill: []},
+  totalSessionTimeForSelectedTimePeriod: null,
   playButtonText: 'play',
 };
 
@@ -160,7 +173,10 @@ export const configureDrillSlice = createSlice({
       state,
       action: PayloadAction<PromptLayer<LayerChildItem>>,
     ) => {
-      state.configuration.promptLayers = [...state.configuration.promptLayers, action.payload];
+      state.configuration.promptLayers = [
+        ...state.configuration.promptLayers,
+        action.payload,
+      ];
     },
     replacePromptLayer: (
       state,
@@ -182,7 +198,7 @@ export const configureDrillSlice = createSlice({
     },
     advanceToNextPrompt: state => {
       state.configuration.promptLayers.forEach(layer =>
-        layer.getNextPromptPairFromCue()
+        layer.getNextPromptPairFromCue(),
       );
     },
     writeDrillSuccess: (state, action: PayloadAction<ConfigureDrillState>) => {
@@ -262,6 +278,9 @@ export const configureDrillSlice = createSlice({
     drillNameNotUniqueError: state => {
       state.titleError = 'That name already exists!';
     },
+    fetchedDrillStats: (state, action: PayloadAction<DrillStats>) => {
+      state.stats = action.payload;
+    },
   },
 });
 
@@ -295,4 +314,5 @@ export const {
   checkedForSimilarDrills,
   drillNameEmptyError,
   drillNameNotUniqueError,
+  fetchedDrillStats,
 } = configureDrillSlice.actions;

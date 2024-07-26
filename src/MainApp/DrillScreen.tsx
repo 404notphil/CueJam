@@ -35,6 +35,10 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import {
+  addSessionToDB,
+  loadSessionDataForTimeRange,
+} from '../services/AppDatabase';
 
 export function DrillScreen(): React.JSX.Element {
   const state = useAppSelector(selectConfigureDrill);
@@ -114,6 +118,10 @@ export function DrillScreen(): React.JSX.Element {
 
   const orientation = useOrientation();
 
+  const [playbackStartTime, setPlaybackStartTime] = useState(0);
+  const [promptsSinceStartedPlayback, setPromptsSinceStartedPlayback] =
+    useState(0);
+
   const divider = (orientationArg: 'PORTRAIT' | 'LANDSCAPE') => (
     <View
       style={
@@ -134,6 +142,25 @@ export function DrillScreen(): React.JSX.Element {
     />
   );
 
+  const addCurrentSessionToDb = () => {
+    drill.drillId &&
+      dispatch(
+        addSessionToDB({
+          drillId: drill.drillId,
+          drillName: drill.drillName,
+          timeStarted: Date.now(),
+          totalSessionTimeMillis: Date.now() - playbackStartTime,
+          promptCount: promptsSinceStartedPlayback,
+          millisecondsPerPrompt:
+            (1000 / (drill.tempo / 60)) * drill.beatsPerPrompt,
+          beatsPerPrompt: drill.beatsPerPrompt,
+          tempo: drill.tempo,
+        }),
+      );
+
+    setPromptsSinceStartedPlayback(0);
+  };
+
   useEffect(() => {
     LogBox.ignoreLogs(['new NativeEventEmitter']);
 
@@ -146,6 +173,18 @@ export function DrillScreen(): React.JSX.Element {
       const beatData = JSON.parse(data);
       const beat = (beatData.currentBeat % drill.beatsPerPrompt) + 1;
       setCurrentBeat(beat);
+      if (beat === 1) {
+        console.log(
+          '12345 promptsSinceStartedPlayback a -> ' +
+            promptsSinceStartedPlayback,
+        );
+        setPromptsSinceStartedPlayback(prevValue => prevValue + 1);
+        console.log('12345 math -> ' + (promptsSinceStartedPlayback + 1));
+        console.log(
+          '12345 promptsSinceStartedPlayback b -> ' +
+            promptsSinceStartedPlayback,
+        );
+      }
     });
     return () => {
       subscription.remove();
@@ -252,35 +291,37 @@ export function DrillScreen(): React.JSX.Element {
           {divider(orientation)}
 
           {/* Next prompt view*/}
-          {shouldShowNextPromptText ? (<View
-            style={{
-              flexDirection: 'column',
-              flex: 3,
-            }}>
-            {/* Current value */}
-
-            {drill.promptLayers.map(item => (
-              <View style={{flex: 1, justifyContent: 'center'}}>
-                <Text
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  style={localStyles.promptText}>
-                  {item.nextPrompt}
-                </Text>
-              </View>
-            ))}
-          </View>)
-           : (<Animated.View
-            style={[
-              animatedStyleForNextPrompt,
-              {
+          {shouldShowNextPromptText ? (
+            <View
+              style={{
                 flexDirection: 'column',
-              },
-            ]}>
-            {/* Previous value */}
-            <View style={{flex: 1, justifyContent: 'center'}}></View>
-          </Animated.View>)}
-          
+                flex: 3,
+              }}>
+              {/* Current value */}
+
+              {drill.promptLayers.map(item => (
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                  <Text
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    style={localStyles.promptText}>
+                    {item.nextPrompt}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Animated.View
+              style={[
+                animatedStyleForNextPrompt,
+                {
+                  flexDirection: 'column',
+                },
+              ]}>
+              {/* Previous value */}
+              <View style={{flex: 1, justifyContent: 'center'}}></View>
+            </Animated.View>
+          )}
         </View>
       </View>
 
@@ -330,8 +371,10 @@ export function DrillScreen(): React.JSX.Element {
             onPress={() => {
               if (isPlaying) {
                 MetronomeModule.stop();
+                addCurrentSessionToDb();
                 setCurrentBeat(1);
               } else {
+                setPlaybackStartTime(Date.now());
                 MetronomeModule.start();
               }
               setIsPlaying(!isPlaying);

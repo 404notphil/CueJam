@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {AppModal} from '../ui/AppModal';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {
   AllChordQualities,
@@ -8,8 +7,8 @@ import {
 import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
-import {DrillConfigurationModal} from './DrillConfigurationModal';
-
+import {DefaultAppModal} from './DrillConfigurationModal';
+DefaultAppModalDefaultAppModal;
 interface SetChordQualitiesModalProps {
   modalIsVisible: boolean;
   chordQualities: ChordQuality[];
@@ -61,8 +60,8 @@ export const SetChordQualitiesModal: React.FC<
   };
 
   return (
-    <DrillConfigurationModal
-      {...props}
+    <DefaultAppModal
+      DefaultAppModal
       title="chord qualities"
       onDismiss={() => {
         props.onSetChordQualities(stateAsChordQualityArray());
@@ -113,8 +112,9 @@ export const SetChordQualitiesModal: React.FC<
           )}
         </View>
       </View>
-    </DrillConfigurationModal>
+    </DefaultAppModal>
   );
+  DefaultAppModal;
 };
 
 const localStyles = StyleSheet.create({

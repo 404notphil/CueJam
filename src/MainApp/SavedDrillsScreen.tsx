@@ -84,10 +84,9 @@ export function SavedDrillsScreen(): React.JSX.Element {
           <DrillCard
             drill={{name: item.name, id: item.drillId}}
             details={
-              'order: ' +
-              item.configuration.promptOrder +
-              ' - context: ' +
-              item.configuration.tonalContext
+              item.configuration.promptLayers
+                .map(item => item.optionType.itemDisplayName)
+                .join(' + ')
             }
             onPress={() => {
               dispatch(loadDrillById(item.drillId));
