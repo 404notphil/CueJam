@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
-import {AppModal} from '../ui/AppModal';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {AllModes, Mode} from '../store/reducers/ConfigureDrillTypes';
 import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
-import {DrillConfigurationModal} from './DrillConfigurationModal';
+import {DefaultAppModal} from './DrillConfigurationModal';
 
 interface SetModesModalProps {
   modalIsVisible: boolean;
@@ -49,7 +48,7 @@ export const SetModesModal: React.FC<SetModesModalProps> = props => {
   };
 
   return (
-    <DrillConfigurationModal
+    <DefaultAppModal
       {...props}
       title="modes"
       onDismiss={() => {
@@ -99,7 +98,7 @@ export const SetModesModal: React.FC<SetModesModalProps> = props => {
           ))}
         </View>
       </View>
-    </DrillConfigurationModal>
+    </DefaultAppModal>
   );
 };
 

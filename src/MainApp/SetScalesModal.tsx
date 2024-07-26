@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
-import {AppModal} from '../ui/AppModal';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {AllScales, Scale} from '../store/reducers/ConfigureDrillTypes';
 import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
-import {DrillConfigurationModal} from './DrillConfigurationModal';
+import {DefaultAppModal} from './DrillConfigurationModal';
 
 interface SetScalesModalProps {
   modalIsVisible: boolean;
@@ -49,7 +48,7 @@ export const SetScalesModal: React.FC<SetScalesModalProps> = props => {
   };
 
   return (
-    <DrillConfigurationModal
+    <DefaultAppModal
       {...props}
       title="scales"
       onDismiss={() => {
@@ -99,7 +98,7 @@ export const SetScalesModal: React.FC<SetScalesModalProps> = props => {
           ))}
         </View>
       </View>
-    </DrillConfigurationModal>
+    </DefaultAppModal>
   );
 };
 

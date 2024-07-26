@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import {globalStyles} from '../ui/theme/styles';
 import {RadioButton} from 'react-native-paper';
-import {DrillConfigurationModal} from './DrillConfigurationModal';
+import {DefaultAppModal} from './DrillConfigurationModal';
 import {Themes} from '../ui/theme/Theme';
 import React from 'react';
 import CloseIcon from '../assets/CloseIcon';
@@ -56,7 +56,7 @@ export const SetPromptLayerModal: React.FC<
   }, [currentConfiguredPromptLayer]);
 
   return (
-    <DrillConfigurationModal
+    <DefaultAppModal
       {...props}
       title={props.promptLayer ? 'edit prompt layer' : 'add to prompt'}
       onDismiss={() => {
@@ -126,7 +126,7 @@ export const SetPromptLayerModal: React.FC<
           />
         </View>
       </View>
-    </DrillConfigurationModal>
+    </DefaultAppModal>
   );
 };
 
