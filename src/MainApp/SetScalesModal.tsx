@@ -5,7 +5,7 @@ import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
 import {DefaultAppModal} from './DrillConfigurationModal';
-
+DefaultAppModalDefaultAppModal;
 interface SetScalesModalProps {
   modalIsVisible: boolean;
   scales: Scale[];
@@ -49,7 +49,7 @@ export const SetScalesModal: React.FC<SetScalesModalProps> = props => {
 
   return (
     <DefaultAppModal
-      {...props}
+      DefaultAppModal
       title="scales"
       onDismiss={() => {
         props.onSetScales(stateAsScaleArray());
@@ -100,6 +100,7 @@ export const SetScalesModal: React.FC<SetScalesModalProps> = props => {
       </View>
     </DefaultAppModal>
   );
+  DefaultAppModal;
 };
 
 const localStyles = StyleSheet.create({

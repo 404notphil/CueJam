@@ -6,7 +6,7 @@ import {
 import {Text, View} from 'react-native';
 import {globalStyles} from '../ui/theme/styles';
 import {RadioButton} from 'react-native-paper';
-import {DefaultAppModal} from './DrillConfigurationModal';
+import {DefaultAppModal./DrillConDefaultAppModal
 
 interface SetTonalContextModalProps {
   modalIsVisible: boolean;
@@ -43,6 +43,6 @@ export const SetTonalContextModal: React.FC<
           ))}
         </View>
       </RadioButton.Group>
-    </DefaultAppModal>
+    </DefaultAppModal
   );
 };

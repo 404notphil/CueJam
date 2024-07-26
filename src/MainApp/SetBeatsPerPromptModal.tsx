@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {NumberSelectorView} from './NumberSelectorView';
-import {DefaultAppModal} from './DrillConfigurationModal';
+import {DefaultAppModal./DrillConDefaultAppModal
 
 interface SetBeatsPerPromptModalProps {
   modalIsVisible: boolean;
@@ -31,6 +31,6 @@ export const SetBeatsPerPromptModal: React.FC<
           props.onDismiss();
         }}
       />
-    </DefaultAppModal>
+    </DefaultAppModal
   );
 };

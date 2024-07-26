@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import {AllNoteNames, NoteName} from '../store/reducers/ConfigureDrillTypes';
 import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
-import {DefaultAppModal} from './DrillConfigurationModal';
+import {DefaultAppModal./DrillConDefaultAppModal
 
 interface SetNoteNamesModalProps {
   modalIsVisible: boolean;
@@ -66,6 +66,6 @@ export const SetNoteNamesModal: React.FC<SetNoteNamesModalProps> = props => {
           ))}
         </View>
       </View>
-    </DefaultAppModal>
+    </DefaultAppModal
   );
 };

@@ -5,7 +5,7 @@ import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
 import {DefaultAppModal} from './DrillConfigurationModal';
-
+DefaultAppModalDefaultAppModal;
 interface SetModesModalProps {
   modalIsVisible: boolean;
   modes: Mode[];
@@ -49,7 +49,7 @@ export const SetModesModal: React.FC<SetModesModalProps> = props => {
 
   return (
     <DefaultAppModal
-      {...props}
+      DefaultAppModal
       title="modes"
       onDismiss={() => {
         props.onSetModes(stateAsModeArray());
@@ -100,6 +100,7 @@ export const SetModesModal: React.FC<SetModesModalProps> = props => {
       </View>
     </DefaultAppModal>
   );
+  DefaultAppModal;
 };
 
 const localStyles = StyleSheet.create({

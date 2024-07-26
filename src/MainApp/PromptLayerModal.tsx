@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import {globalStyles} from '../ui/theme/styles';
 import {RadioButton} from 'react-native-paper';
-import {DefaultAppModal} from './DrillConfigurationModal';
+import {DefaultAppModal} from './DefaultAppModal';
 import {Themes} from '../ui/theme/Theme';
 import React from 'react';
 import CloseIcon from '../assets/CloseIcon';

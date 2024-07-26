@@ -8,7 +8,7 @@ import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
 import {DefaultAppModal} from './DrillConfigurationModal';
-
+DefaultAppModalDefaultAppModal;
 interface SetChordQualitiesModalProps {
   modalIsVisible: boolean;
   chordQualities: ChordQuality[];
@@ -61,7 +61,7 @@ export const SetChordQualitiesModal: React.FC<
 
   return (
     <DefaultAppModal
-      {...props}
+      DefaultAppModal
       title="chord qualities"
       onDismiss={() => {
         props.onSetChordQualities(stateAsChordQualityArray());
@@ -114,6 +114,7 @@ export const SetChordQualitiesModal: React.FC<
       </View>
     </DefaultAppModal>
   );
+  DefaultAppModal;
 };
 
 const localStyles = StyleSheet.create({

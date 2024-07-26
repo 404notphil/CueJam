@@ -5,7 +5,7 @@ import {Chip} from 'react-native-paper';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
 import {DefaultAppModal} from './DrillConfigurationModal';
-
+DefaultAppModalDefaultAppModal;
 interface SetKeysModalProps {
   modalIsVisible: boolean;
   keys: Key[];
@@ -49,7 +49,7 @@ export const SetKeysModal: React.FC<SetKeysModalProps> = props => {
 
   return (
     <DefaultAppModal
-      {...props}
+      DefaultAppModal
       title="keys"
       onDismiss={() => {
         props.onSetKeys(stateAsKeyArray());
@@ -100,6 +100,7 @@ export const SetKeysModal: React.FC<SetKeysModalProps> = props => {
       </View>
     </DefaultAppModal>
   );
+  DefaultAppModal;
 };
 
 const localStyles = StyleSheet.create({
