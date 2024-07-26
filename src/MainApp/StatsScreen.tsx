@@ -153,13 +153,13 @@ export function StatsScreen(): React.JSX.Element {
         setSelectedTimespanOption={setSelectedTimespanOption}
       />
 
-      <MainContent {...stats} />
-
       {/* Empty state */}
-      {stats.totalAllDrills === 0 && (
-        <View style={{flex: 1, alignItems: 'center'}}>
+      {stats.totalAllDrills === 0 ? (
+        <View style={{alignItems: 'center'}}>
           <Text style={globalStyles.title}>no stats yet!</Text>
         </View>
+      ) : (
+        <MainContent {...stats} />
       )}
     </View>
   );
