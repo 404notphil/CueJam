@@ -352,11 +352,6 @@ const TimespanOptionButton: React.FC<TimespanOptionButtonProps> = props => {
     setItemIsClickable(!isSelected);
   }, [isSelected]);
 
-  const [customTimespanConfig, setCustomTimespanConfig] = useState({
-    x: 7,
-    unit: 'days',
-  });
-
   return (
     <View>
       <ClickableGroup
