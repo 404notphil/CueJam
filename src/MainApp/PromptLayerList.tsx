@@ -162,6 +162,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
   return (
     <View>
       <DraggableFlatList
+        keyboardShouldPersistTaps={true}
         data={promptLayers}
         scrollEnabled={true}
         keyExtractor={item => item.uniqueId.toString()}
@@ -172,10 +173,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
         }}
         ListHeaderComponent={<ConfigureDrillHeader state={props.state} />}
         ListFooterComponent={
-          <TouchableOpacity
-            onPress={() =>
-              props.onPressAddNewLayer()
-            }>
+          <TouchableOpacity onPress={() => props.onPressAddNewLayer()}>
             <Text
               style={[
                 globalStyles.actionButtonText,
