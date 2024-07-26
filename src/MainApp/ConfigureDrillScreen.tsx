@@ -2,10 +2,7 @@ import {
   Text,
   View,
   TouchableOpacity,
-  TextInput,
   StyleSheet,
-  Keyboard,
-  ScrollView,
 } from 'react-native';
 
 import React, {FC, useCallback, useEffect, useState} from 'react';
@@ -17,38 +14,11 @@ import {
   onDrillEdit,
   replacePromptLayer,
   selectConfigureDrill,
-  setBeatsPerChord,
-  setChordQualities,
-  setKeys,
-  setModes,
-  setNoteNames,
-  setPromptLayers,
   setPromptOrder,
-  setScales,
-  setTempo,
-  setTonalContext,
 } from '../store/reducers/configureDrillReducer';
-import {SetTempoModal} from './SetTempoModal';
-import {SetBeatsPerPromptModal} from './SetBeatsPerPromptModal';
-import {SetNoteNamesModal} from './SetNoteNamesModal';
-import {
-  ChordQuality,
-  Key,
-  LayerChildItem,
-  Mode,
-  NoteName,
-  PromptLayerOption,
-  PromptOrder,
-  Scale,
-  TonalContext,
-} from '../store/reducers/ConfigureDrillTypes';
-import {SetPromptOrderModal} from './SetPromptOrderModal';
-import {SetTonalContextModal} from './SetTonalContextModal';
-import {SetChordQualitiesModal} from './SetChordQualitiesModal';
-import {SetScalesModal} from './SetScalesModal';
-import Animated, {useSharedValue, withTiming} from 'react-native-reanimated';
-import {SetModesModal} from './SetModesModal';
-import {SetKeysModal} from './SetKeysModal';
+import {LayerChildItem} from '../store/reducers/ConfigureDrillTypes';
+
+import {useSharedValue, withTiming} from 'react-native-reanimated';
 import {
   checkForSimilarDrills,
   loadSessionDataForTimeRange,
