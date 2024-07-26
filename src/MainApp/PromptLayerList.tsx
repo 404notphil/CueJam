@@ -51,7 +51,6 @@ import EditIcon from '../assets/EditIcon';
 import PlayIcon from '../assets/PlayIcon';
 import DraggableFlatList, {
   RenderItemParams,
-  OpacityDecorator,
   ScaleDecorator,
 } from 'react-native-draggable-flatlist';
 
