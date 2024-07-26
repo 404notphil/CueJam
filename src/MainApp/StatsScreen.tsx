@@ -5,6 +5,8 @@ import {
   View,
   FlatList,
   TextInput,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Animated, {
   Easing,
@@ -20,6 +22,7 @@ import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
 import {v4 as uuidv4} from 'uuid';
 import {
+  AllTimeUnits,
   calculateTimes,
   formatDurationInMillis,
   TimeUnit,
@@ -32,6 +35,7 @@ import {
 } from '../store/reducers/configureDrillReducer';
 import EditIcon from '../assets/EditIcon';
 import {DefaultAppModal} from './DefaultAppModal';
+import CheckIcon from '../assets/CheckIIcon';
 
 export function StatsScreen(): React.JSX.Element {
   const navigation = useAppNavigation();
@@ -135,50 +139,80 @@ export function StatsScreen(): React.JSX.Element {
   const [currentCustomUnit, setCurrentCustomUnit] = useState<TimeUnit>('days');
 
   return (
-    <View style={globalStyles.screenContainerScrollable}>
-      <TouchableOpacity
-        style={[globalStyles.button]}
-        onPress={() => toggleTestData()}>
-        <Text
-          style={
-            useTestData ? globalStyles.actionButtonText : globalStyles.infoText
-          }>
-          {useTestData
-            ? 'Using test data (tap to change)'
-            : 'Using real data (tap to change)'}
-        </Text>
-      </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={globalStyles.screenContainerScrollable}>
+        <TouchableOpacity
+          style={[globalStyles.button]}
+          onPress={() => toggleTestData()}>
+          <Text
+            style={
+              useTestData
+                ? globalStyles.actionButtonText
+                : globalStyles.infoText
+            }>
+            {useTestData
+              ? 'Using test data (tap to change)'
+              : 'Using real data (tap to change)'}
+          </Text>
+        </TouchableOpacity>
 
-      {/* Timespan options */}
-      <TimespanOptions
-        selectedTimespanOption={selectedTimespanOption}
-        setSelectedTimespanOption={setSelectedTimespanOption}
-        currentCustomValue={currentCustomValue}
-        currentCustomUnit={currentCustomUnit}
-        onEditCustomValue={newValue => setCurrentCustomValue(newValue)}
-        onPressToEditCustomUnit={() => setShouldShowCustomUnitModal(true)}
-      />
+        {/* Timespan options */}
+        <TimespanOptions
+          selectedTimespanOption={selectedTimespanOption}
+          setSelectedTimespanOption={setSelectedTimespanOption}
+          currentCustomValue={currentCustomValue}
+          currentCustomUnit={currentCustomUnit}
+          onEditCustomValue={newValue => setCurrentCustomValue(newValue)}
+          onPressToEditCustomUnit={() => setShouldShowCustomUnitModal(true)}
+        />
 
-      {/* Empty state */}
-      {stats.totalAllDrills === 0 ? (
-        <View style={{alignItems: 'center'}}>
-          <Text style={globalStyles.title}>no stats yet!</Text>
+        {/* Empty state */}
+        <View style={{flex: 1}}>
+          {stats.totalAllDrills === 0 ? (
+            <View style={{alignItems: 'center'}}>
+              <Text style={globalStyles.title}>no stats yet!</Text>
+            </View>
+          ) : (
+            <MainContent {...stats} />
+          )}
         </View>
-      ) : (
-        <MainContent {...stats} />
-      )}
 
-      {shouldShowCustomUnitModal && (
-        <DefaultAppModal
-          title={'Select time unit'}
-          onDismiss={() => {
-            setShouldShowCustomUnitModal(false);
-          }}
-          modalIsVisible={shouldShowCustomUnitModal}>
-          <View></View>
-        </DefaultAppModal>
-      )}
-    </View>
+        {shouldShowCustomUnitModal && (
+          <DefaultAppModal
+            title={'Select time unit'}
+            onDismiss={() => {
+              setShouldShowCustomUnitModal(false);
+            }}
+            modalIsVisible={shouldShowCustomUnitModal}>
+            <View style={{gap: 10, paddingTop: 16}}>
+              {AllTimeUnits.map(item => (
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    flex: 1,
+                    justifyContent: 'center',
+                  }}
+                  onPress={() => {
+                    setCurrentCustomUnit(item);
+                  }}>
+                  <View
+                    style={{flex: 1, alignItems: 'flex-end', paddingEnd: 16}}>
+                    {currentCustomUnit === item ? (
+                      <CheckIcon size={20} />
+                    ) : (
+                      <View style={{flex: 1}} />
+                    )}
+                  </View>
+                  <Text style={[globalStyles.mediumText, {flex: 1}]}>
+                    {item}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </DefaultAppModal>
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -275,16 +309,18 @@ const TimespanOptions: React.FC<TimeSpanOptionsProps> = props => (
       />
     </View>
 
-    <TimespanOptionButton
-      text={'custom'}
-      thisOption="CUSTOM"
-      currentOptionSelected={props.selectedTimespanOption}
-      onTimespanOptionSelected={props.setSelectedTimespanOption}
-      currentCustomValue={props.currentCustomValue}
-      currentCustomUnit={props.currentCustomUnit}
-      onEditCustomValue={props.onEditCustomValue}
-      onPressToEditCustomUnit={props.onPressToEditCustomUnit}
-    />
+    <View>
+      <TimespanOptionButton
+        text={'custom'}
+        thisOption="CUSTOM"
+        currentOptionSelected={props.selectedTimespanOption}
+        onTimespanOptionSelected={props.setSelectedTimespanOption}
+        currentCustomValue={props.currentCustomValue}
+        currentCustomUnit={props.currentCustomUnit}
+        onEditCustomValue={props.onEditCustomValue}
+        onPressToEditCustomUnit={props.onPressToEditCustomUnit}
+      />
+    </View>
   </View>
 );
 
@@ -413,8 +449,11 @@ const TimespanOptionButton: React.FC<TimespanOptionButtonProps> = props => {
                   ]}
                   keyboardType="numeric"
                   onChangeText={text => {
-                    if (text.length !== 0)
+                    const valid =
+                      text.length !== 0 && text.length <= 3 && text !== '0';
+                    if (valid) {
                       props.onEditCustomValue?.(parseInt(text));
+                    }
                   }}>
                   {props.currentCustomValue}
                 </TextInput>

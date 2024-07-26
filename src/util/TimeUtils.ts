@@ -21,7 +21,11 @@ export const getBeginningOfYear = (date: Date): number => {
   return new Date(date.getFullYear(), 0, 1).getTime();
 };
 
-export type TimeUnit = 'days' | 'weeks' | 'months';
+const timeUnitDefinitions = ['days', 'weeks', 'months'];
+export type TimeUnit = (typeof timeUnitDefinitions)[number];
+export const AllTimeUnits = [...timeUnitDefinitions] as TimeUnit[];
+
+
 
 export const calculateXUnitsAgo = (x: number, unit: TimeUnit, now: number): number => {
   const date = new Date(now);
