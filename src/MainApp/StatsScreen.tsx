@@ -3,11 +3,9 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Platform,
   FlatList,
+  TextInput,
 } from 'react-native';
-import {Image} from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
 import Animated, {
   Easing,
   ReduceMotion,
@@ -20,12 +18,11 @@ import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {useAppNavigation} from '../ui/App';
 import {globalStyles} from '../ui/theme/styles';
 import {Themes} from '../ui/theme/Theme';
-import {TextInput} from 'react-native-paper';
 import {v4 as uuidv4} from 'uuid';
 import {
-  TimeValues,
   calculateTimes,
   formatDurationInMillis,
+  TimeUnit,
 } from '../util/TimeUtils';
 import {loadSessionDataForTimeRange} from '../services/AppDatabase';
 import {
@@ -33,8 +30,8 @@ import {
   DrillStats,
   selectConfigureDrill,
 } from '../store/reducers/configureDrillReducer';
-import {ScrollView} from 'react-native-gesture-handler';
 import EditIcon from '../assets/EditIcon';
+import {DefaultAppModal} from './DefaultAppModal';
 
 export function StatsScreen(): React.JSX.Element {
   const navigation = useAppNavigation();
@@ -132,6 +129,11 @@ export function StatsScreen(): React.JSX.Element {
     }
   }, [selectedTimespanOption, useTestData, state.stats]);
 
+  const [shouldShowCustomUnitModal, setShouldShowCustomUnitModal] =
+    useState(false);
+  const [currentCustomValue, setCurrentCustomValue] = useState(14);
+  const [currentCustomUnit, setCurrentCustomUnit] = useState<TimeUnit>('days');
+
   return (
     <View style={globalStyles.screenContainerScrollable}>
       <TouchableOpacity
@@ -151,6 +153,10 @@ export function StatsScreen(): React.JSX.Element {
       <TimespanOptions
         selectedTimespanOption={selectedTimespanOption}
         setSelectedTimespanOption={setSelectedTimespanOption}
+        currentCustomValue={currentCustomValue}
+        currentCustomUnit={currentCustomUnit}
+        onEditCustomValue={newValue => setCurrentCustomValue(newValue)}
+        onPressToEditCustomUnit={() => setShouldShowCustomUnitModal(true)}
       />
 
       {/* Empty state */}
@@ -160,6 +166,17 @@ export function StatsScreen(): React.JSX.Element {
         </View>
       ) : (
         <MainContent {...stats} />
+      )}
+
+      {shouldShowCustomUnitModal && (
+        <DefaultAppModal
+          title={'Select time unit'}
+          onDismiss={() => {
+            setShouldShowCustomUnitModal(false);
+          }}
+          modalIsVisible={shouldShowCustomUnitModal}>
+          <View></View>
+        </DefaultAppModal>
       )}
     </View>
   );
@@ -195,6 +212,10 @@ const MainContent: React.FC<DrillStats> = props => {
 interface TimeSpanOptionsProps {
   selectedTimespanOption: TimespanOption;
   setSelectedTimespanOption: Dispatch<SetStateAction<TimespanOption>>;
+  currentCustomValue: number;
+  currentCustomUnit: TimeUnit;
+  onEditCustomValue: (newValue: number) => void;
+  onPressToEditCustomUnit: () => void;
 }
 
 const TimespanOptions: React.FC<TimeSpanOptionsProps> = props => (
@@ -259,6 +280,10 @@ const TimespanOptions: React.FC<TimeSpanOptionsProps> = props => (
       thisOption="CUSTOM"
       currentOptionSelected={props.selectedTimespanOption}
       onTimespanOptionSelected={props.setSelectedTimespanOption}
+      currentCustomValue={props.currentCustomValue}
+      currentCustomUnit={props.currentCustomUnit}
+      onEditCustomValue={props.onEditCustomValue}
+      onPressToEditCustomUnit={props.onPressToEditCustomUnit}
     />
   </View>
 );
@@ -322,6 +347,10 @@ interface TimespanOptionButtonProps {
   currentOptionSelected: TimespanOption;
   thisOption: TimespanOption;
   onTimespanOptionSelected: (option: TimespanOption) => void;
+  currentCustomValue?: number;
+  currentCustomUnit?: TimeUnit;
+  onEditCustomValue?: (newValue: number) => void;
+  onPressToEditCustomUnit?: () => void;
 }
 
 const TimespanOptionButton: React.FC<TimespanOptionButtonProps> = props => {
@@ -369,27 +398,46 @@ const TimespanOptionButton: React.FC<TimespanOptionButtonProps> = props => {
           </Animated.Text>
           {props.thisOption === 'CUSTOM' && isSelected && (
             <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
+              <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
                   padding: 16,
                   gap: 10,
                 }}>
-                <Text style={[globalStyles.actionButtonText, {fontSize: 25}]}>
-                  7
-                </Text>
+                <TextInput
+                  style={[
+                    globalStyles.actionButtonText,
+                    globalStyles.underline,
+                    {fontSize: 25},
+                  ]}
+                  keyboardType="numeric"
+                  onChangeText={text => {
+                    if (text.length !== 0)
+                      props.onEditCustomValue?.(parseInt(text));
+                  }}>
+                  {props.currentCustomValue}
+                </TextInput>
                 <EditIcon size={15} />
-              </TouchableOpacity>
+              </View>
+
               <TouchableOpacity
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
                   padding: 16,
                   gap: 10,
+                }}
+                onPress={() => {
+                  props.onPressToEditCustomUnit?.();
                 }}>
-                <Text style={[globalStyles.actionButtonText, {fontSize: 25}]}>
-                  days
+                <Text
+                  style={[
+                    globalStyles.actionButtonText,
+                    globalStyles.underline,
+                    {fontSize: 25},
+                  ]}>
+                  {props.currentCustomUnit ?? 'days'}
                 </Text>
                 <EditIcon size={15} />
               </TouchableOpacity>

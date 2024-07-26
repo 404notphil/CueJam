@@ -21,11 +21,9 @@ export const getBeginningOfYear = (date: Date): number => {
   return new Date(date.getFullYear(), 0, 1).getTime();
 };
 
-export const calculateXUnitsAgo = (
-  x: number,
-  unit: 'days' | 'weeks' | 'months',
-  now: number,
-): number => {
+export type TimeUnit = 'days' | 'weeks' | 'months';
+
+export const calculateXUnitsAgo = (x: number, unit: TimeUnit, now: number): number => {
   const date = new Date(now);
   if (unit === 'days') {
     date.setDate(date.getDate() - x);

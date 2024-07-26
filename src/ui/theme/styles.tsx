@@ -120,6 +120,7 @@ export const globalStyles = StyleSheet.create({
     fontFamily: 'arciform',
     fontSize: 16,
   },
+  underline: {textDecorationLine: 'underline'},
   actionButtonText: {
     color: Themes.dark.actionText,
     fontFamily: 'arciform',
