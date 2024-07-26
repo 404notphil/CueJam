@@ -418,7 +418,6 @@ const ClickableGroup: React.FC<ClickableGroupProps> = ({
   onSelected,
 }) => {
   if (itemIsClickable) {
-    console.log('12345 item IS clickable');
     return (
       <TouchableOpacity
         style={[styles.optionPadding, {flexDirection: 'row'}]}
@@ -427,8 +426,6 @@ const ClickableGroup: React.FC<ClickableGroupProps> = ({
       </TouchableOpacity>
     );
   }
-
-  console.log('12345 item is not clickable');
 
   return (
     <View

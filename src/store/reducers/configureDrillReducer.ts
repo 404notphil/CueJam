@@ -277,7 +277,6 @@ export const configureDrillSlice = createSlice({
       state.titleError = 'That name already exists!';
     },
     fetchedDrillStats: (state, action: PayloadAction<DrillStats>) => {
-      console.log('12345 dispatching -> ' + JSON.stringify(action.payload));
       state.stats = action.payload;
     },
   },
