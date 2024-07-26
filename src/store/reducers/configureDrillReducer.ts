@@ -25,6 +25,7 @@ import {
 export type DrillConfiguration = {
   drillId?: number;
   drillName: string;
+  responseInstruction: string;
   tempo: number;
   beatsPerPrompt: number;
   noteNames: NoteName[];
@@ -102,6 +103,7 @@ export type DrillStat = {drillName: string; totalTime: number};
 export const initialState: ConfigureDrillState = {
   configuration: {
     drillName: '',
+    responseInstruction: '',
     tempo: 150,
     beatsPerPrompt: 4,
     noteNames: AllNoteNames,
