@@ -38,17 +38,27 @@ export const SetPromptLayerModal: React.FC<
   const [currentConfiguredPromptLayer, setCurrentConfiguredPromptLayer] =
     useState<PromptLayer<LayerChildItem> | null>(props.promptLayer);
 
-  const childItemsBaseOnSelection = (values: LayerChildItem[]) => {
-    return values.map(item => {
-      return {isSelected: true, value: item};
-    });
+  const childItemsBasedOnSelection = (values: LayerChildItem[]) => {
+    const all = currentConfiguredPromptLayer?.fullSetOfChildren;
+    return all
+      ? all.map(item => {
+          return {isSelected: values?.includes(item), value: item};
+        })
+      : [];
   };
 
   const [listOfOptions, setListOfOptions] = useState(AllPromptLayerOptions);
   const [currentlyDisplayedChildItems, setCurrentlyDisplayedChildItems] =
     useState<{isSelected: boolean; value: LayerChildItem}[]>(
-      childItemsBaseOnSelection(AllNoteNames),
+      childItemsBasedOnSelection(props.promptLayer?.childrenChosen ?? []),
     );
+
+  useEffect(() => {
+    const children = currentlyDisplayedChildItems
+      .filter(item => item.isSelected)
+      .map(item => item.value);
+    currentConfiguredPromptLayer?.overwriteChildren(children);
+  }, [currentlyDisplayedChildItems]);
 
   const toggleIsSelectedStateOfItem = (name: string) => {
     setCurrentlyDisplayedChildItems(
@@ -70,9 +80,7 @@ export const SetPromptLayerModal: React.FC<
     if (currentConfiguredPromptLayer) {
       setListOfOptions([currentConfiguredPromptLayer.optionType]);
       setCurrentlyDisplayedChildItems(
-        childItemsBaseOnSelection(
-          currentConfiguredPromptLayer.optionType.children,
-        ),
+        childItemsBasedOnSelection(currentConfiguredPromptLayer.childrenChosen),
       );
     } else {
       setListOfOptions(AllPromptLayerOptions);

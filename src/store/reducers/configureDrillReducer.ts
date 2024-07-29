@@ -187,10 +187,11 @@ export const configureDrillSlice = createSlice({
     ) => {
       if (action.payload.oldLayer) {
         state.configuration.promptLayers = state.configuration.promptLayers.map(
-          layerToCheck =>
-            layerToCheck.uniqueId === action.payload.oldLayer?.uniqueId
+          layerToCheck => {
+            return layerToCheck.uniqueId === action.payload.oldLayer?.uniqueId
               ? action.payload.newLayer
-              : layerToCheck,
+              : layerToCheck;
+          },
         );
       } else {
         state.configuration.promptLayers.push(action.payload.newLayer);
