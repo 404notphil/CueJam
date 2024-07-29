@@ -30,7 +30,7 @@ export abstract class PromptLayer<T extends LayerChildItem> {
   optionType: PromptLayerOption;
   // childrenChosen should have the order given to it by the client.
   childrenChosen: Array<T>;
-  fullSetOfChildren: Array<T>;
+  sortedFullSetOfChildren: Array<T>;
   promptCue: Array<T> = [];
   promptOrder: PromptOrder;
   currentPrompt: T | undefined;
@@ -48,7 +48,7 @@ export abstract class PromptLayer<T extends LayerChildItem> {
     this.uniqueId = uuidv4();
     this.optionType = optionType;
     this.childrenChosen = childrenChosen;
-    this.fullSetOfChildren = fullSetOfChildren;
+    this.sortedFullSetOfChildren = fullSetOfChildren;
     this.promptOrder = promptOrder;
     randomizeFunction
       ? (this.randomizeFunction = randomizeFunction)
@@ -84,8 +84,12 @@ export abstract class PromptLayer<T extends LayerChildItem> {
     return {first: this.currentPrompt, second: this.nextPrompt};
   }
 
-  overwriteChildren(newChildren: T[]) {
+  overwriteSelectedChildren(newChildren: T[]) {
     this.childrenChosen = newChildren;
+  }
+
+  replaceSortOrder(newSortedFullSetOfChildren: T[]) {
+    this.sortedFullSetOfChildren = newSortedFullSetOfChildren;
   }
 
   protected defaultRandomizeFunction() {

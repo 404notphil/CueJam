@@ -1,21 +1,16 @@
 import {useEffect, useState} from 'react';
 import {
-  AllNoteNames,
   AllPromptLayerOptions,
   LayerChildItem,
-  PromptLayerOption,
 } from '../store/reducers/ConfigureDrillTypes';
 import {
-  FlatList,
   LayoutAnimation,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {globalStyles} from '../ui/theme/styles';
-import {RadioButton} from 'react-native-paper';
 import {DefaultAppModal} from './DefaultAppModal';
 import {Themes} from '../ui/theme/Theme';
 import React from 'react';
@@ -23,7 +18,11 @@ import CloseIcon from '../assets/CloseIcon';
 import {PromptLayer} from './PromptLayer';
 import CheckIcon from '../assets/CheckIIcon';
 import DragIcon from '../assets/DragIcon';
-import DraggableFlatList from 'react-native-draggable-flatlist';
+import DraggableFlatList, {
+  RenderItemParams,
+  ScaleDecorator,
+} from 'react-native-draggable-flatlist';
+import {useAppDispatch} from '../store/hooks';
 
 interface SetPromptLayerModalProps {
   modalIsVisible: boolean;
@@ -32,14 +31,18 @@ interface SetPromptLayerModalProps {
   onDismiss: () => void;
 }
 
+type SelectableChildItem = {isSelected: boolean; value: LayerChildItem};
+
 export const SetPromptLayerModal: React.FC<
   SetPromptLayerModalProps
 > = props => {
+  const dispatch = useAppDispatch();
   const [currentConfiguredPromptLayer, setCurrentConfiguredPromptLayer] =
     useState<PromptLayer<LayerChildItem> | null>(props.promptLayer);
+  const [dragIsActive, setDragIsActive] = useState(false);
 
   const childItemsBasedOnSelection = (values: LayerChildItem[]) => {
-    const all = currentConfiguredPromptLayer?.fullSetOfChildren;
+    const all = currentConfiguredPromptLayer?.sortedFullSetOfChildren;
     return all
       ? all.map(item => {
           return {isSelected: values?.includes(item), value: item};
@@ -49,15 +52,17 @@ export const SetPromptLayerModal: React.FC<
 
   const [listOfOptions, setListOfOptions] = useState(AllPromptLayerOptions);
   const [currentlyDisplayedChildItems, setCurrentlyDisplayedChildItems] =
-    useState<{isSelected: boolean; value: LayerChildItem}[]>(
+    useState<SelectableChildItem[]>(
       childItemsBasedOnSelection(props.promptLayer?.childrenChosen ?? []),
     );
 
   useEffect(() => {
-    const children = currentlyDisplayedChildItems
+    const selectedChildren = currentlyDisplayedChildItems
       .filter(item => item.isSelected)
       .map(item => item.value);
-    currentConfiguredPromptLayer?.overwriteChildren(children);
+    const sortedChildren = currentlyDisplayedChildItems.map(item => item.value);
+    currentConfiguredPromptLayer?.overwriteSelectedChildren(selectedChildren);
+    currentConfiguredPromptLayer?.replaceSortOrder(sortedChildren);
   }, [currentlyDisplayedChildItems]);
 
   const toggleIsSelectedStateOfItem = (name: string) => {
@@ -88,6 +93,28 @@ export const SetPromptLayerModal: React.FC<
     }
   }, [currentConfiguredPromptLayer]);
 
+  const renderItem = (
+    {item, drag, isActive}: RenderItemParams<SelectableChildItem>,
+    index: number,
+  ) => {
+    return (
+      <ScaleDecorator>
+        <PromptLayerChildItemListItem
+          name={item.value}
+          isSelected={item.isSelected}
+          onClick={(name: string) => toggleIsSelectedStateOfItem(name)}
+          onPressIn={() => {
+            setDragIsActive(true);
+            drag();
+          }}
+          onPressOut={() => setDragIsActive(false)}
+          isActive={isActive}
+          dragIsActive={dragIsActive}
+        />
+      </ScaleDecorator>
+    );
+  };
+
   return (
     <DefaultAppModal
       {...props}
@@ -99,69 +126,68 @@ export const SetPromptLayerModal: React.FC<
         props.onDismiss();
       }}>
       <View>
-        <View onStartShouldSetResponder={(): boolean => true}>
-          <DraggableFlatList
-            data={currentlyDisplayedChildItems}
-            keyExtractor={option => option.value}
-            ListHeaderComponent={
-              <View>
-                {listOfOptions.map((item, index) => (
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      marginTop: 5,
-                    }}>
-                    <RadioIcon
-                      onOptionPress={isSelected => {
-                        if (isSelected) {
-                          if (
-                            props.promptLayer &&
-                            props.promptLayer.optionType === item
-                          )
-                            setCurrentConfiguredPromptLayer(props.promptLayer);
-                          else {
-                            setCurrentConfiguredPromptLayer(
-                              PromptLayer.fromOptionType(item),
-                            );
-                          }
-                        } else {
-                          setCurrentConfiguredPromptLayer(null);
-                          setCurrentlyDisplayedChildItems([]);
+        <DraggableFlatList
+          data={currentlyDisplayedChildItems}
+          keyExtractor={option => option.value}
+          // scrollEnabled={true}
+          ListHeaderComponent={
+            <View>
+              {listOfOptions.map((item, index) => (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop: 5,
+                  }}>
+                  <RadioIcon
+                    onOptionPress={isSelected => {
+                      if (isSelected) {
+                        if (
+                          props.promptLayer &&
+                          props.promptLayer.optionType === item
+                        )
+                          setCurrentConfiguredPromptLayer(props.promptLayer);
+                        else {
+                          setCurrentConfiguredPromptLayer(
+                            PromptLayer.fromOptionType(item),
+                          );
                         }
-                      }}
-                      isSelected={
-                        item === currentConfiguredPromptLayer?.optionType
+                      } else {
+                        setCurrentConfiguredPromptLayer(null);
+                        setCurrentlyDisplayedChildItems([]);
                       }
-                    />
-                    <Text style={[globalStyles.buttonText]}>
-                      {item.itemDisplayName}
-                    </Text>
-                  </View>
-                ))}
-
-                {currentConfiguredPromptLayer && (
-                  <View
-                    style={{
-                      height: 1,
-                      marginBottom: 16,
-                      marginTop: 5,
-                      opacity: 0.2,
-                      backgroundColor: Themes.dark.lightText,
                     }}
+                    isSelected={
+                      item === currentConfiguredPromptLayer?.optionType
+                    }
                   />
-                )}
-              </View>
-            }
-            renderItem={option => (
-              <PromptLayerChildItemListItem
-                name={option.item.value}
-                isSelected={option.item.isSelected}
-                onClick={(name: string) => toggleIsSelectedStateOfItem(name)}
-              />
-            )}
-          />
-        </View>
+                  <Text style={[globalStyles.buttonText]}>
+                    {item.itemDisplayName}
+                  </Text>
+                </View>
+              ))}
+
+              {currentConfiguredPromptLayer && (
+                <View
+                  style={{
+                    height: 1,
+                    marginBottom: 16,
+                    marginTop: 5,
+                    opacity: 0.2,
+                    backgroundColor: Themes.dark.lightText,
+                  }}
+                />
+              )}
+            </View>
+          }
+          renderItem={item =>
+            renderItem(item, currentlyDisplayedChildItems.indexOf(item.item))
+          }
+          onDragEnd={({data}) => {
+            setDragIsActive(false);
+            setCurrentlyDisplayedChildItems(data);
+          }}
+        />
       </View>
     </DefaultAppModal>
   );
@@ -219,6 +245,10 @@ interface ListItemProps {
   name: string;
   isSelected: boolean;
   onClick: (name: string) => void;
+  onPressIn: () => void;
+  onPressOut: () => void;
+  isActive: boolean;
+  dragIsActive: boolean;
 }
 
 const PromptLayerChildItemListItem: React.FC<ListItemProps> = props => {
@@ -252,7 +282,12 @@ const PromptLayerChildItemListItem: React.FC<ListItemProps> = props => {
         {props.name}
       </Text>
       <View style={{flex: 1}} />
-      <DragIcon style={{marginEnd: 16}} />
+      <TouchableOpacity
+        onPressIn={() => props.onPressIn()}
+        onPressOut={() => props.onPressOut()}
+        disabled={props.isActive && !props.dragIsActive}>
+        <DragIcon style={{marginEnd: 16}} />
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 };

@@ -193,6 +193,14 @@ export const configureDrillSlice = createSlice({
               : layerToCheck;
           },
         );
+        console.log(
+          '12345 different order? -> ' +
+            JSON.stringify(action.payload.oldLayer.childrenChosen),
+        );
+        console.log(
+          '12345 and -> ' +
+            JSON.stringify(action.payload.newLayer.childrenChosen),
+        );
       } else {
         state.configuration.promptLayers.push(action.payload.newLayer);
       }
