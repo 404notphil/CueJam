@@ -133,7 +133,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
       {shouldShowSetTempoModal && (
         <SetTempoModal
           modalIsVisible={shouldShowSetTempoModal}
-          tempo={120}
+          tempo={state.configuration.tempo}
           onSetTempo={tempo => {
             dispatch(setTempo(tempo));
           }}
@@ -146,7 +146,7 @@ export function ConfigureDrillScreen(): React.JSX.Element {
       {shouldShowSetBeatsPerPromptModal && (
         <SetBeatsPerPromptModal
           modalIsVisible={shouldShowSetBeatsPerPromptModal}
-          beatsPerPrompt={4}
+          beatsPerPrompt={state.configuration.beatsPerPrompt}
           onSetBeatsPerPrompt={beats => {
             dispatch(setBeatsPerPrompt(beats));
           }}

@@ -30,6 +30,8 @@ export const SetBeatsPerPromptModal: React.FC<
           props.onSetBeatsPerPrompt(currentDisplayedBeatsPerPrompt);
           props.onDismiss();
         }}
+        minNumber={1}
+        maxNumber={50}
       />
     </DefaultAppModal>
   );

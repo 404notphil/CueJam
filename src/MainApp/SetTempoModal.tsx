@@ -29,6 +29,8 @@ export const SetTempoModal: React.FC<SetTempoModalProps> = props => {
           props.onSetTempo(currentDisplayedTempo);
           props.onDismiss();
         }}
+        minNumber={40}
+        maxNumber={400}
       />
     </DefaultAppModal>
   );

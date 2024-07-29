@@ -13,7 +13,7 @@ import kotlinx.coroutines.*
 private const val TAG = "METRONOME_SERVICE"
 private const val CHANNEL_ID = "METRONOME SERVICE"
 private const val STOP_SERVICE = "STOP_METRONOME_SERVICE"
-private const val MAX_BPM = 220
+private const val MAX_BPM = 400
 private const val MIN_BPM = 40
 
 class MetronomeService : Service() {
@@ -99,23 +99,24 @@ class MetronomeService : Service() {
     fun play() {
         Log.d(TAG, "playing beat")
 
+        var lastTick = System.nanoTime()
+
         if(!isPlaying) {
             startForegroundNotification()
-            tickJob = coroutineScope.launch(Dispatchers.Default) {
+            tickJob = coroutineScope.launch(Dispatchers.Main) {
+
                 isPlaying = true
                 var tick = 0
                 while (isPlaying && isActive) {
-                    var rate = 1f
+                    Log.d(TAG, "play() called in " + (System.nanoTime() - lastTick))
+                    lastTick = System.nanoTime()
                     delay(interval.toLong())
                     if (tick % rhythm.value == 0) {
                         for (t in tickListeners) {
                             t.onTick(tick)
                         }
-                        if (emphasis && tick == 0) {
-                            rate = 1.4f
-                        }
                     }
-                    if (isPlaying) soundPool.play(tone.value, 1f, 1f, 1, 0, rate)
+                    if (isPlaying) soundPool.play(tone.value, 1f, 1f, 1, 0, 1f)
                     if (tick < beatsPerMeasure * rhythm.value - 1)
                         tick++
                     else

@@ -174,16 +174,7 @@ export function DrillScreen(): React.JSX.Element {
       const beat = (beatData.currentBeat % drill.beatsPerPrompt) + 1;
       setCurrentBeat(beat);
       if (beat === 1) {
-        console.log(
-          '12345 promptsSinceStartedPlayback a -> ' +
-            promptsSinceStartedPlayback,
-        );
         setPromptsSinceStartedPlayback(prevValue => prevValue + 1);
-        console.log('12345 math -> ' + (promptsSinceStartedPlayback + 1));
-        console.log(
-          '12345 promptsSinceStartedPlayback b -> ' +
-            promptsSinceStartedPlayback,
-        );
       }
     });
     return () => {
