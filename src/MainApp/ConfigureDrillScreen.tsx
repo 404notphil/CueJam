@@ -8,7 +8,9 @@ import {
   onDrillEdit,
   replacePromptLayer,
   selectConfigureDrill,
+  setBeatsPerChord as setBeatsPerPrompt,
   setPromptOrder,
+  setTempo,
 } from '../store/reducers/configureDrillReducer';
 import {LayerChildItem} from '../store/reducers/ConfigureDrillTypes';
 
@@ -21,6 +23,8 @@ import {PromptLayerList} from './PromptLayerList';
 import {PromptLayer} from './PromptLayer';
 import {SetPromptLayerModal} from './PromptLayerModal';
 import {useFocusEffect} from '@react-navigation/native';
+import {SetTempoModal} from './SetTempoModal';
+import {SetBeatsPerPromptModal} from './SetBeatsPerPromptModal';
 
 export function ConfigureDrillScreen(): React.JSX.Element {
   const state = useAppSelector(selectConfigureDrill);
@@ -37,6 +41,13 @@ export function ConfigureDrillScreen(): React.JSX.Element {
 
   const [promptLayerChildrenModalToShow, setPromptLayerChildrenModalToShow] =
     useState<PromptLayer<LayerChildItem>>();
+
+  const [
+    shouldShowSetBeatsPerPromptModal,
+    setShouldShowSetBeatsPerPromptModal,
+  ] = useState(false);
+
+  const [shouldShowSetTempoModal, setShouldShowSetTempoModal] = useState(false);
 
   useEffect(() => {
     dispatch(onDrillEdit(state));
@@ -93,6 +104,10 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           // setting this to null (instead of undefined) means we want to see the modal, but with no layer specified yet
           setPromptLayerTypeModalToShow(null)
         }
+        onPressToEditBeatsPerPrompt={() =>
+          setShouldShowSetBeatsPerPromptModal(true)
+        }
+        onPressToEditTempo={() => setShouldShowSetTempoModal(true)}
       />
 
       {promptLayerTypeModalToShow !== undefined && (
@@ -111,6 +126,32 @@ export function ConfigureDrillScreen(): React.JSX.Element {
           }}
           onDismiss={() => {
             setPromptLayerTypeModalToShow(undefined);
+          }}
+        />
+      )}
+
+      {shouldShowSetTempoModal && (
+        <SetTempoModal
+          modalIsVisible={shouldShowSetTempoModal}
+          tempo={120}
+          onSetTempo={tempo => {
+            dispatch(setTempo(tempo));
+          }}
+          onDismiss={() => {
+            setShouldShowSetTempoModal(false);
+          }}
+        />
+      )}
+
+      {shouldShowSetBeatsPerPromptModal && (
+        <SetBeatsPerPromptModal
+          modalIsVisible={shouldShowSetBeatsPerPromptModal}
+          beatsPerPrompt={4}
+          onSetBeatsPerPrompt={beats => {
+            dispatch(setBeatsPerPrompt(beats));
+          }}
+          onDismiss={() => {
+            setShouldShowSetBeatsPerPromptModal(false);
           }}
         />
       )}

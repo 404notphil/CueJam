@@ -56,11 +56,13 @@ import DraggableFlatList, {
 
 interface PromptLayerListProps {
   state: ConfigureDrillState;
-  onPressAddNewLayer: () => void,
+  onPressAddNewLayer: () => void;
   onPressPromptLayerType: (promptLayer: PromptLayer<LayerChildItem>) => void;
   onPressPromptLayerChildren: (
     promptLayer: PromptLayer<LayerChildItem>,
   ) => void;
+  onPressToEditBeatsPerPrompt: () => void;
+  onPressToEditTempo: () => void;
 }
 
 export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
@@ -170,7 +172,13 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
           setDragIsActive(false);
           dispatch(setPromptLayers(data));
         }}
-        ListHeaderComponent={<ConfigureDrillHeader state={props.state} />}
+        ListHeaderComponent={
+          <ConfigureDrillHeader
+            state={props.state}
+            onPressToEditBeatsPerPrompt={props.onPressToEditBeatsPerPrompt}
+            onPressToEditTempo={props.onPressToEditTempo}
+          />
+        }
         ListFooterComponent={
           <TouchableOpacity onPress={() => props.onPressAddNewLayer()}>
             <Text
