@@ -64,6 +64,10 @@ export abstract class PromptLayer<T extends LayerChildItem> {
     }
   }
 
+  cleanPromptCue(): void {
+    this.promptCue = [];
+  }
+
   getNextPromptPairFromCue(): {first: T; second: T} {
     if (this.nextPrompt === undefined) {
       this.refillPromptCue();
@@ -90,6 +94,14 @@ export abstract class PromptLayer<T extends LayerChildItem> {
 
   replaceSortOrder(newSortedFullSetOfChildren: T[]) {
     this.sortedFullSetOfChildren = newSortedFullSetOfChildren;
+    // we must also sort childrenChosen to match full list's order
+    this.childrenChosen = this.childrenChosen
+      .slice()
+      .sort(
+        (a, b) =>
+          newSortedFullSetOfChildren.indexOf(a) -
+          newSortedFullSetOfChildren.indexOf(b),
+      );
   }
 
   protected defaultRandomizeFunction() {

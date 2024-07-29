@@ -4,10 +4,10 @@ import {
   NativeModules,
   StyleSheet,
   Text,
-  Touchable,
   TouchableOpacity,
   View,
   Animated as RawAnimated,
+  BackHandler,
 } from 'react-native';
 import {Themes} from '../ui/theme/Theme';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
@@ -17,16 +17,6 @@ import {
 } from '../store/reducers/configureDrillReducer';
 import {globalStyles} from '../ui/theme/styles';
 import {useEffect, useState} from 'react';
-import {
-  NoteName,
-  getNoteNameAtFifthAbove,
-  getNoteNameAtFifthBelow,
-  getRandomChordQuality,
-  getRandomKey,
-  getRandomMode,
-  getRandomNoteName,
-  getRandomScale,
-} from '../store/reducers/ConfigureDrillTypes';
 import {useOrientation} from '../util/useOrientation';
 import {LogBox} from 'react-native';
 import Animated, {
@@ -37,7 +27,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import {
   addSessionToDB,
-  loadSessionDataForTimeRange,
 } from '../services/AppDatabase';
 
 export function DrillScreen(): React.JSX.Element {
@@ -53,44 +42,6 @@ export function DrillScreen(): React.JSX.Element {
   const [currentBeat, setCurrentBeat] = useState(1);
   const [totalBeatsElapsed, setTotalBeatsElapsed] = useState(0);
   const [totalPromptsElapsed, setTotalPromptsElapsed] = useState(0);
-
-  // old prompt layers
-  const computeNextNoteName = (noteName: NoteName) => {
-    switch (drill.promptOrder) {
-      case 'random':
-        return getRandomNoteName(drill.noteNames);
-      case 'descending5ths':
-        return getNoteNameAtFifthBelow(noteName);
-      case 'ascending5ths':
-        return getNoteNameAtFifthAbove(noteName);
-    }
-  };
-  const [currentNote, setCurrentNote] = useState(
-    getRandomNoteName(drill.noteNames),
-  );
-  const [nextNote, setNextNote] = useState(computeNextNoteName(currentNote));
-
-  const getRandomTonalContextValue = () => {
-    switch (drill.tonalContext) {
-      case 'chord quality':
-        return getRandomChordQuality(drill.chordQualities);
-      case 'key':
-        return getRandomKey(drill.keys);
-      case 'mode':
-        return getRandomMode(drill.modes);
-      case 'scale':
-        return getRandomScale(drill.scales);
-      default:
-        return null;
-    }
-  };
-  const [currentTonalContextValue, setCurrentTonalContextValue] = useState<
-    string | null
-  >(getRandomTonalContextValue());
-  const [nextTonalContextValue, setNextTonalContextValue] = useState<
-    string | null
-  >(getRandomTonalContextValue());
-  // end old prompt layers
 
   const {MetronomeModule} = NativeModules;
   const clickEventEmitter = new NativeEventEmitter(MetronomeModule);
@@ -148,7 +99,7 @@ export function DrillScreen(): React.JSX.Element {
         addSessionToDB({
           drillId: drill.drillId,
           drillName: drill.drillName,
-          timeStarted: Date.now(),
+          timeStarted: playbackStartTime,
           totalSessionTimeMillis: Date.now() - playbackStartTime,
           promptCount: promptsSinceStartedPlayback,
           millisecondsPerPrompt:
@@ -167,6 +118,7 @@ export function DrillScreen(): React.JSX.Element {
     MetronomeModule.initializeMetronomeService();
     MetronomeModule.setTempo(drill.tempo);
     MetronomeModule.setBeatsPerPrompt(drill.beatsPerPrompt);
+    dispatch(advanceToNextPrompt());
 
     const subscription = clickEventEmitter.addListener('ClickEvent', data => {
       setTotalBeatsElapsed(totalBeatsElapsed + 1);
@@ -178,6 +130,7 @@ export function DrillScreen(): React.JSX.Element {
       }
     });
     return () => {
+      state.configuration.promptLayers.forEach(item => item.cleanPromptCue());
       subscription.remove();
       MetronomeModule.stop();
       MetronomeModule.cleanup();
@@ -188,11 +141,6 @@ export function DrillScreen(): React.JSX.Element {
   useEffect(() => {
     if (currentBeat === 1) {
       setTotalPromptsElapsed(totalPromptsElapsed + 1);
-      setCurrentNote(nextNote);
-      setNextNote(computeNextNoteName(nextNote));
-      setCurrentTonalContextValue(nextTonalContextValue);
-      setNextTonalContextValue(getRandomTonalContextValue());
-
       dispatch(advanceToNextPrompt());
     }
   }, [currentBeat]);
@@ -216,6 +164,20 @@ export function DrillScreen(): React.JSX.Element {
       }).start();
     }
   }, [shouldShowNextPromptText]);
+
+  useEffect(() => {
+    const backAction = () => {
+      if (isPlaying) addCurrentSessionToDb();
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, [isPlaying]);
 
   return (
     // Whole screen

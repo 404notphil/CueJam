@@ -1,5 +1,4 @@
 import {View} from 'react-native';
-
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {globalStyles} from '../ui/theme/styles';
 import {useAppDispatch, useAppSelector} from '../store/hooks';
@@ -13,7 +12,6 @@ import {
   setTempo,
 } from '../store/reducers/configureDrillReducer';
 import {LayerChildItem} from '../store/reducers/ConfigureDrillTypes';
-
 import {useSharedValue, withTiming} from 'react-native-reanimated';
 import {
   checkForSimilarDrills,

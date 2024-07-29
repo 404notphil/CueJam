@@ -261,7 +261,7 @@ export const ExpandableCompositeActionButton: React.FC<
           {...{
             visible: true,
             enabled: true,
-            text: 'play',
+            text: 'practice',
             onPress: () => {
               navigation.navigate('Drill');
             },

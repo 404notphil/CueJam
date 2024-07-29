@@ -107,7 +107,7 @@ export const initialState: ConfigureDrillState = {
     tempo: 150,
     beatsPerPrompt: 4,
     noteNames: AllNoteNames,
-    promptOrder: 'random',
+    promptOrder: 'custom',
     tonalContext: 'chord quality',
     chordQualities: AllChordQualities,
     scales: AllScales,
