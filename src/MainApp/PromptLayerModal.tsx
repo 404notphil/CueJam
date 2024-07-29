@@ -38,16 +38,41 @@ export const SetPromptLayerModal: React.FC<
   const [currentConfiguredPromptLayer, setCurrentConfiguredPromptLayer] =
     useState<PromptLayer<LayerChildItem> | null>(props.promptLayer);
 
+  const childItemsBaseOnSelection = (values: LayerChildItem[]) => {
+    return values.map(item => {
+      return {isSelected: true, value: item};
+    });
+  };
+
   const [listOfOptions, setListOfOptions] = useState(AllPromptLayerOptions);
   const [currentlyDisplayedChildItems, setCurrentlyDisplayedChildItems] =
-    useState<LayerChildItem[]>(AllNoteNames);
+    useState<{isSelected: boolean; value: LayerChildItem}[]>(
+      childItemsBaseOnSelection(AllNoteNames),
+    );
+
+  const toggleIsSelectedStateOfItem = (name: string) => {
+    setCurrentlyDisplayedChildItems(
+      currentlyDisplayedChildItems.map(item => {
+        if (item.value === name) {
+          return {
+            isSelected: !item.isSelected,
+            value: item.value,
+          };
+        } else {
+          return item;
+        }
+      }),
+    );
+  };
 
   useEffect(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     if (currentConfiguredPromptLayer) {
       setListOfOptions([currentConfiguredPromptLayer.optionType]);
       setCurrentlyDisplayedChildItems(
-        currentConfiguredPromptLayer.optionType.children,
+        childItemsBaseOnSelection(
+          currentConfiguredPromptLayer.optionType.children,
+        ),
       );
     } else {
       setListOfOptions(AllPromptLayerOptions);
@@ -69,7 +94,7 @@ export const SetPromptLayerModal: React.FC<
         <View onStartShouldSetResponder={(): boolean => true}>
           <DraggableFlatList
             data={currentlyDisplayedChildItems}
-            keyExtractor={option => option}
+            keyExtractor={option => option.value}
             ListHeaderComponent={
               <View>
                 {listOfOptions.map((item, index) => (
@@ -121,7 +146,11 @@ export const SetPromptLayerModal: React.FC<
               </View>
             }
             renderItem={option => (
-              <PromptLayerChildItemListItem name={option.item} />
+              <PromptLayerChildItemListItem
+                name={option.item.value}
+                isSelected={option.item.isSelected}
+                onClick={(name: string) => toggleIsSelectedStateOfItem(name)}
+              />
             )}
           />
         </View>
@@ -165,23 +194,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     paddingVertical: 15,
   },
-  listItemBorder: {
+
+  listItemSelectedBorder: {
     borderColor: '#799700',
-    borderWidth: 1,
     borderRadius: 20,
+    borderWidth: 1,
+  },
+  listItemDeselectedBorder: {
+    borderColor: '#00000000',
+    borderRadius: 20,
+    borderWidth: 1,
   },
 });
 
 interface ListItemProps {
   name: string;
+  isSelected: boolean;
+  onClick: (name: string) => void;
 }
 
 const PromptLayerChildItemListItem: React.FC<ListItemProps> = props => {
   return (
-    <View
+    <TouchableOpacity
       style={[
         globalStyles.listItemBackground,
-        styles.listItemBorder,
+        props.isSelected
+          ? styles.listItemSelectedBorder
+          : styles.listItemDeselectedBorder,
         {
           marginVertical: 8,
           paddingVertical: 5,
@@ -189,13 +228,23 @@ const PromptLayerChildItemListItem: React.FC<ListItemProps> = props => {
           flexDirection: 'row',
           alignItems: 'center',
         },
-      ]}>
-      <CheckIcon strokeColor={Themes.dark.actionText} size={20} />
-      <Text style={[globalStyles.buttonText, {marginHorizontal: 16}]}>
+      ]}
+      onPress={() => props.onClick(props.name)}>
+      <View style={{width: 30}}>
+        {props.isSelected && (
+          <CheckIcon strokeColor={Themes.dark.actionText} size={20} />
+        )}
+      </View>
+      <Text
+        style={[
+          globalStyles.buttonText,
+          !props.isSelected && {color: '#555555'},
+          {marginHorizontal: 16},
+        ]}>
         {props.name}
       </Text>
       <View style={{flex: 1}} />
       <DragIcon style={{marginEnd: 16}} />
-    </View>
+    </TouchableOpacity>
   );
 };
