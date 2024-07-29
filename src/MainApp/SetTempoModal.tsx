@@ -31,6 +31,7 @@ export const SetTempoModal: React.FC<SetTempoModalProps> = props => {
         }}
         minNumber={40}
         maxNumber={400}
+        increments={[1, 5, 10, 50]}
       />
     </DefaultAppModal>
   );

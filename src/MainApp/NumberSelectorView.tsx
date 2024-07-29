@@ -13,14 +13,15 @@ interface NumberSelectorViewProps {
   onCommitSelectedNumber: (selectedNumber: number) => void;
   maxNumber: number;
   minNumber: number;
+  increments: number[];
 }
 
 export const NumberSelectorView: React.FC<NumberSelectorViewProps> = props => {
   const incrementButtonArgs = {
     setCurrentDisplayedNumber: (newNumber: number) => {
-      if (newNumber >= props.minNumber && newNumber <= props.maxNumber) {
-        props.onSelectNumberInViewer(newNumber);
-      }
+      props.onSelectNumberInViewer(
+        Math.max(props.minNumber, Math.min(props.maxNumber, newNumber)),
+      );
     },
     previousNumber: props.selectedNumberInViewer,
   };
@@ -50,39 +51,23 @@ export const NumberSelectorView: React.FC<NumberSelectorViewProps> = props => {
         style={{
           flexDirection: 'row',
         }}>
-        <IncrementButton
-          {...incrementButtonArgs}
-          increment={1}
-          icon={'../assets/triple_up_arrow.png'}
-        />
-        <IncrementButton
-          {...incrementButtonArgs}
-          increment={5}
-          icon={'../assets/double_up_arrow.png'}
-        />
-        <IncrementButton
-          {...incrementButtonArgs}
-          increment={10}
-          icon={'../assets/single_up_arrow.png'}
-        />
+        {props.increments.map(increment => (
+          <IncrementButton
+            {...incrementButtonArgs}
+            increment={increment}
+            icon={'../assets/triple_up_arrow.png'}
+          />
+        ))}
       </View>
 
       <View style={{flexDirection: 'row'}}>
-        <IncrementButton
-          {...incrementButtonArgs}
-          increment={-1}
-          icon={'../assets/single_down_arrow.png'}
-        />
-        <IncrementButton
-          {...incrementButtonArgs}
-          increment={-5}
-          icon={'../assets/double_down_arrow.png'}
-        />
-        <IncrementButton
-          {...incrementButtonArgs}
-          increment={-10}
-          icon={'../assets/triple_down_arrow.png'}
-        />
+        {props.increments.map(increment => (
+          <IncrementButton
+            {...incrementButtonArgs}
+            increment={increment * -1}
+            icon={'../assets/triple_up_arrow.png'}
+          />
+        ))}
       </View>
     </View>
   );

@@ -32,6 +32,7 @@ export const SetBeatsPerPromptModal: React.FC<
         }}
         minNumber={1}
         maxNumber={50}
+        increments={[1, 5, 10, 20]}
       />
     </DefaultAppModal>
   );
