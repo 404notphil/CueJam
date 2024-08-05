@@ -10,7 +10,7 @@ export function SignupScreenModal(
   modalTitle: string,
   modalMessage: string | undefined,
   dispatch: React.Dispatch<
-    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupUiState').SignupAction
+    import('/Users/philcarlson/ReactNativeProjects/CueJam/src/onboarding/reducers/SignupUiState').SignupAction
   >,
 ): React.ReactNode {
   return (

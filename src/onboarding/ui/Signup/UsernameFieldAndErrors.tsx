@@ -6,7 +6,7 @@ import { ExpandableText } from '../ExpandableText';
 
 export function UsernameFieldAndErrors(
   dispatch: React.Dispatch<
-    import('/Users/philcarlson/ReactNativeProjects/NotePrompter/src/onboarding/reducers/SignupUiState').SignupAction
+    import('/Users/philcarlson/ReactNativeProjects/CueJam/src/onboarding/reducers/SignupUiState').SignupAction
   >,
   uiState: SignupUiState,
 ) {

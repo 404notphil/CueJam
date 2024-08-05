@@ -1,4 +1,4 @@
-package com.tunepruner.noteprompter
+package com.tunepruner.cuejam
 
 import android.app.*
 import android.content.Intent
@@ -75,7 +75,7 @@ class MetronomeService : Service() {
         val stopAction = Notification.Action.Builder(Icon.createWithResource(this, android.R.drawable.ic_media_pause), "Stop", pStopSelf).build()
 
         val notification: Notification = Notification.Builder(this, CHANNEL_ID)
-            .setContentTitle("NotePrompter")
+            .setContentTitle("CueJam")
             .setContentText("Metronome playing")
 //            .setSmallIcon(R.drawable.ic_metronome_icon_white)
 //            .setLargeIcon(Icon.createWithResource(this, R.drawable.ic_metronome_icon_circle_bg))

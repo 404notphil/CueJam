@@ -80,14 +80,14 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.tunepruner.noteprompter"
+    namespace "com.tunepruner.cuejam"
     defaultConfig {
-        applicationId "com.tunepruner.noteprompter"
+        applicationId "com.tunepruner.cuejam"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        resValue "string", "build_config_package", "com.tunepruner.noteprompter"
+        resValue "string", "build_config_package", "com.tunepruner.cuejam"
     }
     signingConfigs {
         debug {
