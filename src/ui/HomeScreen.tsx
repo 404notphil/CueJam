@@ -33,41 +33,47 @@ export function HomeScreen(): React.JSX.Element {
   return (
     <SafeAreaView
       style={[globalStyles.screenContainer, {paddingBottom: insets.bottom}]}>
-      <StatusBar barStyle="default" backgroundColor="transparent" translucent />
-      <TouchableOpacity
-        onPress={() => {
-          dispatch(clearDrill());
-          navigation.navigate('ConfigureDrill');
-        }}
-        style={styles.largeButton}>
-        <Text style={[globalStyles.title, {fontSize: 35, maxWidth: 100}]}>
-          new drill
-        </Text>
-        <View />
-        <AddDrillIcon />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('SavedDrills');
-        }}
-        style={styles.largeButton}>
-        <Text style={[globalStyles.title, {fontSize: 35, maxWidth: 100}]}>
-          saved drills
-        </Text>
+      <View style={globalStyles.screenContainer}>
+        <StatusBar
+          barStyle="default"
+          backgroundColor="transparent"
+          translucent
+        />
+        <TouchableOpacity
+          onPress={() => {
+            dispatch(clearDrill());
+            navigation.navigate('ConfigureDrill');
+          }}
+          style={[styles.largeButton]}>
+          <Text style={[globalStyles.title, {fontSize: 35, maxWidth: 100}]}>
+            new drill
+          </Text>
+          <View />
+          <AddDrillIcon />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('SavedDrills');
+          }}
+          style={styles.largeButton}>
+          <Text style={[globalStyles.title, {fontSize: 35, maxWidth: 100}]}>
+            saved drills
+          </Text>
 
-        <SavedDrillsIcon />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Stats');
-        }}
-        style={styles.largeButton}>
-        <Text style={[globalStyles.title, {fontSize: 35, maxWidth: 100}]}>
-          stats
-        </Text>
+          <SavedDrillsIcon />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Stats');
+          }}
+          style={styles.largeButton}>
+          <Text style={[globalStyles.title, {fontSize: 35, maxWidth: 100}]}>
+            stats
+          </Text>
 
-        <StatsIcon />
-      </TouchableOpacity>
+          <StatsIcon />
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
