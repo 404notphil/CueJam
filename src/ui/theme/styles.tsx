@@ -47,7 +47,7 @@ export const globalStyles = StyleSheet.create({
   },
   screenContainer: {
     ...StyleSheet.absoluteFillObject,
-    padding: 24,
+    padding: 10,
     flex: 1,
     backgroundColor: Themes.dark.background,
   },
