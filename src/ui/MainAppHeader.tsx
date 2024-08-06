@@ -28,7 +28,7 @@ export function MainAppHeader(props: AppHeaderProps) {
   return (
     <View
       style={{
-        marginTop: 16,
+        marginTop: 32,
         alignItems: 'center',
         justifyContent: 'space-evenly',
         flexDirection: 'row',

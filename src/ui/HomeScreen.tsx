@@ -1,4 +1,12 @@
-import {StyleSheet, Text, TouchableOpacity, View, Platform} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Platform,
+  StatusBar,
+  SafeAreaView,
+} from 'react-native';
 import {globalStyles} from './theme/styles';
 import {Image} from 'react-native';
 import Animated, {
@@ -18,7 +26,8 @@ export function HomeScreen(): React.JSX.Element {
   const dispatch = useAppDispatch();
 
   return (
-    <View style={[globalStyles.screenContainer]}>
+    <SafeAreaView style={[globalStyles.screenContainer]}>
+      <StatusBar barStyle="default" backgroundColor="transparent" translucent />
       <TouchableOpacity
         onPress={() => {
           dispatch(clearDrill());
@@ -60,7 +69,7 @@ export function HomeScreen(): React.JSX.Element {
           resizeMode="contain"
         />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
