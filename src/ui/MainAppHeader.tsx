@@ -12,6 +12,7 @@ import {
 import {globalStyles} from './theme/styles';
 import {ScreenName, useAppNavigation} from './App';
 import {Themes} from './theme/Theme';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 if (
   Platform.OS === 'android' &&
@@ -25,10 +26,11 @@ export interface AppHeaderProps {
 }
 
 export function MainAppHeader(props: AppHeaderProps) {
+  const insets = useSafeAreaInsets();
   return (
     <View
       style={{
-        marginTop: 32,
+        marginTop: insets.top,
         alignItems: 'center',
         justifyContent: 'space-evenly',
         flexDirection: 'row',

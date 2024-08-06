@@ -163,7 +163,7 @@ export const PromptLayerList: React.FC<PromptLayerListProps> = props => {
   return (
     <View>
       <DraggableFlatList
-        keyboardShouldPersistTaps={true}
+        keyboardShouldPersistTaps={'always'}
         data={promptLayers}
         scrollEnabled={true}
         keyExtractor={item => item.uniqueId.toString()}
