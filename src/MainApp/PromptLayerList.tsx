@@ -220,21 +220,6 @@ export const ExpandableCompositeActionButton: React.FC<
     props.foundSimilarDrillButtonVisible,
   ]);
 
-  const playButtonAnimatedOpacity = useSharedValue(1);
-  useEffect(() => {
-    playButtonAnimatedOpacity.value = withRepeat(
-      withTiming(0.5, {duration: 1000, easing: Easing.linear}),
-      -1, // Repeat infinitely
-      true, // Reverse the animation on every iteration
-    );
-  }, []);
-
-  const animatedOpacityStyle = useAnimatedStyle(() => {
-    return {
-      opacity: playButtonAnimatedOpacity.value,
-    };
-  });
-
   const dispatch = useAppDispatch();
   const navigation = useAppNavigation();
 
@@ -256,19 +241,17 @@ export const ExpandableCompositeActionButton: React.FC<
         globalStyles.button,
         {paddingHorizontal: 30, paddingVertical: 0},
       ]}>
-      <Animated.View style={animatedOpacityStyle}>
-        <ExpandingActionButton
-          {...{
-            visible: true,
-            enabled: true,
-            text: 'practice',
-            onPress: () => {
-              navigation.navigate('Drill');
-            },
-            icon: <PlayIcon size={20} fillColor={Themes.dark.actionText} />,
-          }}
-        />
-      </Animated.View>
+      <ExpandingActionButton
+        {...{
+          visible: true,
+          enabled: true,
+          text: 'practice',
+          onPress: () => {
+            navigation.navigate('Drill');
+          },
+          icon: <PlayIcon size={20} fillColor={Themes.dark.actionText} />,
+        }}
+      />
 
       <AnimatedDivider isVisible={true} />
 
