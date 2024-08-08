@@ -12,31 +12,38 @@ import {useAuth} from '../../auth/AuthProvider';
 import {globalStyles} from '../../ui/theme/styles';
 import {loginUser} from '../../services/AuthService';
 import {initialUiState, LoginActions} from '../reducers/LoginReducer';
-
 import {loginReducer} from '../reducers/LoginReducer';
-import { Themes } from '../../ui/theme/Theme';
+import {Themes} from '../../ui/theme/Theme';
+import auth from '@react-native-firebase/auth';
 
 export function LoginScreen(): React.JSX.Element {
   const [uiState, dispatch] = useReducer(loginReducer, initialUiState);
   const {setToken} = useAuth();
 
-  const onLoginPressed = async () => {
-    const response = await loginUser(
-      uiState.emailText,
-      uiState.passwordText,
-      setToken,
-    );
-
-    switch (response) {
-      case 'Success': {
+  const onLoginPressed = () => {
+    auth()
+      .createUserWithEmailAndPassword(uiState.emailText, uiState.passwordText)
+      .then(() => {
+        console.log('12345 + User account created & signed in!');
         dispatch(LoginActions.loginCompleted());
-        break;
-      }
-      case 'InvalidCredentials' || 'UserNotFound' || 'ErrorDuringLogin': {
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          console.log('12345 + That email address is already in use!');
+          auth().signInWithEmailAndPassword(
+            uiState.emailText,
+            uiState.passwordText,
+          );
+          return;
+        }
+
+        if (error.code === 'auth/invalid-email') {
+          console.log('12345 + That email address is invalid!');
+        }
+
+        console.error('12345 +' + error);
         dispatch(LoginActions.serverOrCredentialError());
-        break;
-      }
-    }
+      });
   };
 
   return (

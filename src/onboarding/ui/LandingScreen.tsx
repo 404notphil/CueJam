@@ -16,26 +16,7 @@ export function LandingScreen(): React.JSX.Element {
   const user = auth().currentUser;
 
   const onLoginPressedd = () => {
-    // navigation.navigate('Login');
-    auth()
-      .createUserWithEmailAndPassword(
-        uuidv4() + '@example.com',
-        'SuperSecretPassword!',
-      )
-      .then(() => {
-        console.log('12345 + User account created & signed in!');
-      })
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('12345 + That email address is already in use!');
-        }
-
-        if (error.code === 'auth/invalid-email') {
-          console.log('12345 + That email address is invalid!');
-        }
-
-        console.error('12345 +' + error);
-      });
+    navigation.navigate('Login');
   };
   const onSignupPressed = () => {
     navigation.navigate('Signup');

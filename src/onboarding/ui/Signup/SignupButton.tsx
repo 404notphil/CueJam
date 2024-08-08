@@ -10,6 +10,7 @@ import {
 import {globalStyles} from '../../../ui/theme/styles';
 import {signUpUser} from '../../../services/AuthService';
 import {useAppNavigation} from '../../../ui/App';
+import auth from '@react-native-firebase/auth';
 
 export function SignupButton(
   dispatch: React.Dispatch<
@@ -17,23 +18,20 @@ export function SignupButton(
   >,
   uiState: SignupUiState,
 ) {
-  const navigation = useAppNavigation();
-
   const {setToken} = useAuth();
 
   const attemptUserSignup = async () => {
     const result = await signUpUser(
       uiState.emailText,
-      uiState.usernameText,
       uiState.passwordText,
       setToken,
     );
     switch (result) {
-      case 'ErrorDuringSignup': {
-        dispatch(SignupActions.serverOrCredentialError());
-      }
       case 'Success': {
         dispatch(SignupActions.signupCompleted());
+      }
+      default: {
+        dispatch(SignupActions.serverOrCredentialError());
       }
     }
   };

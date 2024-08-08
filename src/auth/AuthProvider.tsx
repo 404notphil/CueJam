@@ -54,12 +54,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     const signOutOfFirebase = () => {
       auth()
         .signOut()
-        .then(() => setToken(null))
         .then(() =>
           console.log('User signed out! of firebase and deleted local token'),
-        );
+        )
+        .catch(error => console.error(error));
     };
-    signOutOfFirebase();
+    if (auth().currentUser) signOutOfFirebase();
+    setToken(null);
   };
 
   return (
