@@ -83,6 +83,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
+      customArchiveName = "CueJam"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
