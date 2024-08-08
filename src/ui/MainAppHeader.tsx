@@ -97,7 +97,7 @@ const AppHeaderTitle: React.FC<AppHeaderTitleProps> = props => {
       )}
       {largeText && (
         <Text style={[globalStyles.smallText, {marginTop: 0, paddingLeft: 60}]}>
-          by tunepruner
+          by tunepruners
         </Text>
       )}
     </View>

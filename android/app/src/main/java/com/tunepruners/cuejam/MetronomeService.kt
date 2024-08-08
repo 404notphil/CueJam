@@ -1,4 +1,4 @@
-package com.tunepruner.cuejam
+package com.tunepruners.cuejam
 
 import android.app.*
 import android.content.Intent

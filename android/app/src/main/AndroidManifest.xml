@@ -28,7 +28,7 @@
             android:foregroundServiceType="mediaPlayback" />
         <receiver android:name=".ServiceStarterReceiver" android:exported="false">
             <intent-filter>
-                <action android:name="com.tunepruner.cuejam.START_METRONOME_SERVICE" />
+                <action android:name="com.tunepruners.cuejam.START_METRONOME_SERVICE" />
             </intent-filter>
         </receiver>
     </application>

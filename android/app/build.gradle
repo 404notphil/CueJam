@@ -80,14 +80,14 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.tunepruner.cuejam"
+    namespace "com.tunepruners.cuejam"
     defaultConfig {
-        applicationId "com.tunepruner.cuejam"
+        applicationId "com.tunepruners.cuejam"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        resValue "string", "build_config_package", "com.tunepruner.cuejam"
+        resValue "string", "build_config_package", "com.tunepruners.cuejam"
     }
     signingConfigs {
         debug {

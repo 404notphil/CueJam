@@ -1,4 +1,4 @@
-package com.tunepruner.cuejam
+package com.tunepruners.cuejam
 
 import android.content.ComponentName
 import android.content.Context
@@ -37,7 +37,7 @@ class MetronomeModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun initializeMetronomeService() {
         Log.d(TAG, "starting bind service")
-        val intent = Intent("com.tunepruner.cuejam.START_METRONOME_SERVICE")
+        val intent = Intent("com.tunepruners.cuejam.START_METRONOME_SERVICE")
         reactApplicationContext.sendBroadcast(intent)
         bindService()
         Log.d(TAG, "finished bind service")

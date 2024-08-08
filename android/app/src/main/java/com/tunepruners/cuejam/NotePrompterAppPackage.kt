@@ -1,4 +1,4 @@
-package com.tunepruner.cuejam
+package com.tunepruners.cuejam
 
 import android.view.View
 import com.facebook.react.ReactPackage
