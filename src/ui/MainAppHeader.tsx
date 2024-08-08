@@ -13,6 +13,7 @@ import {globalStyles} from './theme/styles';
 import {ScreenName, useAppNavigation} from './App';
 import {Themes} from './theme/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import auth from '@react-native-firebase/auth';
 
 if (
   Platform.OS === 'android' &&
@@ -106,12 +107,13 @@ const AppHeaderTitle: React.FC<AppHeaderTitleProps> = props => {
 
 const ShortcutButton: React.FC<AppHeaderProps> = props => {
   const navigation = useAppNavigation();
-  const {token, setToken} = useAuth();
+  const {token, logOut} = useAuth();
+
   return (
     <TouchableOpacity
       onPress={() => {
         props.screenName === 'Home'
-          ? setToken(null)
+          ? logOut()
           : navigation.navigate('Home');
       }}
       style={[

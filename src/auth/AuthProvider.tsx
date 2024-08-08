@@ -6,11 +6,13 @@ import React, {
   ReactNode,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import auth from '@react-native-firebase/auth';
 
-// The context will contain the auth token. 
+// The context will contain the auth token.
 interface AuthContextType {
   token: string | null;
   setToken: (token: string | null) => void;
+  logOut: () => void;
 }
 
 // Create context with a default value
@@ -48,11 +50,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     setTokenInWorkingMemory(token); // Update state
   };
 
+  const logOut = async () => {
+    const signOutOfFirebase = () => {
+      auth()
+        .signOut()
+        .then(() => setToken(null))
+        .then(() =>
+          console.log('User signed out! of firebase and deleted local token'),
+        );
+    };
+    signOutOfFirebase();
+  };
+
   return (
-    <AuthContext.Provider value={{token: tokenInWorkingMemory, setToken}}>
+    <AuthContext.Provider
+      value={{token: tokenInWorkingMemory, setToken, logOut}}>
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const logInTempUser = () => {
+  const {setToken} = useAuth();
+  setToken('temp');
 };
 
 // Custom hook to use the auth context
