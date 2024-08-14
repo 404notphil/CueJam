@@ -1,4 +1,12 @@
-import {StyleSheet, Text, TouchableOpacity, View, Platform} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Platform,
+  StatusBar,
+  SafeAreaView,
+} from 'react-native';
 import {globalStyles} from './theme/styles';
 import {Image} from 'react-native';
 import Animated, {
@@ -12,55 +20,61 @@ import {useEffect} from 'react';
 import {useAppNavigation} from './App';
 import {useAppDispatch} from '../store/hooks';
 import {clearDrill} from '../store/reducers/configureDrillReducer';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import AddDrillIcon from '../assets/AddDrillIcon';
+import SavedDrillsIcon from '../assets/SavedDrillsIcon';
+import StatsIcon from '../assets/StatsIcon';
 
 export function HomeScreen(): React.JSX.Element {
   const navigation = useAppNavigation();
   const dispatch = useAppDispatch();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={[globalStyles.screenContainer]}>
-      <TouchableOpacity
-        onPress={() => {
-          dispatch(clearDrill());
-          navigation.navigate('ConfigureDrill');
-        }}
-        style={styles.largeButton}>
-        <Text style={[globalStyles.fieldHeader, styles.fieldHeader]}>
-          new drill
-        </Text>
-        <Image
-          style={styles.largeButtonIcon}
-          source={require('../assets/create_drill_icon_large.png')}
-          resizeMode="contain" // Add this line
+    <SafeAreaView
+      style={[globalStyles.screenContainer, {paddingBottom: insets.bottom}]}>
+      <View style={globalStyles.screenContainer}>
+        <StatusBar
+          barStyle="default"
+          backgroundColor="transparent"
+          translucent
         />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('SavedDrills');
-        }}
-        style={styles.largeButton}>
-        <Text style={globalStyles.fieldHeader}>saved drills</Text>
+        <TouchableOpacity
+          onPress={() => {
+            dispatch(clearDrill());
+            navigation.navigate('ConfigureDrill');
+          }}
+          style={[styles.largeButton]}>
+          <Text style={[globalStyles.title, {fontSize: 35, maxWidth: 100}]}>
+            new drill
+          </Text>
+          <View />
+          <AddDrillIcon />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('SavedDrills');
+          }}
+          style={styles.largeButton}>
+          <Text style={[globalStyles.title, {fontSize: 35, maxWidth: 100}]}>
+            saved drills
+          </Text>
 
-        <Image
-          style={styles.largeButtonIcon}
-          source={require('../assets/saved_drills_icon_large.png')}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Stats');
-        }}
-        style={styles.largeButton}>
-        <Text style={globalStyles.fieldHeader}>stats</Text>
+          <SavedDrillsIcon />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Stats');
+          }}
+          style={styles.largeButton}>
+          <Text style={[globalStyles.title, {fontSize: 35, maxWidth: 100}]}>
+            stats
+          </Text>
 
-        <Image
-          style={styles.largeButtonIcon}
-          source={require('../assets/stats_icon_large.png')}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
-    </View>
+          <StatsIcon />
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -81,9 +95,11 @@ const styles = StyleSheet.create({
   largeButton: {
     ...globalStyles.button,
     flex: 1,
+    flexDirection: 'row',
     marginVertical: 5,
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    paddingHorizontal: 40,
     borderRadius: 10,
   },
   largeButtonIcon: {height: 100, width: 130, flex: 1},

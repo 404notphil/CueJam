@@ -107,7 +107,7 @@ export const initialState: ConfigureDrillState = {
     tempo: 150,
     beatsPerPrompt: 4,
     noteNames: AllNoteNames,
-    promptOrder: 'random',
+    promptOrder: 'custom',
     tonalContext: 'chord quality',
     chordQualities: AllChordQualities,
     scales: AllScales,
@@ -187,10 +187,19 @@ export const configureDrillSlice = createSlice({
     ) => {
       if (action.payload.oldLayer) {
         state.configuration.promptLayers = state.configuration.promptLayers.map(
-          layerToCheck =>
-            layerToCheck.uniqueId === action.payload.oldLayer?.uniqueId
+          layerToCheck => {
+            return layerToCheck.uniqueId === action.payload.oldLayer?.uniqueId
               ? action.payload.newLayer
-              : layerToCheck,
+              : layerToCheck;
+          },
+        );
+        console.log(
+          '12345 different order? -> ' +
+            JSON.stringify(action.payload.oldLayer.childrenChosen),
+        );
+        console.log(
+          '12345 and -> ' +
+            JSON.stringify(action.payload.newLayer.childrenChosen),
         );
       } else {
         state.configuration.promptLayers.push(action.payload.newLayer);

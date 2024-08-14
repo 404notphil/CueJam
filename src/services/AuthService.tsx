@@ -1,5 +1,7 @@
 import {useAuth} from '../auth/AuthProvider';
+import {SignupActions} from '../onboarding/reducers/SignupUiState';
 import {baseUrl} from './Common';
+import auth from '@react-native-firebase/auth';
 
 type LoginResult =
   | 'Success'
@@ -7,9 +9,40 @@ type LoginResult =
   | 'UserNotFound'
   | 'ErrorDuringLogin';
 
-type SignupResult = 'Success' | 'ErrorDuringSignup';
+type SignupResult =
+  | 'Success'
+  | 'InvalidEmail'
+  | 'InvalidPassword'
+  | 'EmailInUse'
+  | 'ErrorDuringSignup';
 
 const loginUser = async (
+  username: string,
+  password: string,
+  setToken: (token: string) => void,
+): Promise<LoginResult> => {
+  try {
+    const userCredential = await auth().signInWithEmailAndPassword(
+      username,
+      password,
+    );
+    setToken(await userCredential.user.getIdToken());
+    return 'Success';
+  } catch (error) {
+    const firebaseError = error as {code: string; message: string};
+    switch (firebaseError.code) {
+      case 'auth/invalid-email':
+      case 'auth/wrong-password':
+        return 'InvalidCredentials';
+      case 'auth/user-not-found':
+        return 'UserNotFound';
+      default:
+        return 'ErrorDuringLogin';
+    }
+  }
+};
+
+const loginUserLegacy = async (
   username: string,
   password: string,
   setToken: (token: string) => void,
@@ -40,6 +73,35 @@ const loginUser = async (
 };
 
 const signUpUser = async (
+  email: string,
+  password: string,
+  setToken: (token: string) => void,
+): Promise<SignupResult> => {
+  try {
+    const userCredential = await auth().createUserWithEmailAndPassword(
+      email,
+      password,
+    );
+    setToken(await userCredential.user.getIdToken());
+    console.log('User account created & signed in!', userCredential);
+    return 'Success';
+  } catch (error) {
+    const firebaseError = error as {code: string; message: string};
+    console.log('12345 ' + error);
+    switch (firebaseError.code) {
+      case 'auth/invalid-email':
+        return 'InvalidEmail';
+      case 'auth/weak-password':
+        return 'InvalidPassword';
+      case 'email-already-in-use':
+        return 'EmailInUse';
+      default:
+        return 'ErrorDuringSignup';
+    }
+  }
+};
+
+const signUpUserLegacy = async (
   email: string,
   username: string,
   password: string,

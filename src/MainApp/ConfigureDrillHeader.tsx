@@ -15,6 +15,8 @@ import EditIcon from '../assets/EditIcon';
 
 export interface ConfigureDrillHeaderProps {
   state: ConfigureDrillState;
+  onPressToEditBeatsPerPrompt: () => void;
+  onPressToEditTempo: () => void;
 }
 
 export const ConfigureDrillHeader: React.FC<
@@ -72,7 +74,9 @@ export const ConfigureDrillHeader: React.FC<
           alignItems: 'center',
         }}>
         <Text style={styles.promptConfigurationSentence}>every</Text>
-        <TouchableOpacity style={styles.promptConfigurationSentenceButton}>
+        <TouchableOpacity
+          style={styles.promptConfigurationSentenceButton}
+          onPress={() => props.onPressToEditBeatsPerPrompt()}>
           <Text style={[globalStyles.actionButtonText]}>
             {props.state.configuration.beatsPerPrompt}
           </Text>
@@ -88,7 +92,9 @@ export const ConfigureDrillHeader: React.FC<
         <Text style={[styles.promptConfigurationSentence, {marginStart: 16}]}>
           at
         </Text>
-        <TouchableOpacity style={styles.promptConfigurationSentenceButton}>
+        <TouchableOpacity
+          style={styles.promptConfigurationSentenceButton}
+          onPress={() => props.onPressToEditTempo()}>
           <Text style={globalStyles.actionButtonText}>
             {props.state.configuration.tempo}
           </Text>

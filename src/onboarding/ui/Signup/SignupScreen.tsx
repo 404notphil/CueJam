@@ -5,7 +5,6 @@ import {signupReducer} from '../../reducers/SignupReducer';
 import {initialSignupUiState} from '../../reducers/SignupUiState';
 import {SignupScreenModal} from './SignupScreenModal';
 import {EmailFieldAndErrors} from './EmailFieldAndErrors';
-import {UsernameFieldAndErrors} from './UsernameFieldAndErrors';
 import {PasswordFieldAndErrors} from './PasswordFieldAndErrors';
 import {SignupButton} from './SignupButton';
 
@@ -24,7 +23,6 @@ export function SignupScreen(): React.JSX.Element {
       {/* Header */}
       <Text style={globalStyles.title}>Signup</Text>
       <EmailFieldAndErrors dispatch={dispatch} uiState={uiState} />
-      {UsernameFieldAndErrors(dispatch, uiState)}
       <PasswordFieldAndErrors dispatch={dispatch} uiState={uiState} />
       {SignupButton(dispatch, uiState)}
     </View>

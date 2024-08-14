@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "230641647448",
+    "project_id": "cuejam-abfc1",
+    "storage_bucket": "cuejam-abfc1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:230641647448:android:27d972bce6b5c9e30c6f2d",
+        "android_client_info": {
+          "package_name": "com.tunepruners.cuejam"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDalq43ztZfjr738Ecdb510StsP4qrAolI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:230641647448:android:f3ceb2cef8c386590c6f2d",
+        "android_client_info": {
+          "package_name": "com.tunepruners.cuejam.development"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDalq43ztZfjr738Ecdb510StsP4qrAolI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

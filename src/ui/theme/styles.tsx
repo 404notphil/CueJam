@@ -46,7 +46,8 @@ export const globalStyles = StyleSheet.create({
     ...shadowStyleSheet.shadowStyle,
   },
   screenContainer: {
-    padding: 24,
+    ...StyleSheet.absoluteFillObject,
+    padding: 10,
     flex: 1,
     backgroundColor: Themes.dark.background,
   },

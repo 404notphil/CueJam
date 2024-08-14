@@ -30,6 +30,7 @@ export abstract class PromptLayer<T extends LayerChildItem> {
   optionType: PromptLayerOption;
   // childrenChosen should have the order given to it by the client.
   childrenChosen: Array<T>;
+  sortedFullSetOfChildren: Array<T>;
   promptCue: Array<T> = [];
   promptOrder: PromptOrder;
   currentPrompt: T | undefined;
@@ -40,18 +41,19 @@ export abstract class PromptLayer<T extends LayerChildItem> {
   constructor(
     optionType: PromptLayerOption,
     childrenChosen: Array<T>,
+    fullSetOfChildren: Array<T>,
     promptOrder: PromptOrder,
     randomizeFunction?: () => T,
   ) {
     this.uniqueId = uuidv4();
     this.optionType = optionType;
     this.childrenChosen = childrenChosen;
+    this.sortedFullSetOfChildren = fullSetOfChildren;
     this.promptOrder = promptOrder;
     randomizeFunction
       ? (this.randomizeFunction = randomizeFunction)
       : (this.randomizeFunction = this.defaultRandomizeFunction);
     this.getNextPromptPairFromCue();
-
   }
 
   protected refillPromptCue(): void {
@@ -62,6 +64,10 @@ export abstract class PromptLayer<T extends LayerChildItem> {
     }
   }
 
+  cleanPromptCue(): void {
+    this.promptCue = [];
+  }
+
   getNextPromptPairFromCue(): {first: T; second: T} {
     if (this.nextPrompt === undefined) {
       this.refillPromptCue();
@@ -69,17 +75,33 @@ export abstract class PromptLayer<T extends LayerChildItem> {
       this.nextPrompt = this.promptCue.shift()!;
 
       return {first: this.currentPrompt, second: this.nextPrompt};
-    } 
+    }
 
     if (this.promptCue.length === 0) {
       this.refillPromptCue();
     }
-    
+
     this.currentPrompt = this.nextPrompt;
 
     this.nextPrompt = this.promptCue.shift()!;
 
     return {first: this.currentPrompt, second: this.nextPrompt};
+  }
+
+  overwriteSelectedChildren(newChildren: T[]) {
+    this.childrenChosen = newChildren;
+  }
+
+  replaceSortOrder(newSortedFullSetOfChildren: T[]) {
+    this.sortedFullSetOfChildren = newSortedFullSetOfChildren;
+    // we must also sort childrenChosen to match full list's order
+    this.childrenChosen = this.childrenChosen
+      .slice()
+      .sort(
+        (a, b) =>
+          newSortedFullSetOfChildren.indexOf(a) -
+          newSortedFullSetOfChildren.indexOf(b),
+      );
   }
 
   protected defaultRandomizeFunction() {
@@ -111,7 +133,7 @@ export abstract class PromptLayer<T extends LayerChildItem> {
 
   static rehydrateLayer(layer: any): PromptLayer<any> {
     let rehydratedLayer: PromptLayer<any>;
-    const id = layer.optionType.id as LayerTypeId
+    const id = layer.optionType.id as LayerTypeId;
     switch (id) {
       case 'NOTE_NAME':
         rehydratedLayer = Object.assign(new BufferedNoteNameLayer(), layer);
@@ -138,12 +160,14 @@ export abstract class PromptLayer<T extends LayerChildItem> {
 export class BufferedNoteNameLayer extends PromptLayer<NoteName> {
   constructor(
     promptOrder: PromptOrder = 'random',
-    randomizeFunction?: () => NoteName,
+    fullSetOfChildren: Array<NoteName> = AllNoteNames,
     childrenChosen: Array<NoteName> = AllNoteNames,
+    randomizeFunction?: () => NoteName,
   ) {
     super(
       NoteNamePromptLayerOption,
       childrenChosen,
+      fullSetOfChildren,
       promptOrder,
       randomizeFunction,
     );
@@ -161,26 +185,43 @@ export class BufferedNoteNameLayer extends PromptLayer<NoteName> {
 }
 
 export class BufferedChordQualityLayer extends PromptLayer<ChordQuality> {
-  constructor(childrenChosen: Array<ChordQuality> = AllChordQualities) {
-    super(ChordQualitiesPromptLayerOption, childrenChosen, 'random');
+  constructor(
+    childrenChosen: Array<ChordQuality> = AllChordQualities,
+    fullSetOfChildren = AllChordQualities,
+  ) {
+    super(
+      ChordQualitiesPromptLayerOption,
+      fullSetOfChildren,
+      childrenChosen,
+      'random',
+    );
   }
 }
 
 export class BufferedScaleLayer extends PromptLayer<Scale> {
-  constructor(childrenChosen: Array<Scale> = AllScales) {
-    super(ScalesPromptLayerOption, childrenChosen, 'random');
+  constructor(
+    childrenChosen: Array<Scale> = AllScales,
+    fullSetOfChildren: Array<Scale> = AllScales,
+  ) {
+    super(ScalesPromptLayerOption, childrenChosen, fullSetOfChildren, 'random');
   }
 }
 
 export class BufferedModeLayer extends PromptLayer<Mode> {
-  constructor(childrenChosen: Array<Mode> = AllModes) {
-    super(ModesPromptLayerOption, childrenChosen, 'random');
+  constructor(
+    childrenChosen: Array<Mode> = AllModes,
+    fullSetOfChildren: Array<Mode> = AllModes,
+  ) {
+    super(ModesPromptLayerOption, childrenChosen, fullSetOfChildren, 'random');
   }
 }
 
 export class BufferedKeyLayer extends PromptLayer<Key> {
-  constructor(childrenChosen: Array<Key> = AllKeys) {
-    super(KeysPromptLayerOption, childrenChosen, 'random');
+  constructor(
+    childrenChosen: Array<Key> = AllKeys,
+    fullSetOfChildren: Array<Key> = AllKeys,
+  ) {
+    super(KeysPromptLayerOption, childrenChosen, fullSetOfChildren, 'random');
   }
 }
 

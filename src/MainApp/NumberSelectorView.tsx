@@ -11,12 +11,18 @@ interface NumberSelectorViewProps {
   selectedNumberInViewer: number;
   onSelectNumberInViewer: (numberToSelectInViewer: number) => void;
   onCommitSelectedNumber: (selectedNumber: number) => void;
+  maxNumber: number;
+  minNumber: number;
+  increments: number[];
 }
 
 export const NumberSelectorView: React.FC<NumberSelectorViewProps> = props => {
   const incrementButtonArgs = {
-    setCurrentDisplayedTempo: (newNumber: number) =>
-      props.onSelectNumberInViewer(newNumber),
+    setCurrentDisplayedNumber: (newNumber: number) => {
+      props.onSelectNumberInViewer(
+        Math.max(props.minNumber, Math.min(props.maxNumber, newNumber)),
+      );
+    },
     previousNumber: props.selectedNumberInViewer,
   };
 
@@ -45,47 +51,31 @@ export const NumberSelectorView: React.FC<NumberSelectorViewProps> = props => {
         style={{
           flexDirection: 'row',
         }}>
-        <IncrementButton
-          {...incrementButtonArgs}
-          bpmDistance={1}
-          icon={'../assets/triple_up_arrow.png'}
-        />
-        <IncrementButton
-          {...incrementButtonArgs}
-          bpmDistance={5}
-          icon={'../assets/double_up_arrow.png'}
-        />
-        <IncrementButton
-          {...incrementButtonArgs}
-          bpmDistance={10}
-          icon={'../assets/single_up_arrow.png'}
-        />
+        {props.increments.map(increment => (
+          <IncrementButton
+            {...incrementButtonArgs}
+            increment={increment}
+            icon={'../assets/triple_up_arrow.png'}
+          />
+        ))}
       </View>
 
       <View style={{flexDirection: 'row'}}>
-        <IncrementButton
-          {...incrementButtonArgs}
-          bpmDistance={-1}
-          icon={'../assets/single_down_arrow.png'}
-        />
-        <IncrementButton
-          {...incrementButtonArgs}
-          bpmDistance={-5}
-          icon={'../assets/double_down_arrow.png'}
-        />
-        <IncrementButton
-          {...incrementButtonArgs}
-          bpmDistance={-10}
-          icon={'../assets/triple_down_arrow.png'}
-        />
+        {props.increments.map(increment => (
+          <IncrementButton
+            {...incrementButtonArgs}
+            increment={increment * -1}
+            icon={'../assets/triple_up_arrow.png'}
+          />
+        ))}
       </View>
     </View>
   );
 };
 
 interface IncrementButtonProps {
-  setCurrentDisplayedTempo: (newTempo: number) => void;
-  bpmDistance: number;
+  setCurrentDisplayedNumber: (newTempo: number) => void;
+  increment: number;
   previousNumber: number;
   icon: string;
 }
@@ -94,7 +84,7 @@ const IncrementButton: React.FC<IncrementButtonProps> = props => {
   return (
     <TouchableOpacity
       onPress={() =>
-        props.setCurrentDisplayedTempo(props.previousNumber + props.bpmDistance)
+        props.setCurrentDisplayedNumber(props.previousNumber + props.increment)
       }
       style={[
         globalStyles.button,
@@ -109,9 +99,9 @@ const IncrementButton: React.FC<IncrementButtonProps> = props => {
         },
       ]}>
       <Text style={[globalStyles.fieldHeader, {marginTop: 0}]}>
-        {props.bpmDistance < 0
-          ? props.bpmDistance
-          : '+' + props.bpmDistance.toString()}
+        {props.increment < 0
+          ? props.increment
+          : '+' + props.increment.toString()}
       </Text>
 
       {/* <Image

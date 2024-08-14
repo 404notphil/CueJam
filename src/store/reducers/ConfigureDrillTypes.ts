@@ -3,6 +3,7 @@ const PromptOrderDefinitions = [
   'random',
   'descending5ths',
   'ascending5ths',
+  'custom',
 ] as const;
 
 export type PromptOrder = (typeof PromptOrderDefinitions)[number];

@@ -1,4 +1,4 @@
-# NotePrompter
+# CueJam
 
 An app which provides prompts (note names, chord names, scale names, etc) for use in musical training of any kind. 
 

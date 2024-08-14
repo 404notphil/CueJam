@@ -11,6 +11,9 @@ import {
 } from 'react-native';
 import {globalStyles} from './theme/styles';
 import {ScreenName, useAppNavigation} from './App';
+import {Themes} from './theme/Theme';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import auth from '@react-native-firebase/auth';
 
 if (
   Platform.OS === 'android' &&
@@ -24,10 +27,11 @@ export interface AppHeaderProps {
 }
 
 export function MainAppHeader(props: AppHeaderProps) {
+  const insets = useSafeAreaInsets();
   return (
     <View
       style={{
-        marginTop: 16,
+        marginTop: insets.top,
         alignItems: 'center',
         justifyContent: 'space-evenly',
         flexDirection: 'row',
@@ -66,7 +70,7 @@ const AppHeaderTitle: React.FC<AppHeaderTitleProps> = props => {
       break;
     }
     default: {
-      screenTitle = 'noteprompter';
+      screenTitle = 'CueJam';
       break;
     }
   }
@@ -80,7 +84,12 @@ const AppHeaderTitle: React.FC<AppHeaderTitleProps> = props => {
     <View style={{}}>
       {largeText ? (
         <Text style={[globalStyles.title, {fontSize: 50, margin: 16}]}>
-          {screenTitle}
+          <Text style={{color: Themes.dark.lightText}}>
+            {screenTitle.slice(0, 3)}
+          </Text>
+          <Text style={{color: Themes.dark.actionText}}>
+            {screenTitle.slice(3)}
+          </Text>
         </Text>
       ) : (
         <Text style={[globalStyles.title, {fontSize: 30, margin: 16}]}>
@@ -89,7 +98,7 @@ const AppHeaderTitle: React.FC<AppHeaderTitleProps> = props => {
       )}
       {largeText && (
         <Text style={[globalStyles.smallText, {marginTop: 0, paddingLeft: 60}]}>
-          by tunepruner
+          by tunepruners
         </Text>
       )}
     </View>
@@ -98,12 +107,13 @@ const AppHeaderTitle: React.FC<AppHeaderTitleProps> = props => {
 
 const ShortcutButton: React.FC<AppHeaderProps> = props => {
   const navigation = useAppNavigation();
-  const {token, setToken} = useAuth();
+  const {token, logOut} = useAuth();
+
   return (
     <TouchableOpacity
       onPress={() => {
         props.screenName === 'Home'
-          ? setToken(null)
+          ? logOut()
           : navigation.navigate('Home');
       }}
       style={[
