@@ -2,9 +2,7 @@
 
 An app which provides prompts (note names, chord names, scale names, etc) for use in musical training of any kind. 
 
-See the figma design [here](https://www.figma.com/file/2IR1FbthGus1OufkmFWkGW/Untitled?type=design&node-id=0%3A1&mode=dev&t=Y9OVKelz22WWL2ex-1)
-
-Here is the [current state of the app](https://drive.google.com/file/d/1iM9s4scZdZpwwpKqh8qIgQxX_xj8W2Cn/view?usp=drive_link)
+See a walkthrough and explanation [here](https://stupendous-limpet-8b4.notion.site/CueJam-0bfd69c9809440e0bcd67b2af288d672?pvs=4)
 
 # Running the app
 
